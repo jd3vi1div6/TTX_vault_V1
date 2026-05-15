@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VAULT-TEC TTX TERMINAL :: Tabletop Exercise Tracker</title>
+<link rel="stylesheet" href="assets/pipboy.css">
+<style>
+.tracker-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 14px;
+  min-height: 80vh;
+}
+.tracker-sidebar { display: flex; flex-direction: column; gap: 14px; }
+.role-list { list-style: none; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.role-list li {
+  font-size: 13px; padding: 6px 10px; border: 1px solid var(--pb-green-dark);
+  cursor: pointer; transition: all 0.1s; color: var(--pb-text-dim);
+}
+.role-list li::before { content: '[ ] '; color: var(--pb-green-dim); }
+.role-list li.active-role::before { content: '[X] '; color: var(--pb-green); }
+.role-list li:hover { color: var(--pb-green); border-color: var(--pb-green-dim); }
+.role-list li.active-role { color: var(--pb-green); border-color: var(--pb-green); background: rgba(78,255,145,0.05); }
+
+.sidebar-section label {
+  display: block; font-size: 11px; color: var(--pb-green-dim);
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 4px;
+}
+.sidebar-section select { width: 100%; }
+
+.phase-progress { display: flex; gap: 4px; align-items: center; margin: 10px 0; }
+.phase-pip {
+  flex: 1; height: 18px; border: 1px solid var(--pb-green-dim);
+  background: var(--pb-bg); cursor: pointer; transition: all 0.1s;
+  position: relative; font-family: 'VT323', monospace; font-size: 14px;
+  color: var(--pb-green-dim); display: flex; align-items: center; justify-content: center;
+}
+.phase-pip.done { background: var(--pb-green-dark); color: var(--pb-green); }
+.phase-pip.current {
+  background: var(--pb-green-dim); color: var(--pb-bg);
+  box-shadow: 0 0 8px var(--pb-green-glow);
+}
+.phase-pip:hover { border-color: var(--pb-green); }
+.phase-label {
+  font-size: 12px; color: var(--pb-green-dim); margin-left: 10px;
+  white-space: nowrap; letter-spacing: 0.1em;
+}
+
+.inject-card { margin-bottom: 14px; }
+.inject-body {
+  font-family: 'Share Tech Mono', monospace; font-size: 14px; line-height: 1.7;
+  color: var(--pb-text); white-space: pre-wrap;
+}
+.inject-body strong { color: var(--pb-green); }
+
+.facilitator-box {
+  border: 1px dashed var(--pb-amber); padding: 10px 12px; margin-top: 12px;
+  color: var(--pb-amber); font-size: 13px; line-height: 1.5;
+  background: rgba(255,180,55,0.05);
+}
+.facilitator-box::before {
+  content: '>> FACILITATOR EYES ONLY <<'; display: block;
+  font-size: 11px; letter-spacing: 0.2em; margin-bottom: 6px;
+}
+
+.q-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.q-item {
+  display: flex; gap: 10px; padding: 8px 10px;
+  border-left: 2px solid var(--pb-green-dim);
+}
+.q-num { color: var(--pb-green); min-width: 24px; }
+.q-text { color: var(--pb-text); line-height: 1.5; }
+
+.risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.risk-field label {
+  display: block; font-size: 11px; color: var(--pb-green-dim);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;
+}
+.risk-field select, .risk-field textarea, .notes-card textarea { width: 100%; }
+.notes-card textarea { min-height: 90px; }
+
+.obs-list { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+.obs-item {
+  display: flex; gap: 10px; padding: 8px 10px;
+  border: 1px solid var(--pb-green-dark); align-items: flex-start;
+}
+.obs-item-text { flex: 1; color: var(--pb-text); font-size: 13px; line-height: 1.5; }
+.obs-type-badge {
+  font-size: 10px; padding: 1px 8px; border: 1px solid currentColor;
+  text-transform: uppercase; letter-spacing: 0.15em; white-space: nowrap;
+}
+.obs-gap { color: var(--pb-red); }
+.obs-action { color: var(--pb-amber); }
+.obs-strength { color: var(--pb-green); }
+.obs-note { color: var(--pb-text-dim); }
+.obs-del { color: var(--pb-red); cursor: pointer; padding: 0 4px; }
+.obs-del:hover { background: var(--pb-red); color: var(--pb-bg); }
+
+.obs-add-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+.obs-add-row input { flex: 1; min-width: 200px; }
+
+.scenario-cards {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px;
+}
+.sc-card {
+  border: 1px solid var(--pb-green-dim); padding: 16px; cursor: pointer;
+  transition: all 0.15s; position: relative;
+  background: var(--pb-bg-2);
+}
+.sc-card:hover {
+  border-color: var(--pb-green); box-shadow: 0 0 16px var(--pb-green-glow);
+  background: var(--pb-bg-3);
+}
+.sc-card-title {
+  font-family: 'VT323', monospace; font-size: 22px; color: var(--pb-green);
+  margin-bottom: 6px;
+}
+.sc-card-desc { font-size: 13px; color: var(--pb-text-dim); line-height: 1.6; }
+
+.landing { padding: 30px 20px; text-align: center; }
+.landing h2 { font-size: 36px; margin-bottom: 8px; }
+.landing-sub { color: var(--pb-text-dim); font-size: 14px; max-width: 520px; margin: 0 auto 14px; line-height: 1.7; }
+
+.vault-boy {
+  font-family: 'Courier New', monospace; font-size: 9px; line-height: 1;
+  color: var(--pb-green); white-space: pre; margin: 14px auto;
+  text-align: left; display: inline-block; text-shadow: 0 0 4px var(--pb-green-glow);
+}
+
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border: 1px solid var(--pb-green-dim);
+  margin-bottom: 10px; background: var(--pb-bg-2);
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-title { font-family: 'VT323', monospace; font-size: 22px; color: var(--pb-green); }
+.mitre-tag {
+  font-size: 11px; padding: 2px 8px; border: 1px solid var(--pb-green-dark);
+  color: var(--pb-text-dim); letter-spacing: 0.05em;
+}
+
+.footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 12px; border: 1px solid var(--pb-green-dim);
+  background: var(--pb-bg-2); margin-top: 14px;
+}
+.footer-info { font-size: 12px; color: var(--pb-text-dim); }
+.btn-row { display: flex; gap: 8px; }
+
+.boot-overlay {
+  position: fixed; inset: 0; background: var(--pb-bg);
+  z-index: 10000; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px; font-family: 'Share Tech Mono', monospace;
+  color: var(--pb-green); font-size: 14px; padding: 20px;
+}
+.boot-overlay.hidden { display: none; }
+.boot-line { opacity: 0; animation: boot-in 0.15s forwards; }
+@keyframes boot-in { to { opacity: 1; } }
+
+@media (max-width: 720px) {
+  .tracker-layout { grid-template-columns: 1fr; }
+  .scenario-cards, .risk-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body class="pb-screen">
+
+<div class="boot-overlay" id="bootOverlay">
+  <pre class="boot-line" style="animation-delay:0s">**** ROBCO INDUSTRIES (TM) TERMLINK ****</pre>
+  <pre class="boot-line" style="animation-delay:0.2s">VAULT-TEC TTX SUBSYSTEM v3.7.4</pre>
+  <pre class="boot-line" style="animation-delay:0.4s">[OK] LOADING SCENARIO MATRIX...</pre>
+  <pre class="boot-line" style="animation-delay:0.6s">[OK] MOUNTING MITRE ATT&amp;CK FRAMEWORK...</pre>
+  <pre class="boot-line" style="animation-delay:0.8s">[OK] INITIALIZING RISK ASSESSMENT MODULE...</pre>
+  <pre class="boot-line" style="animation-delay:1.0s">[OK] HANDSHAKE COMPLETE — WELCOME, OVERSEER<span class="pb-cursor"></span></pre>
+</div>
+
+<div class="pb-app">
+
+<header class="pb-header">
+  <div>
+    <div class="pb-header-title">VAULT-TEC :: TTX TERMINAL</div>
+    <div class="pb-header-meta">TABLETOP EXERCISE TRACKER &nbsp;|&nbsp; AUTHORIZED PERSONNEL ONLY</div>
+  </div>
+  <div class="pb-header-meta">
+    <div>OVERSEER: <span class="pb-glow">JOANNA.D</span></div>
+    <div id="clockBox">--:--:--</div>
+  </div>
+</header>
+
+<div class="vt-stripe"></div>
+
+<nav class="pb-nav">
+  <a href="index.html">[ HOME ]</a>
+  <a href="dashboard.html">[ DASHBOARD ]</a>
+  <a href="tracker.html" class="active">[ TRACKER ]</a>
+  <a href="crem-demo.html">[ CREM DEMO ]</a>
+</nav>
+
+<div class="tracker-layout">
+  <aside class="tracker-sidebar">
+    <div class="pb-panel">
+      <div class="pb-panel-title">SCENARIO</div>
+      <div class="sidebar-section pb-mt8">
+        <label>Select scenario</label>
+        <select id="scenarioSel" onchange="onScenarioChange()">
+          <option value="">— UNSELECTED —</option>
+          <option value="breach">DATA BREACH</option>
+          <option value="ransom">RANSOMWARE</option>
+        </select>
+      </div>
+      <div class="sidebar-section pb-mt16">
+        <label>Mode</label>
+        <select id="modeSel" onchange="render()">
+          <option value="participant">PARTICIPANT</option>
+          <option value="facilitator">FACILITATOR</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="pb-panel">
+      <div class="pb-panel-title">DWELLERS PRESENT</div>
+      <ul class="role-list" id="roleList">
+        <li onclick="toggleRole(this)">CISO</li>
+        <li onclick="toggleRole(this)">IT lead</li>
+        <li onclick="toggleRole(this)">Legal</li>
+        <li onclick="toggleRole(this)">PR / comms</li>
+        <li onclick="toggleRole(this)">CEO / exec</li>
+        <li onclick="toggleRole(this)">HR</li>
+        <li onclick="toggleRole(this)">DPO</li>
+      </ul>
+    </div>
+
+    <div class="pb-panel">
+      <div class="pb-panel-title">VAULT BOY</div>
+      <div class="vault-boy">      ___
+     /   \
+    | o o |
+    |  ^  |
+     \ - /
+      |||
+   ___|||___
+  /  \___/  \
+ /    | |    \
+/_____|_|_____\
+      | |
+     _|_|_
+    |_____|</div>
+      <div class="pb-small pb-dim pb-center pb-mt8">"WAR. WAR NEVER CHANGES."</div>
+    </div>
+  </aside>
+
+  <main>
+    <div id="landing" class="pb-panel">
+      <div class="pb-panel-title">MISSION BRIEFING</div>
+      <div class="landing">
+        <h2 class="pb-glow">CYBERSECURITY TABLETOP EXERCISE</h2>
+        <div class="landing-sub">
+          Initiate a structured exercise. Walk through each inject phase, assess risk under simulated conditions, capture observations, and export a debriefing report at conclusion.
+        </div>
+        <div class="pb-divider">═══════════════════════════════════════════════════════════</div>
+        <div class="scenario-cards">
+          <div class="sc-card" onclick="selectScenario('breach')">
+            <div class="sc-card-title">▶ DATA BREACH</div>
+            <div class="sc-card-desc">
+              Phishing simulation → active data exfiltration → PII exposure.
+              <br><br>
+              <span class="pb-dim">6 PHASES · GDPR / NIS2 IMPLICATIONS</span>
+            </div>
+          </div>
+          <div class="sc-card" onclick="selectScenario('ransom')">
+            <div class="sc-card-title">▶ RANSOMWARE</div>
+            <div class="sc-card-desc">
+              CVE exploitation → mass file encryption → 48h ransom demand.
+              <br><br>
+              <span class="pb-dim">7 PHASES · BUSINESS CONTINUITY FOCUS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="exercise" style="display:none">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span class="topbar-title" id="topTitle"></span>
+          <span class="pb-badge" id="sevBadge"></span>
+          <span class="mitre-tag" id="mitreTag" style="display:none"></span>
+        </div>
+        <button class="pb-btn" onclick="exportReport()">[ EXPORT REPORT ]</button>
+      </div>
+
+      <div class="phase-progress" id="progressRow"></div>
+
+      <div id="body"></div>
+
+      <div class="footer">
+        <div class="footer-info" id="footerInfo"></div>
+        <div class="btn-row">
+          <button class="pb-btn" id="prevBtn" onclick="prevPhase()">◀ PREVIOUS</button>
+          <button class="pb-btn primary" id="nextBtn" onclick="nextPhase()">NEXT INJECT ▶</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer class="pb-mt16 pb-center pb-small pb-dim">
+  <div class="pb-divider">───────────────────────────────────────────────</div>
+  VAULT-TEC INDUSTRIES &middot; A BRIGHTER FUTURE, UNDERGROUND &middot;
+  PREPARED BY OVERSEER JOANNA D.
+</footer>
+
+</div>
+
+<script>
+// === SCENARIO DATA (preserved from original) ===
+const SCENARIOS = {
+  breach: {
+    phases: [
+      {
+        title: 'PHASE 0 — Preliminary event',
+        severity: 'amber',
+        mitre: 'T1566 · Phishing',
+        inject: 'Your team conducted a phishing simulation on a randomly selected group of 50 employees.\n\nResults: 2 users entered credentials:\n\n• John Doe — Accounting, limited access, no prior incidents.\n• Jane Kowalsky — IT admin privileges on critical systems, multiple prior incidents recorded.',
+        tips: 'Focus on privilege asymmetry. Jane\'s admin rights and prior incident history make her the higher-risk user despite the simulation context. Probe whether the team would treat a simulation result as a real IR trigger.',
+        questions: [
+          'How do you prioritize response between these two users?',
+          'Suspend accounts, add MFA, or covert monitoring — which and why?',
+          'Does a phishing simulation result trigger a real IR process?',
+          'What does Jane\'s incident history tell you about your awareness programme?',
+          'Should privileged accounts require additional verification beyond standard MFA?'
+        ]
+      },
+      {
+        title: 'PHASE 1 — Main event',
+        severity: 'red',
+        mitre: 'T1041 · Exfiltration over C2 channel',
+        inject: 'One week after the phishing simulation, users report slow internet connections. During investigation, a network team member notices unusually high outbound traffic from the database server to an unknown external IP address.',
+        tips: 'Force the team to connect the earlier phishing event to this anomaly. Test whether playbooks exist for this correlation. Key tension: contain vs. preserve evidence.',
+        questions: [
+          'What is your immediate triage and containment procedure?',
+          'Which teams do you engage first and in what order?',
+          'Do you suspect insider threat, malware, or credential abuse?',
+          'How do you preserve forensic evidence while blocking the traffic?',
+          'At what point does executive leadership need to be informed?'
+        ]
+      },
+      {
+        title: 'PHASE 2 — Scenario update #1',
+        severity: 'red',
+        mitre: 'T1078 · Valid Accounts',
+        inject: 'Investigation confirms the outbound transfer originates from a compromised account belonging to John Doe — now identified as a senior financial analyst with access to sensitive customer records.',
+        tips: 'Explore notification trees. Who calls whom? Is there a documented escalation path? Test knowledge of GDPR 72-hour notification window.',
+        questions: [
+          'Who needs to be notified and engaged at this stage?',
+          'How does the team verify and handle the John Doe account?',
+          'What data and systems should be collected to assess scope and prepare a report?',
+          'What predisposing conditions existed — vulnerabilities, misconfigurations, behavioural signals?',
+          'Has the risk priority changed? How would you communicate the new priority to leadership?'
+        ]
+      },
+      {
+        title: 'PHASE 3 — Scenario update #2',
+        severity: 'red',
+        mitre: 'T1005 · Data from Local System',
+        inject: 'Exfiltrated data is confirmed to include customer PII. Legal and compliance are engaged. Additional investigation reveals: John Doe received 3 suspicious emails with links to compromised websites; his workstation had not been patched for 6 weeks due to connectivity issues; the workstation is likely compromised.',
+        tips: 'This is the regulatory pressure point. GDPR Art.33 (72h supervisory authority notification) and Art.34 (data subject notification) should both be explored. Test awareness of NIS2 obligations too.',
+        questions: [
+          'Who needs to be notified — internally and externally?',
+          'How do you explain the priority and importance of this event to a non-technical audience?',
+          'What data from which systems should be collected to complete the risk assessment?',
+          'Is external regulatory notification required at this stage? Under which framework?',
+          'How does this change your assessment of business and company-wide impact?'
+        ]
+      },
+      {
+        title: 'PHASE 4 — Scenario update #3',
+        severity: 'amber',
+        mitre: 'T1070 · Indicator Removal',
+        inject: 'The breach is contained: compromised servers isolated, malware removed and traced. IT begins restoring affected systems to normal operations with enhanced monitoring in place.',
+        tips: 'Shift to recovery and lessons-learned mindset. Probe whether the team has defined KRIs, and whether recovery steps are documented in a playbook or are ad-hoc.',
+        questions: [
+          'How will you assess the effectiveness of the containment and response actions?',
+          'How will you assess the probability of a similar event occurring again?',
+          'What KRI (Key Risk Indicators) metrics should be tracked going forward?',
+          'From which systems and data sources will you collect KRI data?',
+          'Are there additional events or signals that should now be monitored?'
+        ]
+      },
+      {
+        title: 'PHASE 5 — Concluding discussion',
+        severity: 'green',
+        mitre: '',
+        inject: 'Open hotwash. Reflect on the exercise as a whole — processes, tooling, decision-making, and communication.',
+        tips: 'Use this phase to surface systemic gaps. Encourage honest assessment of tooling sufficiency and process maturity. Record action items with owners.',
+        questions: [
+          'What were the key lessons learned from this scenario?',
+          'What concrete steps can the organisation take to prevent a recurrence?',
+          'Are current systems and data sufficient for effective, real-time risk management?',
+          'Where are the most critical points for improvement?',
+          'Are currently available tools sufficient for accurate risk evaluation and reporting?'
+        ]
+      }
+    ]
+  },
+  ransom: {
+    phases: [
+      {
+        title: 'PHASE 0 — Preliminary event',
+        severity: 'amber',
+        mitre: 'CVE-2025-55182 · CVSS 10.0',
+        inject: 'Your team is notified of CVE-2025-55182 (CVSS 10.0), associated with the Bert ransomware family. Last vulnerability scan ran one week ago. Next scheduled scan is in 3 weeks. The vulnerable server was not covered by the critical-asset weekly scan.',
+        tips: 'Highlight the scan coverage gap as the key failure. Test whether the team has an emergency out-of-cycle patch process and how they assess exposure when scan data is stale.',
+        questions: [
+          'Are current scan frequencies and scope sufficient?',
+          'How do you assess likelihood of exploitation given the disclosure timeline?',
+          'What is your immediate response — emergency patch, compensating controls, or wait for scheduled scan?',
+          'Which assets and business processes are at highest risk from this CVE?'
+        ]
+      },
+      {
+        title: 'PHASE 1 — Main event',
+        severity: 'red',
+        mitre: 'T1486 · Data Encrypted for Impact',
+        inject: 'Helpdesk is flooded with calls — users cannot log in. An administrator checks the Domain Controller and finds all files have been modified with the extension ".encryptedbybert".',
+        tips: 'Test crisis declaration. Who has authority to declare an incident at this severity? Is there a formal process or does it default to the most senior person available?',
+        questions: [
+          'What is your first action — who do you call and what do you do immediately?',
+          'How do you prioritise and triage across affected systems?',
+          'How would you assess initial business process impact?',
+          'Who do you engage and notify in the first 30 minutes?',
+          'What data and from which systems do you need to qualify and communicate the event?'
+        ]
+      },
+      {
+        title: 'PHASE 2 — Scenario update #1',
+        severity: 'red',
+        mitre: 'T1486 · T1490 · Inhibit System Recovery',
+        inject: 'The administrator notifies their manager. Majority of systems are down. The call volume is overwhelming helpdesk. The outbreak appears to be spreading.',
+        tips: 'Explore the escalation path under pressure. Does the team have documented communication trees? Test BC/DR plan awareness and war-room activation.',
+        questions: [
+          'Who needs to be notified and engaged at this point?',
+          'What data and systems are needed to build the incident picture?',
+          'How do you identify the initial source or patient-zero system?',
+          'What predisposing conditions allowed this to spread?',
+          'How has your priority and business impact assessment changed?'
+        ]
+      },
+      {
+        title: 'PHASE 3 — Scenario update #2',
+        severity: 'red',
+        mitre: 'T1491 · Defacement / Ransom Note',
+        inject: 'Ransomware is confirmed. A ransom note demands payment within 48 hours, threatening to publish exfiltrated data externally if the demand is not met. Double-extortion scenario.',
+        tips: 'The pay/don\'t-pay decision is the centrepiece here. Also: GDPR + NIS2 notification obligations kick in. Law enforcement contact (CERT, police) should be explored.',
+        questions: [
+          'Who needs to be notified and engaged — including external bodies?',
+          'How do you communicate this to non-technical executives and the board?',
+          'What data and systems are needed for a full organisational risk assessment?',
+          'Is notification to supervisory authorities or law enforcement required now?',
+          'How do you identify the full scope of encrypted and exfiltrated data?',
+          'What is your position on ransom payment — policy and reasoning?'
+        ]
+      },
+      {
+        title: 'PHASE 4 — Scenario update #3',
+        severity: 'amber',
+        mitre: 'T1078 · T1190 · Exploit Public-Facing Application',
+        inject: 'Root cause confirmed: the attack originated from the server excluded from the weekly critical scan. The network anomaly system had flagged a possible CVE exploitation attempt, but the alert was closed as a false positive because no vulnerability was shown in the scan. Most machines and data have been restored from backup.',
+        tips: 'The false positive closure is a critical process failure. Test whether teams have a documented false-positive review process and whether anomaly detection is cross-referenced with vulnerability data.',
+        questions: [
+          'How do you assess effectiveness of the response and recovery actions?',
+          'What additional events or signals should now be monitored?',
+          'What data and systems will extend monitoring and build long-term context?',
+          'How would you reassess the organisation\'s security posture after this event?'
+        ]
+      },
+      {
+        title: 'PHASE 5 — Scenario update #4',
+        severity: 'green',
+        mitre: '',
+        inject: 'IT begins restoring remaining affected systems to normal operations under close monitoring. The immediate crisis is resolved. Focus shifts to resilience and recurrence prevention.',
+        tips: 'This is the metrics and prevention phase. KRIs, detection gaps, and process improvements should be the focus. Encourage honest reflection on whether this could have been prevented.',
+        questions: [
+          'How will you monitor for signs of recurring or latent infection?',
+          'How do you assess the probability of a similar event occurring again?',
+          'What metrics can serve as early warning indicators?',
+          'Could this incident have been prevented — and what would that have required?',
+          'What data and systems will be used to track ongoing risk metrics?'
+        ]
+      },
+      {
+        title: 'PHASE 6 — Concluding discussion',
+        severity: 'green',
+        mitre: '',
+        inject: 'Open hotwash. Reflect on the full scenario — detection gaps, response speed, communication, tooling, and regulatory readiness.',
+        tips: 'Surface systemic gaps. The scan coverage failure and false-positive process failure are key discussion anchors. Encourage ownership of action items.',
+        questions: [
+          'What were the key lessons learned?',
+          'What concrete steps can prevent a recurrence?',
+          'Are current systems and data sufficient for effective risk management?',
+          'Where are the most critical points for improvement?',
+          'Could available tools have detected or prevented this earlier?'
+        ]
+      }
+    ]
+  }
+};
+
+const STATE = { scenario: null, phase: 0, notes: {}, risk: {}, obs: [], obsId: 0 };
+
+function selectScenario(key) {
+  document.getElementById('scenarioSel').value = key;
+  onScenarioChange();
+}
+function onScenarioChange() {
+  const key = document.getElementById('scenarioSel').value;
+  if (!key) return;
+  STATE.scenario = key;
+  STATE.phase = 0;
+  STATE.notes = {};
+  STATE.risk = {};
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('exercise').style.display = '';
+  render();
+  // persist
+  saveState();
+}
+function toggleRole(el) { el.classList.toggle('active-role'); }
+function sevLabel(s) { return {green:'NOMINAL',amber:'CAUTION',red:'CRITICAL'}[s]||s.toUpperCase(); }
+function sevClass(s) { return {green:'green',amber:'amber',red:'red'}[s]||'amber'; }
+function getKey(p) { return STATE.scenario + '_' + p; }
+
+function render() {
+  const s = SCENARIOS[STATE.scenario];
+  const p = s.phases[STATE.phase];
+  const mode = document.getElementById('modeSel').value;
+  const key = getKey(STATE.phase);
+
+  document.getElementById('topTitle').textContent = p.title;
+  const sev = document.getElementById('sevBadge');
+  sev.className = 'pb-badge ' + sevClass(p.severity);
+  sev.textContent = sevLabel(p.severity);
+
+  const mt = document.getElementById('mitreTag');
+  if (mode === 'facilitator' && p.mitre) {
+    mt.style.display = '';
+    mt.textContent = p.mitre;
+  } else {
+    mt.style.display = 'none';
+  }
+
+  const pr = document.getElementById('progressRow');
+  pr.innerHTML = '';
+  s.phases.forEach((ph, i) => {
+    const pip = document.createElement('div');
+    pip.className = 'phase-pip' + (i < STATE.phase ? ' done' : i === STATE.phase ? ' current' : '');
+    pip.title = ph.title;
+    pip.textContent = (i < STATE.phase ? '■' : i === STATE.phase ? '►' : '·');
+    pip.onclick = () => { STATE.phase = i; render(); saveState(); };
+    pr.appendChild(pip);
+  });
+  const lbl = document.createElement('span');
+  lbl.className = 'phase-label';
+  lbl.textContent = `PHASE ${STATE.phase + 1} / ${s.phases.length}`;
+  pr.appendChild(lbl);
+
+  const body = document.getElementById('body');
+  const savedNote = STATE.notes[key] || '';
+  const savedRisk = STATE.risk[key] || {};
+
+  let html = `<div class="pb-panel inject-card">
+    <div class="pb-panel-title">INJECT TRANSMISSION</div>
+    <div class="inject-body">${escapeHtml(p.inject)}</div>`;
+  if (mode === 'facilitator') {
+    html += `<div class="facilitator-box">${escapeHtml(p.tips)}</div>`;
+  }
+  html += `</div>`;
+
+  html += `<div class="pb-panel">
+    <div class="pb-panel-title">DISCUSSION QUESTIONS</div>
+    <div class="q-list">`;
+  p.questions.forEach((q, i) => {
+    html += `<div class="q-item"><span class="q-num">${i+1}.</span><span class="q-text">${escapeHtml(q)}</span></div>`;
+  });
+  html += `</div></div>`;
+
+  html += `<div class="pb-panel">
+    <div class="pb-panel-title">RISK ASSESSMENT — THIS PHASE</div>
+    <div class="risk-grid">
+      <div class="risk-field"><label>Business impact</label>
+        <select onchange="saveRisk('${key}','impact',this.value)">
+          ${opt('', '— SELECT —', savedRisk.impact)}
+          ${opt('low','LOW',savedRisk.impact)}
+          ${opt('medium','MEDIUM',savedRisk.impact)}
+          ${opt('high','HIGH',savedRisk.impact)}
+        </select></div>
+      <div class="risk-field"><label>Likelihood of escalation</label>
+        <select onchange="saveRisk('${key}','likelihood',this.value)">
+          ${opt('', '— SELECT —', savedRisk.likelihood)}
+          ${opt('low','LOW',savedRisk.likelihood)}
+          ${opt('medium','MEDIUM',savedRisk.likelihood)}
+          ${opt('high','HIGH',savedRisk.likelihood)}
+        </select></div>
+      <div class="risk-field"><label>Data sensitivity</label>
+        <select onchange="saveRisk('${key}','data',this.value)">
+          ${opt('', '— SELECT —', savedRisk.data)}
+          ${opt('public','PUBLIC',savedRisk.data)}
+          ${opt('internal','INTERNAL',savedRisk.data)}
+          ${opt('confidential','CONFIDENTIAL',savedRisk.data)}
+          ${opt('pii','PERSONAL / PII',savedRisk.data)}
+          ${opt('special','SPECIAL CATEGORY',savedRisk.data)}
+        </select></div>
+      <div class="risk-field"><label>Regulatory exposure</label>
+        <select onchange="saveRisk('${key}','reg',this.value)">
+          ${opt('', '— SELECT —', savedRisk.reg)}
+          ${opt('none','NONE',savedRisk.reg)}
+          ${opt('gdpr','GDPR',savedRisk.reg)}
+          ${opt('nis2','NIS2',savedRisk.reg)}
+          ${opt('both','GDPR + NIS2',savedRisk.reg)}
+        </select></div>
+    </div>
+    <div class="risk-field"><label>Decision &amp; rationale</label>
+      <textarea placeholder="Document rationale for decisions taken in this phase…" onchange="saveNote('${key}','rationale',this.value)">${escapeHtml(savedRisk.rationale||'')}</textarea>
+    </div>
+  </div>`;
+
+  html += `<div class="pb-panel notes-card">
+    <div class="pb-panel-title">DISCUSSION LOG</div>
+    <textarea placeholder="Capture key points, decisions, and outcomes for this phase…" onchange="saveNote('${key}','notes',this.value)">${escapeHtml(savedNote)}</textarea>
+  </div>`;
+
+  html += renderObs();
+  body.innerHTML = html;
+
+  document.getElementById('footerInfo').textContent =
+    `${STATE.scenario === 'breach' ? 'DATA BREACH' : 'RANSOMWARE'} · ${p.title}`;
+  document.getElementById('prevBtn').disabled = STATE.phase === 0;
+  document.getElementById('nextBtn').textContent =
+    STATE.phase === s.phases.length - 1 ? 'FINISH ▶' : 'NEXT INJECT ▶';
+  saveState();
+}
+
+function opt(val, label, current) {
+  const sel = (current||'') === val ? 'selected' : '';
+  return `<option value="${val}" ${sel}>${label}</option>`;
+}
+
+function renderObs() {
+  const items = STATE.obs.filter(o => o.scenario === STATE.scenario);
+  let html = `<div class="pb-panel">
+    <div class="pb-panel-title">OBSERVATIONS &amp; ACTION ITEMS</div>`;
+  if (items.length > 0) {
+    html += `<div class="obs-list">`;
+    items.forEach(o => {
+      const cls = {gap:'obs-gap',action:'obs-action',strength:'obs-strength',note:'obs-note'}[o.type]||'obs-note';
+      html += `<div class="obs-item">
+        <span class="obs-type-badge ${cls}">${o.type}</span>
+        <span class="obs-item-text">${escapeHtml(o.text)}${o.owner ? ` <span class="pb-dim pb-small">— ${escapeHtml(o.owner)}</span>` : ''}</span>
+        <span class="obs-del" onclick="deleteObs(${o.id})">[X]</span>
+      </div>`;
+    });
+    html += `</div>`;
+  } else {
+    html += `<div class="pb-dim pb-small">> NO OBSERVATIONS RECORDED</div>`;
+  }
+  html += `<div class="obs-add-row">
+    <input type="text" id="obsInput" placeholder="Add observation, gap, or action…" onkeydown="if(event.key==='Enter')addObs()"/>
+    <select id="obsType">
+      <option value="note">NOTE</option>
+      <option value="gap">GAP</option>
+      <option value="action">ACTION</option>
+      <option value="strength">STRENGTH</option>
+    </select>
+    <input type="text" id="obsOwner" placeholder="Owner" style="max-width:120px"/>
+    <button class="pb-btn" onclick="addObs()">[ ADD ]</button>
+  </div></div>`;
+  return html;
+}
+
+function saveNote(key, field, val) {
+  if (field === 'notes') STATE.notes[key] = val;
+  if (field === 'rationale') {
+    if (!STATE.risk[key]) STATE.risk[key] = {};
+    STATE.risk[key].rationale = val;
+  }
+  saveState();
+}
+function saveRisk(key, field, val) {
+  if (!STATE.risk[key]) STATE.risk[key] = {};
+  STATE.risk[key][field] = val;
+  saveState();
+}
+function addObs() {
+  const inp = document.getElementById('obsInput');
+  const text = inp ? inp.value.trim() : '';
+  if (!text) return;
+  STATE.obs.push({
+    id: ++STATE.obsId,
+    scenario: STATE.scenario,
+    phase: STATE.phase,
+    text,
+    type: document.getElementById('obsType').value,
+    owner: document.getElementById('obsOwner').value.trim()
+  });
+  render();
+}
+function deleteObs(id) {
+  STATE.obs = STATE.obs.filter(o => o.id !== id);
+  render();
+}
+function prevPhase() { if (STATE.phase > 0) { STATE.phase--; render(); } }
+function nextPhase() {
+  const s = SCENARIOS[STATE.scenario];
+  if (STATE.phase < s.phases.length - 1) { STATE.phase++; render(); }
+}
+
+function exportReport() {
+  const s = SCENARIOS[STATE.scenario];
+  const lines = [];
+  lines.push('====================================================');
+  lines.push(`  TABLETOP EXERCISE REPORT — ${STATE.scenario === 'breach' ? 'DATA BREACH' : 'RANSOMWARE'}`);
+  lines.push(`  VAULT-TEC TTX TERMINAL · ${new Date().toLocaleString()}`);
+  lines.push('====================================================');
+  s.phases.forEach((p, i) => {
+    const key = getKey(i);
+    const r = STATE.risk[key] || {};
+    const n = STATE.notes[key] || '';
+    lines.push(`\n${p.title}`);
+    lines.push(`Severity: ${sevLabel(p.severity)}`);
+    if (r.impact) lines.push(`Business impact: ${r.impact}`);
+    if (r.likelihood) lines.push(`Likelihood: ${r.likelihood}`);
+    if (r.data) lines.push(`Data sensitivity: ${r.data}`);
+    if (r.reg) lines.push(`Regulatory exposure: ${r.reg}`);
+    if (r.rationale) lines.push(`Rationale: ${r.rationale}`);
+    if (n) lines.push(`Notes: ${n}`);
+  });
+  lines.push('\nOBSERVATIONS');
+  lines.push('-'.repeat(40));
+  STATE.obs.filter(o => o.scenario === STATE.scenario).forEach(o => {
+    lines.push(`[${o.type.toUpperCase()}] ${o.text}${o.owner ? ` (${o.owner})` : ''} — Phase ${o.phase + 1}`);
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ttx-report-${STATE.scenario}-${Date.now()}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// === Persistence (in-memory only — no localStorage) ===
+function saveState() {
+  // Persist via window object so the dashboard tab can read shared state if open in same window
+  window.__TTX_STATE__ = STATE;
+  window.__TTX_OBS_TOTAL__ = STATE.obs.length;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// Boot sequence
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('bootOverlay').classList.add('hidden');
+  }, 1400);
+});
+
+// Live clock
+function tick() {
+  const d = new Date();
+  const t = d.toTimeString().slice(0,8);
+  const date = d.toISOString().slice(0,10);
+  document.getElementById('clockBox').textContent = `${date} ${t}`;
+}
+tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>

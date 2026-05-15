@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VAULT-TEC TTX :: Dashboard</title>
+<link rel="stylesheet" href="assets/pipboy.css">
+<style>
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px;
+}
+.kpi {
+  border: 1px solid var(--pb-green-dim); padding: 14px; background: var(--pb-bg-2);
+  position: relative;
+}
+.kpi-label {
+  font-size: 11px; color: var(--pb-green-dim); letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.kpi-value {
+  font-family: 'VT323', monospace; font-size: 42px; color: var(--pb-green);
+  text-shadow: 0 0 8px var(--pb-green-glow); line-height: 1;
+}
+.kpi-sub { font-size: 11px; color: var(--pb-text-dim); margin-top: 4px; }
+
+.dash-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;
+}
+.dash-grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+
+.phase-bar { display: flex; gap: 4px; margin: 10px 0; }
+.phase-cell {
+  flex: 1; height: 24px; border: 1px solid var(--pb-green-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-family: 'VT323', monospace; color: var(--pb-green-dim);
+}
+.phase-cell.done { background: var(--pb-green-dark); color: var(--pb-green); }
+.phase-cell.current { background: var(--pb-green-dim); color: var(--pb-bg); box-shadow: 0 0 8px var(--pb-green-glow); }
+
+.bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.bar-row { display: grid; grid-template-columns: 110px 1fr 50px; align-items: center; gap: 8px; }
+.bar-label { font-size: 12px; color: var(--pb-text); text-transform: uppercase; }
+.bar-track { height: 14px; background: var(--pb-bg); border: 1px solid var(--pb-green-dark); position: relative; }
+.bar-fill { height: 100%; background: var(--pb-green-dim); box-shadow: 0 0 6px var(--pb-green-glow); }
+.bar-fill.amber { background: var(--pb-amber); }
+.bar-fill.red { background: var(--pb-red); }
+.bar-val { font-size: 12px; color: var(--pb-green); text-align: right; }
+
+.risk-heatmap {
+  display: grid; grid-template-columns: 80px repeat(3, 1fr); gap: 4px; margin-top: 10px;
+}
+.hm-cell {
+  padding: 8px; text-align: center; font-size: 12px; border: 1px solid var(--pb-green-dark);
+  font-family: 'Share Tech Mono', monospace;
+}
+.hm-header { color: var(--pb-green-dim); text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; }
+.hm-axis { color: var(--pb-green-dim); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; justify-content: center; }
+.hm-low    { background: rgba(78,255,145,0.10); color: var(--pb-green); }
+.hm-medium { background: rgba(255,180,55,0.15); color: var(--pb-amber); }
+.hm-high   { background: rgba(255,77,77,0.20); color: var(--pb-red); }
+.hm-critical { background: rgba(255,77,77,0.4); color: var(--pb-red); animation: pb-blink 1.4s infinite; }
+.hm-cell .num { font-family: 'VT323', monospace; font-size: 22px; display: block; line-height: 1; }
+.hm-cell .lbl { font-size: 10px; opacity: 0.7; }
+
+.mitre-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 4px;
+}
+.mitre-cell {
+  border: 1px solid var(--pb-green-dark); padding: 6px 8px; font-size: 11px;
+  font-family: 'Share Tech Mono', monospace;
+}
+.mitre-cell.covered {
+  background: rgba(78,255,145,0.10); border-color: var(--pb-green-dim); color: var(--pb-green);
+}
+.mitre-cell.gap {
+  background: rgba(255,77,77,0.10); border-color: var(--pb-red); color: var(--pb-red);
+}
+.mitre-tactic {
+  font-size: 10px; color: var(--pb-green-dim); text-transform: uppercase; letter-spacing: 0.1em;
+  margin: 8px 0 4px;
+}
+
+.donut-wrap { display: flex; align-items: center; gap: 16px; }
+.donut-legend { display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+.legend-row { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 12px; height: 12px; border: 1px solid currentColor; }
+
+.obs-feed { display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto; }
+.obs-row {
+  display: flex; gap: 10px; padding: 6px 8px; border-left: 2px solid var(--pb-green-dark);
+  font-size: 12px; align-items: flex-start;
+}
+.obs-row .tag {
+  font-size: 10px; padding: 1px 6px; border: 1px solid currentColor;
+  white-space: nowrap; letter-spacing: 0.1em;
+}
+.obs-row .gap-tag { color: var(--pb-red); }
+.obs-row .action-tag { color: var(--pb-amber); }
+.obs-row .strength-tag { color: var(--pb-green); }
+.obs-row .note-tag { color: var(--pb-text-dim); }
+
+.empty-state {
+  text-align: center; padding: 30px 20px; color: var(--pb-text-dim);
+  font-size: 13px; line-height: 1.7;
+}
+.empty-state .blink { animation: pb-blink 1.4s infinite; }
+
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-grid, .dash-grid-3 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body class="pb-screen">
+
+<div class="pb-app">
+
+<header class="pb-header">
+  <div>
+    <div class="pb-header-title">VAULT-TEC :: TTX DASHBOARD</div>
+    <div class="pb-header-meta">EXERCISE COMMAND &amp; CONTROL OVERVIEW</div>
+  </div>
+  <div class="pb-header-meta">
+    <div>OVERSEER: <span class="pb-glow">JOANNA.D</span></div>
+    <div id="clockBox">--:--:--</div>
+  </div>
+</header>
+
+<div class="vt-stripe"></div>
+
+<nav class="pb-nav">
+  <a href="index.html">[ HOME ]</a>
+  <a href="dashboard.html" class="active">[ DASHBOARD ]</a>
+  <a href="tracker.html">[ TRACKER ]</a>
+  <a href="crem-demo.html">[ CREM DEMO ]</a>
+</nav>
+
+<!-- KPI strip -->
+<div class="kpi-grid" id="kpiStrip">
+  <div class="kpi">
+    <div class="kpi-label">► EXERCISES RUN</div>
+    <div class="kpi-value" id="kpi-exercises">14</div>
+    <div class="kpi-sub">YTD · across 4 quarters</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">► OBSERVATIONS</div>
+    <div class="kpi-value" id="kpi-obs">87</div>
+    <div class="kpi-sub" id="kpi-obs-sub">42 gaps · 31 actions · 14 strengths</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">► AVG RISK SCORE</div>
+    <div class="kpi-value" id="kpi-risk">6.4</div>
+    <div class="kpi-sub">▲ 0.8 vs last quarter</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">► MITRE COVERAGE</div>
+    <div class="kpi-value" id="kpi-mitre">62%</div>
+    <div class="kpi-sub">8 of 13 techniques exercised</div>
+  </div>
+</div>
+
+<!-- Current exercise progress -->
+<div class="pb-panel">
+  <div class="pb-panel-title">CURRENT EXERCISE — PHASE TRACKING</div>
+  <div class="pb-row">
+    <div class="pb-col">
+      <div class="pb-small pb-dim pb-uppercase pb-mb8">Active scenario</div>
+      <div style="font-family:'VT323',monospace;font-size:24px;color:var(--pb-green)" id="activeScenario">RANSOMWARE — BERT VARIANT</div>
+      <div class="pb-small pb-dim pb-mt8">Started: 2026-05-08 09:00 · Facilitator: J. Dabrowska · Duration: 02:47:12</div>
+    </div>
+    <div class="pb-col" style="text-align:right">
+      <div class="pb-small pb-dim pb-uppercase">Status</div>
+      <div style="font-family:'VT323',monospace;font-size:24px;color:var(--pb-amber);text-shadow:0 0 8px rgba(255,180,55,0.4)">▶ IN PROGRESS</div>
+      <div class="pb-small pb-dim pb-mt8">Phase 4 of 7 · 57% complete</div>
+    </div>
+  </div>
+  <div class="phase-bar" id="phaseBar"></div>
+  <div class="pb-small pb-dim">► Click TRACKER to advance to next inject</div>
+</div>
+
+<!-- Two-column: observations stats + risk heatmap -->
+<div class="dash-grid">
+  <div class="pb-panel">
+    <div class="pb-panel-title">OBSERVATIONS BY ROLE</div>
+    <div class="bar-chart pb-mt8" id="obsBarChart"></div>
+  </div>
+
+  <div class="pb-panel">
+    <div class="pb-panel-title">OBSERVATION TYPES</div>
+    <div class="donut-wrap pb-mt8">
+      <svg viewBox="0 0 120 120" width="140" height="140">
+        <circle cx="60" cy="60" r="48" fill="none" stroke="var(--pb-bg-3)" stroke-width="18"/>
+        <!-- 42 gap, 31 action, 14 strength = 87 total -->
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#ff4d4d" stroke-width="18"
+          stroke-dasharray="145.5 301.6" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#ffb437" stroke-width="18"
+          stroke-dasharray="107.4 301.6" stroke-dashoffset="-145.5" transform="rotate(-90 60 60)"/>
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#4eff91" stroke-width="18"
+          stroke-dasharray="48.5 301.6" stroke-dashoffset="-252.9" transform="rotate(-90 60 60)"/>
+        <text x="60" y="62" text-anchor="middle" fill="var(--pb-green)" font-family="VT323" font-size="22">87</text>
+        <text x="60" y="78" text-anchor="middle" fill="var(--pb-green-dim)" font-family="Share Tech Mono" font-size="9">TOTAL</text>
+      </svg>
+      <div class="donut-legend">
+        <div class="legend-row" style="color:var(--pb-red)"><span class="legend-dot" style="background:var(--pb-red)"></span> GAPS — 42 (48%)</div>
+        <div class="legend-row" style="color:var(--pb-amber)"><span class="legend-dot" style="background:var(--pb-amber)"></span> ACTIONS — 31 (36%)</div>
+        <div class="legend-row" style="color:var(--pb-green)"><span class="legend-dot" style="background:var(--pb-green)"></span> STRENGTHS — 14 (16%)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Risk heatmap + observations feed -->
+<div class="dash-grid-3">
+  <div class="pb-panel">
+    <div class="pb-panel-title">RISK REGISTER — LIKELIHOOD × IMPACT</div>
+    <div class="risk-heatmap pb-mt8">
+      <div class="hm-axis"></div>
+      <div class="hm-cell hm-header">LOW IMPACT</div>
+      <div class="hm-cell hm-header">MED IMPACT</div>
+      <div class="hm-cell hm-header">HIGH IMPACT</div>
+
+      <div class="hm-axis">HIGH<br>LIKELY</div>
+      <div class="hm-cell hm-medium"><span class="num">2</span><span class="lbl">elevated</span></div>
+      <div class="hm-cell hm-high"><span class="num">5</span><span class="lbl">high</span></div>
+      <div class="hm-cell hm-critical"><span class="num">3</span><span class="lbl">critical</span></div>
+
+      <div class="hm-axis">MED<br>LIKELY</div>
+      <div class="hm-cell hm-low"><span class="num">4</span><span class="lbl">low</span></div>
+      <div class="hm-cell hm-medium"><span class="num">7</span><span class="lbl">elevated</span></div>
+      <div class="hm-cell hm-high"><span class="num">4</span><span class="lbl">high</span></div>
+
+      <div class="hm-axis">LOW<br>LIKELY</div>
+      <div class="hm-cell hm-low"><span class="num">3</span><span class="lbl">low</span></div>
+      <div class="hm-cell hm-low"><span class="num">2</span><span class="lbl">low</span></div>
+      <div class="hm-cell hm-medium"><span class="num">1</span><span class="lbl">elevated</span></div>
+    </div>
+    <div class="pb-small pb-dim pb-mt8">► 3 CRITICAL risks require Overseer review · <span style="color:var(--pb-red)">⚠ ACTION REQUIRED</span></div>
+
+    <table class="pb-mt16">
+      <thead>
+        <tr><th>#</th><th>RISK</th><th>L</th><th>I</th><th>OWNER</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>R-01</td><td>Stale vuln scan coverage on critical assets</td><td style="color:var(--pb-red)">HIGH</td><td style="color:var(--pb-red)">HIGH</td><td>IT-OPS</td></tr>
+        <tr><td>R-02</td><td>False-positive triage process undocumented</td><td style="color:var(--pb-red)">HIGH</td><td style="color:var(--pb-red)">HIGH</td><td>SOC</td></tr>
+        <tr><td>R-03</td><td>Privileged-account MFA enforcement gap</td><td style="color:var(--pb-amber)">MED</td><td style="color:var(--pb-red)">HIGH</td><td>IAM</td></tr>
+        <tr><td>R-04</td><td>72h GDPR notification drill not run in 18 months</td><td style="color:var(--pb-amber)">MED</td><td style="color:var(--pb-red)">HIGH</td><td>DPO</td></tr>
+        <tr><td>R-05</td><td>Backup integrity verification cadence unclear</td><td style="color:var(--pb-amber)">MED</td><td style="color:var(--pb-amber)">MED</td><td>IT-OPS</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pb-panel">
+    <div class="pb-panel-title">RECENT OBSERVATIONS</div>
+    <div class="obs-feed">
+      <div class="obs-row"><span class="tag gap-tag">GAP</span><span>No escalation path for after-hours ransomware declaration. <span class="pb-dim">— phase 1</span></span></div>
+      <div class="obs-row"><span class="tag action-tag">ACTION</span><span>Document FP-review process by Q3. <span class="pb-dim">— SOC lead</span></span></div>
+      <div class="obs-row"><span class="tag gap-tag">GAP</span><span>Critical-asset scan exclusion list not reviewed in 9mo. <span class="pb-dim">— phase 0</span></span></div>
+      <div class="obs-row"><span class="tag strength-tag">STR</span><span>SOC correctly identified C2 traffic within 12 minutes. <span class="pb-dim">— phase 1</span></span></div>
+      <div class="obs-row"><span class="tag action-tag">ACTION</span><span>Run 72h GDPR notification drill before next exercise. <span class="pb-dim">— DPO</span></span></div>
+      <div class="obs-row"><span class="tag gap-tag">GAP</span><span>No documented decision tree for ransom payment. <span class="pb-dim">— phase 3</span></span></div>
+      <div class="obs-row"><span class="tag note-tag">NOTE</span><span>Legal team requested earlier engagement in IR flow. <span class="pb-dim">— phase 2</span></span></div>
+      <div class="obs-row"><span class="tag strength-tag">STR</span><span>Backup restoration confirmed within RTO. <span class="pb-dim">— phase 4</span></span></div>
+      <div class="obs-row"><span class="tag action-tag">ACTION</span><span>Add insider-threat scenario to next exercise rotation. <span class="pb-dim">— CISO</span></span></div>
+    </div>
+    <div class="pb-divider pb-mt8">═══════════════════════════════════════</div>
+    <div class="pb-small pb-dim">▌ live observations stream from active TTX</div>
+  </div>
+</div>
+
+<!-- MITRE coverage -->
+<div class="pb-panel">
+  <div class="pb-panel-title">MITRE ATT&amp;CK COVERAGE</div>
+  <div class="pb-small pb-dim pb-mb8">► Techniques exercised across all TTX scenarios YTD. Red = gap (not yet exercised).</div>
+
+  <div class="mitre-tactic">▼ INITIAL ACCESS</div>
+  <div class="mitre-grid">
+    <div class="mitre-cell covered">[✓] T1566 · Phishing</div>
+    <div class="mitre-cell covered">[✓] T1190 · Exploit Public App</div>
+    <div class="mitre-cell gap">[!] T1133 · Ext. Remote Svcs</div>
+    <div class="mitre-cell gap">[!] T1078 · Valid Accounts</div>
+  </div>
+
+  <div class="mitre-tactic">▼ EXECUTION / IMPACT</div>
+  <div class="mitre-grid">
+    <div class="mitre-cell covered">[✓] T1486 · Data Encrypted</div>
+    <div class="mitre-cell covered">[✓] T1490 · Inhibit Recovery</div>
+    <div class="mitre-cell covered">[✓] T1491 · Defacement</div>
+    <div class="mitre-cell gap">[!] T1485 · Data Destruction</div>
+  </div>
+
+  <div class="mitre-tactic">▼ EXFILTRATION / COLLECTION</div>
+  <div class="mitre-grid">
+    <div class="mitre-cell covered">[✓] T1041 · C2 Exfiltration</div>
+    <div class="mitre-cell covered">[✓] T1005 · Local System Data</div>
+    <div class="mitre-cell gap">[!] T1567 · Exfil to Web Svc</div>
+  </div>
+
+  <div class="mitre-tactic">▼ DEFENSE EVASION</div>
+  <div class="mitre-grid">
+    <div class="mitre-cell covered">[✓] T1070 · Indicator Removal</div>
+    <div class="mitre-cell gap">[!] T1562 · Impair Defenses</div>
+  </div>
+
+  <div class="pb-divider pb-mt16">═══════════════════════════════════════════════════════════════</div>
+  <div class="pb-small pb-dim">► RECOMMENDATION: prioritize T1078, T1485, and T1562 in next exercise cycle</div>
+</div>
+
+<footer class="pb-mt16 pb-center pb-small pb-dim">
+  VAULT-TEC INDUSTRIES &middot; A BRIGHTER FUTURE, UNDERGROUND
+</footer>
+
+</div>
+
+<script>
+// Phase bar — current exercise (mock)
+const phases = [
+  { name: 'PHASE 0', state: 'done' },
+  { name: 'PHASE 1', state: 'done' },
+  { name: 'PHASE 2', state: 'done' },
+  { name: 'PHASE 3', state: 'done' },
+  { name: 'PHASE 4', state: 'current' },
+  { name: 'PHASE 5', state: '' },
+  { name: 'PHASE 6', state: '' },
+];
+const pb = document.getElementById('phaseBar');
+phases.forEach(p => {
+  const cell = document.createElement('div');
+  cell.className = 'phase-cell ' + p.state;
+  cell.textContent = p.name + (p.state === 'done' ? ' ✓' : p.state === 'current' ? ' ►' : '');
+  pb.appendChild(cell);
+});
+
+// Observations bar chart by role
+const obsByRole = [
+  { role: 'CISO', val: 14, max: 20 },
+  { role: 'IT LEAD', val: 19, max: 20 },
+  { role: 'SOC', val: 17, max: 20, color: 'amber' },
+  { role: 'LEGAL', val: 11, max: 20 },
+  { role: 'DPO', val: 9, max: 20 },
+  { role: 'PR / COMMS', val: 6, max: 20, color: 'red' },
+  { role: 'HR', val: 5, max: 20, color: 'red' },
+  { role: 'EXEC', val: 6, max: 20, color: 'red' }
+];
+const bc = document.getElementById('obsBarChart');
+obsByRole.forEach(r => {
+  const row = document.createElement('div');
+  row.className = 'bar-row';
+  const pct = Math.round(r.val / r.max * 100);
+  row.innerHTML = `
+    <div class="bar-label">${r.role}</div>
+    <div class="bar-track"><div class="bar-fill ${r.color||''}" style="width:${pct}%"></div></div>
+    <div class="bar-val">${r.val}</div>`;
+  bc.appendChild(row);
+});
+
+// If TTX tracker is open in same window — read actual obs (best-effort)
+try {
+  if (window.opener && window.opener.__TTX_OBS_TOTAL__) {
+    document.getElementById('kpi-obs').textContent = window.opener.__TTX_OBS_TOTAL__;
+  }
+} catch (e) {}
+
+// Live clock
+function tick() {
+  const d = new Date();
+  document.getElementById('clockBox').textContent =
+    d.toISOString().slice(0,10) + ' ' + d.toTimeString().slice(0,8);
+}
+tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CREM Interactive Demo — Cyber Risk Exposure Management</title>
+<link rel="stylesheet" href="assets/pipboy.css">
+<style>
+.crem-hero {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;
+}
+.cri-gauge {
+  position: relative; padding: 18px; border: 1px solid var(--pb-green-dim);
+  background: var(--pb-bg-2); text-align: center;
+}
+.gauge-svg { width: 100%; max-width: 320px; height: auto; }
+.gauge-label { font-size: 11px; letter-spacing: 0.2em; color: var(--pb-green-dim); }
+.gauge-value { font-family: 'VT323', monospace; font-size: 64px; color: var(--pb-amber); text-shadow: 0 0 12px rgba(255,180,55,0.4); line-height: 1; }
+.gauge-band { font-size: 13px; color: var(--pb-amber); letter-spacing: 0.15em; }
+
+.kpi-stack { display: grid; grid-template-rows: repeat(2, 1fr); gap: 14px; }
+.kpi-stack .kpi { padding: 14px; border: 1px solid var(--pb-green-dim); background: var(--pb-bg-2); }
+.kpi-stack .kpi-label { font-size: 11px; color: var(--pb-green-dim); letter-spacing: 0.15em; }
+.kpi-stack .kpi-value { font-family: 'VT323', monospace; font-size: 36px; color: var(--pb-green); }
+.kpi-stack .kpi-sub { font-size: 11px; color: var(--pb-text-dim); margin-top: 4px; }
+.kpi-stack .kpi-row { display: flex; justify-content: space-between; align-items: baseline; }
+.delta-up { color: var(--pb-red); }
+.delta-dn { color: var(--pb-green); }
+
+.crem-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 14px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center; }
+.filters label { font-size: 11px; color: var(--pb-green-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-right: 4px; }
+.filter-chip {
+  font-size: 11px; padding: 3px 10px; border: 1px solid var(--pb-green-dark);
+  cursor: pointer; color: var(--pb-text-dim); letter-spacing: 0.1em;
+  text-transform: uppercase; user-select: none;
+}
+.filter-chip:hover { border-color: var(--pb-green-dim); color: var(--pb-green); }
+.filter-chip.active { background: var(--pb-green-dim); color: var(--pb-bg); border-color: var(--pb-green-dim); }
+
+.exposure-table th, .exposure-table td { font-size: 12px; }
+.score-pill {
+  display: inline-block; min-width: 38px; padding: 1px 8px; text-align: center;
+  font-family: 'VT323', monospace; font-size: 16px; border: 1px solid currentColor;
+}
+.score-low { color: var(--pb-green); }
+.score-med { color: var(--pb-amber); }
+.score-high { color: var(--pb-red); }
+
+.criticality-low::before { content: '●'; color: var(--pb-green); margin-right: 4px; }
+.criticality-medium::before { content: '●'; color: var(--pb-amber); margin-right: 4px; }
+.criticality-high::before { content: '●'; color: var(--pb-red); margin-right: 4px; }
+
+.attack-path-svg { width: 100%; height: 320px; }
+.attack-tooltip {
+  position: absolute; background: var(--pb-bg-2); border: 1px solid var(--pb-green-dim);
+  padding: 6px 10px; font-size: 11px; color: var(--pb-green); pointer-events: none;
+  display: none; max-width: 260px; box-shadow: 0 0 12px var(--pb-green-glow);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.legend-strip { display: flex; gap: 14px; font-size: 11px; color: var(--pb-text-dim); flex-wrap: wrap; }
+.legend-strip .legend-row { display: flex; align-items: center; gap: 6px; }
+
+.surface-list { display: flex; flex-direction: column; gap: 6px; }
+.surface-row {
+  display: grid; grid-template-columns: 1fr 60px 60px;
+  border: 1px solid var(--pb-green-dark); padding: 6px 10px; font-size: 12px;
+  align-items: center; transition: all 0.1s;
+}
+.surface-row:hover { border-color: var(--pb-green-dim); background: var(--pb-bg-3); }
+.surface-name { color: var(--pb-text); }
+.surface-cnt { text-align: right; font-family: 'VT323', monospace; font-size: 18px; }
+
+.trend-svg { width: 100%; height: 160px; }
+
+@media (max-width: 900px) {
+  .crem-hero, .crem-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body class="pb-screen">
+
+<div class="pb-app">
+
+<header class="pb-header">
+  <div>
+    <div class="pb-header-title">CREM :: INTERACTIVE DEMO</div>
+    <div class="pb-header-meta">CYBER RISK EXPOSURE MANAGEMENT &middot; MOCK CONSOLE</div>
+  </div>
+  <div class="pb-header-meta">
+    <div>TENANT: <span class="pb-glow">VAULT-CORP / PROD</span></div>
+    <div id="clockBox">--:--:--</div>
+  </div>
+</header>
+
+<div class="vt-stripe"></div>
+
+<nav class="pb-nav">
+  <a href="index.html">[ HOME ]</a>
+  <a href="dashboard.html">[ DASHBOARD ]</a>
+  <a href="tracker.html">[ TRACKER ]</a>
+  <a href="crem-demo.html" class="active">[ CREM DEMO ]</a>
+</nav>
+
+<div class="pb-panel">
+  <div class="pb-panel-title">DEMO BRIEF</div>
+  <p class="pb-small pb-dim" style="line-height:1.7">
+    Interactive walkthrough of a Cyber Risk Exposure Management console.
+    Filter by business unit, drill into top exposures, and visualize attack paths against a simulated
+    estate of <strong style="color:var(--pb-green)">2,847 assets</strong>. All data is illustrative —
+    no real customer data is presented.
+  </p>
+</div>
+
+<!-- Filters -->
+<div class="pb-panel">
+  <div class="pb-panel-title">FILTERS</div>
+  <div class="filters pb-mt8">
+    <label>Business unit</label>
+    <span class="filter-chip active" data-filter="bu" data-val="all">ALL</span>
+    <span class="filter-chip" data-filter="bu" data-val="finance">FINANCE</span>
+    <span class="filter-chip" data-filter="bu" data-val="ops">OPS</span>
+    <span class="filter-chip" data-filter="bu" data-val="rd">R&amp;D</span>
+    <span class="filter-chip" data-filter="bu" data-val="hr">HR</span>
+  </div>
+  <div class="filters">
+    <label>Asset type</label>
+    <span class="filter-chip active" data-filter="at" data-val="all">ALL</span>
+    <span class="filter-chip" data-filter="at" data-val="cloud">CLOUD</span>
+    <span class="filter-chip" data-filter="at" data-val="endpoint">ENDPOINT</span>
+    <span class="filter-chip" data-filter="at" data-val="server">SERVER</span>
+    <span class="filter-chip" data-filter="at" data-val="identity">IDENTITY</span>
+  </div>
+  <div class="filters">
+    <label>Severity</label>
+    <span class="filter-chip active" data-filter="sv" data-val="all">ALL</span>
+    <span class="filter-chip" data-filter="sv" data-val="critical">CRITICAL</span>
+    <span class="filter-chip" data-filter="sv" data-val="high">HIGH</span>
+    <span class="filter-chip" data-filter="sv" data-val="medium">MEDIUM</span>
+  </div>
+</div>
+
+<!-- Hero: CRI gauge + KPIs -->
+<div class="crem-hero">
+  <div class="cri-gauge">
+    <div class="gauge-label">► CYBER RISK INDEX (CRI)</div>
+    <svg class="gauge-svg" viewBox="0 0 200 130" id="gaugeSvg">
+      <defs>
+        <linearGradient id="gaugeGrad">
+          <stop offset="0%" stop-color="#4eff91"/>
+          <stop offset="50%" stop-color="#ffd13a"/>
+          <stop offset="100%" stop-color="#ff4d4d"/>
+        </linearGradient>
+      </defs>
+      <!-- Track -->
+      <path d="M 20,110 A 80,80 0 0 1 180,110" fill="none" stroke="var(--pb-bg-3)" stroke-width="14"/>
+      <!-- Fill (proportional to value) -->
+      <path d="M 20,110 A 80,80 0 0 1 180,110" fill="none" stroke="url(#gaugeGrad)" stroke-width="14"
+        stroke-dasharray="251.3" stroke-dashoffset="75" id="gaugePath"/>
+      <!-- Needle -->
+      <line x1="100" y1="110" x2="100" y2="40" stroke="var(--pb-green)" stroke-width="2" id="gaugeNeedle"
+        transform="rotate(45 100 110)"/>
+      <circle cx="100" cy="110" r="4" fill="var(--pb-green)"/>
+      <!-- Tick labels -->
+      <text x="20" y="125" font-size="9" fill="var(--pb-green-dim)" font-family="Share Tech Mono">0</text>
+      <text x="100" y="35" text-anchor="middle" font-size="9" fill="var(--pb-amber)" font-family="Share Tech Mono">5</text>
+      <text x="180" y="125" text-anchor="end" font-size="9" fill="var(--pb-red)" font-family="Share Tech Mono">10</text>
+    </svg>
+    <div class="gauge-value" id="cri-val">7.2</div>
+    <div class="gauge-band" id="cri-band">► HIGH RISK</div>
+    <div class="pb-small pb-dim pb-mt8">▲ 0.8 vs. 30 days ago</div>
+  </div>
+
+  <div class="kpi-stack">
+    <div class="kpi">
+      <div class="kpi-label">► EXPOSED ASSETS</div>
+      <div class="kpi-row">
+        <div class="kpi-value" id="kpi-exposed">142</div>
+        <div class="delta-up">▲ 18</div>
+      </div>
+      <div class="kpi-sub" id="kpi-exposed-sub">of 2,847 total · 4.99% exposure rate</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">► CRITICAL RISKS (OPEN)</div>
+      <div class="kpi-row">
+        <div class="kpi-value" id="kpi-crit" style="color:var(--pb-red)">23</div>
+        <div class="delta-dn">▼ 4</div>
+      </div>
+      <div class="kpi-sub">SLA breaches: 7 · MTTR: 9.4 days</div>
+    </div>
+  </div>
+</div>
+
+<!-- Trend chart full width -->
+<div class="pb-panel">
+  <div class="pb-panel-title">CRI TREND — LAST 30 DAYS</div>
+  <svg class="trend-svg" viewBox="0 0 700 160" id="trendSvg" preserveAspectRatio="none">
+    <!-- gridlines drawn via JS -->
+  </svg>
+  <div class="legend-strip pb-mt8">
+    <div class="legend-row" style="color:var(--pb-green)"><span style="display:inline-block;width:14px;height:2px;background:var(--pb-green)"></span> CRI SCORE</div>
+    <div class="legend-row" style="color:var(--pb-amber)"><span style="display:inline-block;width:14px;height:2px;background:var(--pb-amber);border-top:1px dashed"></span> EXPOSED ASSETS (×0.05)</div>
+    <div class="legend-row" style="color:var(--pb-red)"><span style="display:inline-block;width:14px;height:2px;background:var(--pb-red);border-top:1px dotted"></span> CRITICAL OPEN</div>
+  </div>
+</div>
+
+<!-- Top exposures + attack surface -->
+<div class="crem-grid">
+  <div class="pb-panel">
+    <div class="pb-panel-title">TOP EXPOSURES — PRIORITIZED</div>
+    <table class="exposure-table pb-mt8" id="exposureTable">
+      <thead>
+        <tr><th>#</th><th>ASSET</th><th>VECTOR</th><th>BU</th><th>CRIT</th><th>SCORE</th></tr>
+      </thead>
+      <tbody id="exposureBody"></tbody>
+    </table>
+    <div class="pb-divider pb-mt16">═══════════════════════════════════════════════════════════════</div>
+    <div class="pb-small pb-dim">► Click row to drill into asset · Filtering live</div>
+  </div>
+
+  <div class="pb-panel">
+    <div class="pb-panel-title">ATTACK SURFACE BY TYPE</div>
+    <div class="surface-list pb-mt8">
+      <div class="surface-row">
+        <div class="surface-name">▶ INTERNET-EXPOSED SERVERS</div>
+        <div class="surface-cnt" style="color:var(--pb-red)">37</div>
+        <div style="color:var(--pb-red)">●●●</div>
+      </div>
+      <div class="surface-row">
+        <div class="surface-name">▶ UNPATCHED ENDPOINTS</div>
+        <div class="surface-cnt" style="color:var(--pb-amber)">52</div>
+        <div style="color:var(--pb-amber)">●●○</div>
+      </div>
+      <div class="surface-row">
+        <div class="surface-name">▶ PRIVILEGED IDENTITIES</div>
+        <div class="surface-cnt" style="color:var(--pb-amber)">28</div>
+        <div style="color:var(--pb-amber)">●●○</div>
+      </div>
+      <div class="surface-row">
+        <div class="surface-name">▶ MISCONFIGURED CLOUD</div>
+        <div class="surface-cnt" style="color:var(--pb-red)">14</div>
+        <div style="color:var(--pb-red)">●●●</div>
+      </div>
+      <div class="surface-row">
+        <div class="surface-name">▶ THIRD-PARTY APIS</div>
+        <div class="surface-cnt" style="color:var(--pb-green)">9</div>
+        <div style="color:var(--pb-green)">●○○</div>
+      </div>
+      <div class="surface-row">
+        <div class="surface-name">▶ SHADOW IT (DETECTED)</div>
+        <div class="surface-cnt" style="color:var(--pb-amber)">11</div>
+        <div style="color:var(--pb-amber)">●●○</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Attack path graph -->
+<div class="pb-panel" style="position:relative">
+  <div class="pb-panel-title">ATTACK PATH ANALYSIS — TOP RISK CHAIN</div>
+  <div class="pb-small pb-dim pb-mt8">► Hover nodes to inspect. Path shows highest-likelihood compromise route from internet to crown-jewel data.</div>
+  <svg class="attack-path-svg" viewBox="0 0 800 320" id="apSvg">
+    <!-- edges drawn first so nodes overlay -->
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--pb-amber)"/>
+      </marker>
+    </defs>
+  </svg>
+  <div class="attack-tooltip" id="apTip"></div>
+  <div class="legend-strip pb-mt8">
+    <div class="legend-row" style="color:var(--pb-red)"><span style="width:10px;height:10px;border:1px solid currentColor;display:inline-block"></span> COMPROMISED / CRITICAL</div>
+    <div class="legend-row" style="color:var(--pb-amber)"><span style="width:10px;height:10px;border:1px solid currentColor;display:inline-block"></span> EXPOSED</div>
+    <div class="legend-row" style="color:var(--pb-green)"><span style="width:10px;height:10px;border:1px solid currentColor;display:inline-block"></span> SECURE</div>
+  </div>
+</div>
+
+<footer class="pb-mt16 pb-center pb-small pb-dim">
+  CREM DEMO · ILLUSTRATIVE DATA ONLY · NOT A LIVE PRODUCT INSTANCE
+</footer>
+
+</div>
+
+<script>
+// === Mock dataset ===
+const EXPOSURES = [
+  { id:'X-001', asset: 'srv-fin-db-01',     vector: 'CVE-2025-55182 (CVSS 10)', bu:'finance', at:'server',  crit:'high',   score:9.4, sv:'critical' },
+  { id:'X-002', asset: 'okta-admin-svc',    vector: 'No MFA on service acct',  bu:'ops',     at:'identity',crit:'high',   score:8.9, sv:'critical' },
+  { id:'X-003', asset: 's3-customer-pii',   vector: 'Public bucket policy',     bu:'finance', at:'cloud',   crit:'high',   score:8.7, sv:'critical' },
+  { id:'X-004', asset: 'win-ep-jdoe-laptop',vector: 'Unpatched 47 days · phish',bu:'finance', at:'endpoint',crit:'medium', score:7.6, sv:'high' },
+  { id:'X-005', asset: 'azure-rd-vm-pool',  vector: 'Open RDP 3389',            bu:'rd',      at:'cloud',   crit:'high',   score:7.2, sv:'high' },
+  { id:'X-006', asset: 'gh-actions-runner', vector: 'Long-lived secrets',       bu:'rd',      at:'cloud',   crit:'medium', score:6.8, sv:'high' },
+  { id:'X-007', asset: 'hr-payroll-app',    vector: 'Outdated TLS 1.0',         bu:'hr',      at:'server',  crit:'medium', score:6.1, sv:'medium' },
+  { id:'X-008', asset: 'ops-jumphost-02',   vector: 'Stale admin acct',         bu:'ops',     at:'server',  crit:'medium', score:5.9, sv:'medium' },
+  { id:'X-009', asset: 'devops-vault',      vector: 'Audit logs disabled',      bu:'rd',      at:'identity',crit:'high',   score:5.4, sv:'medium' },
+  { id:'X-010', asset: 'ext-vpn-gateway',   vector: 'Default cipher suite',     bu:'ops',     at:'server',  crit:'medium', score:5.1, sv:'medium' }
+];
+
+const filterState = { bu: 'all', at: 'all', sv: 'all' };
+
+function renderExposures() {
+  const tbody = document.getElementById('exposureBody');
+  const filtered = EXPOSURES.filter(e =>
+    (filterState.bu === 'all' || e.bu === filterState.bu) &&
+    (filterState.at === 'all' || e.at === filterState.at) &&
+    (filterState.sv === 'all' || e.sv === filterState.sv)
+  );
+  tbody.innerHTML = filtered.length === 0
+    ? `<tr><td colspan="6" class="pb-center pb-dim">> NO EXPOSURES MATCH FILTER</td></tr>`
+    : filtered.map(e => {
+      const sc = e.score >= 8 ? 'score-high' : e.score >= 6 ? 'score-med' : 'score-low';
+      return `<tr>
+        <td>${e.id}</td>
+        <td><strong style="color:var(--pb-green)">${e.asset}</strong><br><span class="pb-dim pb-small">${e.vector}</span></td>
+        <td class="pb-small pb-uppercase pb-dim">${e.at}</td>
+        <td class="pb-small pb-uppercase pb-dim">${e.bu}</td>
+        <td><span class="criticality-${e.crit}"></span><span class="pb-small">${e.crit.toUpperCase()}</span></td>
+        <td><span class="score-pill ${sc}">${e.score.toFixed(1)}</span></td>
+      </tr>`;
+    }).join('');
+
+  // Update KPIs based on filter
+  document.getElementById('kpi-exposed').textContent = filtered.length * 14 + (filterState.bu === 'all' ? 2 : 0);
+  document.getElementById('kpi-crit').textContent = filtered.filter(e => e.sv === 'critical').length || 0;
+
+  // CRI updates with filter "drill"
+  const avgScore = filtered.length === 0 ? 0 : filtered.reduce((a,b)=>a+b.score,0)/filtered.length;
+  const cri = filtered.length === 0 ? 0 : (avgScore).toFixed(1);
+  document.getElementById('cri-val').textContent = cri;
+  const band = avgScore >= 8 ? '► CRITICAL RISK' : avgScore >= 6 ? '► HIGH RISK' : avgScore >= 4 ? '► MEDIUM RISK' : '► LOW RISK';
+  const bandColor = avgScore >= 8 ? 'var(--pb-red)' : avgScore >= 6 ? 'var(--pb-amber)' : 'var(--pb-green)';
+  const bandEl = document.getElementById('cri-band');
+  bandEl.textContent = band;
+  bandEl.style.color = bandColor;
+  document.getElementById('cri-val').style.color = bandColor;
+  // Needle: rotate -90 deg = 0, +90 deg = 10
+  const angle = -90 + (avgScore / 10) * 180;
+  document.getElementById('gaugeNeedle').setAttribute('transform', `rotate(${angle} 100 110)`);
+  // Fill arc proportionally
+  const totalLen = 251.3;
+  const offset = totalLen - (avgScore/10) * totalLen;
+  document.getElementById('gaugePath').setAttribute('stroke-dashoffset', offset);
+}
+
+// Filter chip clicks
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.onclick = () => {
+    const f = chip.dataset.filter;
+    document.querySelectorAll(`.filter-chip[data-filter="${f}"]`).forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    filterState[f] = chip.dataset.val;
+    renderExposures();
+  };
+});
+
+renderExposures();
+
+// === Trend chart ===
+function drawTrend() {
+  const svg = document.getElementById('trendSvg');
+  const W = 700, H = 160, pad = { l: 30, r: 10, t: 10, b: 24 };
+  // 30 days of data
+  function gen(seed, base, swing) {
+    const out = [];
+    for (let i = 0; i < 30; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const r = (seed / 233280) - 0.5;
+      out.push(base + Math.sin(i / 4) * swing + r * swing * 0.6);
+    }
+    return out;
+  }
+  const cri = gen(7, 6.4, 1.2);
+  // last point pinned high to match KPI
+  cri[cri.length-1] = 7.2;
+  const exposed = gen(13, 120, 30).map(v => v / 20); // scaled
+  const crit = gen(21, 22, 6).map(v => Math.max(0, v));
+  // crit[crit.length-1] = 23;
+
+  const xs = i => pad.l + (W - pad.l - pad.r) * (i / 29);
+  const yScale = (v, min, max) => H - pad.b - (v - min)/(max - min) * (H - pad.t - pad.b);
+  const ys = v => yScale(v, 0, 12); // CRI scale 0-12 covers all overlays
+  const path = (arr, scale=1) => arr.map((v,i) => (i===0?'M':'L') + xs(i) + ',' + ys(v*scale)).join(' ');
+
+  let svgHtml = '';
+  // Gridlines
+  for (let g = 0; g <= 10; g += 2) {
+    const y = ys(g);
+    svgHtml += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${y}" y2="${y}" stroke="var(--pb-green-dark)" stroke-dasharray="2,3"/>`;
+    svgHtml += `<text x="${pad.l-4}" y="${y+3}" text-anchor="end" font-size="9" fill="var(--pb-green-dim)" font-family="Share Tech Mono">${g}</text>`;
+  }
+  // X axis labels
+  [0, 7, 14, 21, 29].forEach(i => {
+    const lab = i === 29 ? 'TODAY' : `D-${29-i}`;
+    svgHtml += `<text x="${xs(i)}" y="${H-8}" text-anchor="middle" font-size="9" fill="var(--pb-green-dim)" font-family="Share Tech Mono">${lab}</text>`;
+  });
+  // CRI line
+  svgHtml += `<path d="${path(cri)}" fill="none" stroke="var(--pb-green)" stroke-width="1.5" filter="drop-shadow(0 0 3px rgba(78,255,145,0.6))"/>`;
+  // Exposed (dashed)
+  svgHtml += `<path d="${path(exposed)}" fill="none" stroke="var(--pb-amber)" stroke-width="1.2" stroke-dasharray="4,3"/>`;
+  // Critical (dotted)
+  svgHtml += `<path d="${path(crit, 0.4)}" fill="none" stroke="var(--pb-red)" stroke-width="1.2" stroke-dasharray="1,3"/>`;
+  // Today marker
+  const lastX = xs(29), lastY = ys(cri[29]);
+  svgHtml += `<circle cx="${lastX}" cy="${lastY}" r="4" fill="var(--pb-green)" filter="drop-shadow(0 0 6px var(--pb-green))"/>`;
+  svgHtml += `<text x="${lastX-6}" y="${lastY-8}" text-anchor="end" font-size="11" fill="var(--pb-green)" font-family="VT323">${cri[29].toFixed(1)}</text>`;
+  svg.innerHTML = svgHtml;
+}
+drawTrend();
+
+// === Attack path graph ===
+function drawAttackPath() {
+  const svg = document.getElementById('apSvg');
+  const tip = document.getElementById('apTip');
+  const nodes = [
+    { id: 'internet', x: 50,  y: 160, label: 'INTERNET', state: 'amber', detail: 'Public internet — ingress source' },
+    { id: 'phish',    x: 200, y: 80,  label: 'PHISH EMAIL', state: 'red', detail: 'Phishing email · J. Doe (finance)' },
+    { id: 'wkstn',    x: 350, y: 80,  label: 'JDOE WORKSTATION', state: 'red', detail: 'Compromised endpoint · unpatched 47 days · session token harvested' },
+    { id: 'vpn',      x: 200, y: 240, label: 'VPN GATEWAY', state: 'amber', detail: 'External VPN · default cipher · CVSS 6.8' },
+    { id: 'jumphost', x: 350, y: 240, label: 'JUMPHOST-02', state: 'amber', detail: 'Stale admin account · pivot point' },
+    { id: 'ad',       x: 500, y: 160, label: 'ACTIVE DIR', state: 'amber', detail: 'Domain controller · over-permissioned svc accounts' },
+    { id: 'findb',    x: 680, y: 100, label: 'FIN-DB-01', state: 'red', detail: 'CVE-2025-55182 · CVSS 10 · CROWN JEWEL' },
+    { id: 's3pii',    x: 680, y: 220, label: 'S3 PII BUCKET', state: 'red', detail: 'Public bucket policy · 2.4M PII records · CROWN JEWEL' }
+  ];
+  const edges = [
+    ['internet','phish'], ['phish','wkstn'], ['wkstn','ad'],
+    ['internet','vpn'], ['vpn','jumphost'], ['jumphost','ad'],
+    ['ad','findb'], ['ad','s3pii']
+  ];
+  const colorOf = s => s === 'red' ? 'var(--pb-red)' : s === 'amber' ? 'var(--pb-amber)' : 'var(--pb-green)';
+  const idMap = Object.fromEntries(nodes.map(n => [n.id, n]));
+
+  let svgHtml = svg.innerHTML; // keep <defs>
+  // Edges
+  edges.forEach(([a,b]) => {
+    const A = idMap[a], B = idMap[b];
+    const dx = B.x - A.x, dy = B.y - A.y;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    const ux = dx/len, uy = dy/len;
+    const x2 = B.x - ux * 30;
+    const y2 = B.y - uy * 18;
+    svgHtml += `<line x1="${A.x}" y1="${A.y}" x2="${x2}" y2="${y2}"
+      stroke="var(--pb-amber)" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrow)" opacity="0.7"/>`;
+  });
+  // Nodes
+  nodes.forEach(n => {
+    const c = colorOf(n.state);
+    svgHtml += `<g class="ap-node" data-detail="${n.detail.replace(/"/g,'&quot;')}" style="cursor:pointer">
+      <rect x="${n.x-55}" y="${n.y-16}" width="110" height="32"
+        fill="var(--pb-bg-2)" stroke="${c}" stroke-width="1.5"/>
+      <text x="${n.x}" y="${n.y+4}" text-anchor="middle" fill="${c}"
+        font-family="Share Tech Mono" font-size="10" letter-spacing="0.05em">${n.label}</text>
+    </g>`;
+  });
+  svg.innerHTML = svgHtml;
+
+  // Tooltips
+  svg.querySelectorAll('.ap-node').forEach(node => {
+    node.addEventListener('mousemove', e => {
+      tip.textContent = node.dataset.detail;
+      tip.style.display = 'block';
+      const rect = svg.getBoundingClientRect();
+      tip.style.left = (e.clientX - rect.left + 12) + 'px';
+      tip.style.top  = (e.clientY - rect.top + 12) + 'px';
+    });
+    node.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+  });
+}
+drawAttackPath();
+
+// Live clock
+function tick() {
+  const d = new Date();
+  document.getElementById('clockBox').textContent =
+    d.toISOString().slice(0,10) + ' ' + d.toTimeString().slice(0,8);
+}
+tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>

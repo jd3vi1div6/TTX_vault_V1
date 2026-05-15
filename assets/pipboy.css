@@ -1,0 +1,372 @@
+/* =====================================================
+   PIP-BOY + VAULT-TEC SHARED STYLING
+   TTX App  ·  RobCo Industries (TM) Termlink Protocol
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Press+Start+2P&display=swap');
+
+:root {
+  /* Pip-Boy palette */
+  --pb-bg: #050a05;
+  --pb-bg-2: #081208;
+  --pb-bg-3: #0d1f0d;
+  --pb-green: #4eff91;
+  --pb-green-dim: #2db364;
+  --pb-green-dark: #155028;
+  --pb-green-glow: rgba(78, 255, 145, 0.45);
+
+  /* Vault-Tec palette */
+  --vt-yellow: #ffd13a;
+  --vt-blue: #1c3a8c;
+  --vt-red: #c4302b;
+
+  /* States */
+  --pb-amber: #ffb437;
+  --pb-red: #ff4d4d;
+  --pb-text: #80ff9f;
+  --pb-text-dim: #4a9f63;
+
+  /* Sizing */
+  --pb-radius: 0;
+  --pb-border: 1px solid var(--pb-green-dim);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--pb-bg);
+  color: var(--pb-green);
+  font-family: 'Share Tech Mono', 'VT323', 'Courier New', monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* CRT scanline overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 255, 100, 0.03) 0px,
+      rgba(0, 255, 100, 0.03) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+}
+
+/* CRT vignette */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Subtle CRT flicker */
+@keyframes pb-flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.92; }
+  94% { opacity: 1; }
+}
+
+.pb-screen {
+  animation: pb-flicker 6s infinite;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5 {
+  font-family: 'VT323', 'Share Tech Mono', monospace;
+  color: var(--pb-green);
+  text-shadow: 0 0 6px var(--pb-green-glow);
+  font-weight: normal;
+  letter-spacing: 0.05em;
+}
+
+h1 { font-size: 32px; }
+h2 { font-size: 26px; }
+h3 { font-size: 20px; }
+h4 { font-size: 17px; text-transform: uppercase; }
+
+/* Glow text */
+.pb-glow {
+  text-shadow: 0 0 4px var(--pb-green-glow), 0 0 10px var(--pb-green-glow);
+}
+
+/* Bracketed headers (Pip-Boy style) */
+.pb-bracket-h::before { content: '[ '; color: var(--pb-green-dim); }
+.pb-bracket-h::after  { content: ' ]'; color: var(--pb-green-dim); }
+
+/* Page chrome  */
+.pb-app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100vh;
+}
+
+.pb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border: var(--pb-border);
+  background: var(--pb-bg-2);
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.pb-header::before {
+  content: 'ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL';
+  position: absolute;
+  top: -10px;
+  left: 14px;
+  background: var(--pb-bg);
+  padding: 0 8px;
+  font-size: 11px;
+  color: var(--pb-green-dim);
+  letter-spacing: 0.15em;
+}
+
+.pb-header-title {
+  font-family: 'VT323', monospace;
+  font-size: 28px;
+  color: var(--pb-green);
+  text-shadow: 0 0 6px var(--pb-green-glow);
+}
+
+.pb-header-meta {
+  font-size: 12px;
+  color: var(--pb-text-dim);
+  text-align: right;
+}
+
+/* Nav tabs (Pip-Boy main tabs) */
+.pb-nav {
+  display: flex;
+  gap: 0;
+  margin-bottom: 14px;
+  border-bottom: var(--pb-border);
+}
+
+.pb-nav a {
+  padding: 8px 18px;
+  text-decoration: none;
+  color: var(--pb-green-dim);
+  background: transparent;
+  border: var(--pb-border);
+  border-bottom: none;
+  margin-right: 4px;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.pb-nav a:hover { color: var(--pb-green); background: var(--pb-bg-3); }
+.pb-nav a.active {
+  color: var(--pb-bg);
+  background: var(--pb-green-dim);
+  text-shadow: none;
+}
+
+/* Panels */
+.pb-panel {
+  border: var(--pb-border);
+  background: var(--pb-bg-2);
+  padding: 14px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.pb-panel-title {
+  position: absolute;
+  top: -10px;
+  left: 14px;
+  background: var(--pb-bg);
+  padding: 0 8px;
+  font-size: 12px;
+  color: var(--pb-green);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Buttons */
+.pb-btn {
+  display: inline-block;
+  padding: 6px 16px;
+  background: transparent;
+  color: var(--pb-green);
+  border: 1px solid var(--pb-green-dim);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.1s;
+  text-decoration: none;
+}
+.pb-btn:hover {
+  background: var(--pb-green-dim);
+  color: var(--pb-bg);
+  box-shadow: 0 0 12px var(--pb-green-glow);
+}
+.pb-btn.primary {
+  background: var(--pb-green-dim);
+  color: var(--pb-bg);
+}
+.pb-btn.primary:hover {
+  background: var(--pb-green);
+}
+.pb-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* Form elements */
+input[type=text], select, textarea {
+  background: var(--pb-bg);
+  color: var(--pb-green);
+  border: 1px solid var(--pb-green-dim);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  padding: 6px 10px;
+  outline: none;
+}
+input[type=text]:focus, select:focus, textarea:focus {
+  border-color: var(--pb-green);
+  box-shadow: 0 0 8px var(--pb-green-glow);
+}
+select option { background: var(--pb-bg-2); color: var(--pb-green); }
+textarea { resize: vertical; font-family: 'Share Tech Mono', monospace; }
+
+/* Severity / status badges */
+.pb-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+}
+.pb-badge.green { color: var(--pb-green); }
+.pb-badge.amber { color: var(--pb-amber); }
+.pb-badge.red { color: var(--pb-red); animation: pb-blink 1.4s infinite; }
+
+@keyframes pb-blink {
+  0%, 60% { opacity: 1; }
+  61%, 100% { opacity: 0.5; }
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+}
+th, td {
+  padding: 6px 10px;
+  text-align: left;
+  border-bottom: 1px dashed var(--pb-green-dark);
+}
+th {
+  color: var(--pb-green-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+  font-weight: normal;
+  border-bottom: 1px solid var(--pb-green-dim);
+}
+
+/* ASCII / box-drawing dividers */
+.pb-divider {
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--pb-green-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+/* Vault-Tec stripe accent */
+.vt-stripe {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--vt-yellow) 0,
+    var(--vt-yellow) 12px,
+    var(--vt-blue) 12px,
+    var(--vt-blue) 24px
+  );
+  height: 6px;
+  margin: 8px 0;
+}
+
+/* Vault Boy thumbs-up ASCII (used as decorative element) */
+.vault-boy-ascii {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  line-height: 1.1;
+  color: var(--pb-green);
+  white-space: pre;
+}
+
+/* Terminal cursor */
+.pb-cursor::after {
+  content: '_';
+  animation: pb-cursor 0.8s steps(2) infinite;
+  color: var(--pb-green);
+}
+@keyframes pb-cursor {
+  50% { opacity: 0; }
+}
+
+/* Utilities */
+.pb-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.pb-col { flex: 1; min-width: 0; }
+.pb-mono { font-family: 'Share Tech Mono', monospace; }
+.pb-dim { color: var(--pb-text-dim); }
+.pb-uppercase { text-transform: uppercase; letter-spacing: 0.1em; }
+.pb-small { font-size: 12px; }
+.pb-mt8 { margin-top: 8px; }
+.pb-mt16 { margin-top: 16px; }
+.pb-mb8 { margin-bottom: 8px; }
+.pb-center { text-align: center; }
+
+/* Status pip indicator */
+.pb-pip {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pb-green-dim);
+  box-shadow: 0 0 6px var(--pb-green-glow);
+  margin-right: 6px;
+}
+.pb-pip.amber { background: var(--pb-amber); box-shadow: 0 0 6px rgba(255,180,55,0.5); }
+.pb-pip.red { background: var(--pb-red); box-shadow: 0 0 6px rgba(255,77,77,0.5); animation: pb-blink 1.4s infinite; }
+
+/* Vault door corner ornament for cards */
+.pb-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--pb-green);
+}
+.pb-corner.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.pb-corner.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+.pb-corner.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+.pb-corner.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+/* Responsive */
+@media (max-width: 720px) {
+  .pb-row { flex-direction: column; }
+  .pb-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .pb-nav { flex-wrap: wrap; }
+}

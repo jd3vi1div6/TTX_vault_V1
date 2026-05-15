@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VAULT-TEC TTX :: Home</title>
+<link rel="stylesheet" href="assets/pipboy.css">
+<style>
+.hero {
+  text-align: center; padding: 30px 20px 20px;
+  border: 1px solid var(--pb-green-dim); background: var(--pb-bg-2);
+  margin-bottom: 18px; position: relative;
+}
+.hero-title {
+  font-family: 'VT323', monospace; font-size: 56px; color: var(--pb-green);
+  text-shadow: 0 0 12px var(--pb-green-glow); line-height: 1;
+}
+.hero-sub {
+  font-family: 'Share Tech Mono', monospace; font-size: 14px;
+  color: var(--pb-green-dim); letter-spacing: 0.2em; margin-top: 8px;
+}
+.hero-tagline {
+  font-size: 14px; color: var(--pb-text-dim); max-width: 600px; margin: 16px auto 0;
+  line-height: 1.7;
+}
+
+.tile-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 18px 0;
+}
+.tile {
+  border: 1px solid var(--pb-green-dim); padding: 24px 20px;
+  background: var(--pb-bg-2); cursor: pointer;
+  text-decoration: none; color: var(--pb-text);
+  transition: all 0.15s; position: relative;
+  display: block;
+}
+.tile:hover {
+  border-color: var(--pb-green); box-shadow: 0 0 20px var(--pb-green-glow);
+  background: var(--pb-bg-3); transform: translateY(-2px);
+}
+.tile-icon {
+  font-family: 'VT323', monospace; font-size: 48px;
+  color: var(--pb-green); margin-bottom: 8px;
+  text-shadow: 0 0 8px var(--pb-green-glow);
+}
+.tile-title {
+  font-family: 'VT323', monospace; font-size: 24px;
+  color: var(--pb-green); margin-bottom: 6px;
+}
+.tile-desc { font-size: 13px; color: var(--pb-text-dim); line-height: 1.6; }
+.tile-meta {
+  font-size: 11px; color: var(--pb-green-dim); margin-top: 12px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+}
+
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px;
+}
+
+.feature-list { list-style: none; }
+.feature-list li {
+  padding: 6px 0; border-bottom: 1px dashed var(--pb-green-dark);
+  font-size: 13px; color: var(--pb-text);
+}
+.feature-list li::before {
+  content: '▸ '; color: var(--pb-green); margin-right: 4px;
+}
+.feature-list li:last-child { border-bottom: none; }
+
+.poster {
+  border: 2px solid var(--pb-green-dim); padding: 18px;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      var(--pb-bg-3) 0,
+      var(--pb-bg-3) 12px,
+      var(--pb-bg-2) 12px,
+      var(--pb-bg-2) 24px
+    );
+  text-align: center; position: relative;
+}
+.poster-title {
+  font-family: 'VT323', monospace; font-size: 36px; color: var(--vt-yellow);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 8px rgba(255,209,58,0.4);
+}
+.poster-sub {
+  font-size: 13px; color: var(--pb-green); margin-top: 8px; line-height: 1.6;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 720px) {
+  .tile-grid { grid-template-columns: 1fr; }
+  .about-grid { grid-template-columns: 1fr; }
+  .hero-title { font-size: 38px; }
+}
+</style>
+</head>
+<body class="pb-screen">
+
+<div class="pb-app">
+
+<header class="pb-header">
+  <div>
+    <div class="pb-header-title">VAULT-TEC :: TTX APP</div>
+    <div class="pb-header-meta">CYBERSECURITY EXERCISE PLATFORM</div>
+  </div>
+  <div class="pb-header-meta">
+    <div>OVERSEER: <span class="pb-glow">JOANNA.D</span></div>
+    <div id="clockBox">--:--:--</div>
+  </div>
+</header>
+
+<div class="vt-stripe"></div>
+
+<nav class="pb-nav">
+  <a href="index.html" class="active">[ HOME ]</a>
+  <a href="dashboard.html">[ DASHBOARD ]</a>
+  <a href="tracker.html">[ TRACKER ]</a>
+  <a href="crem-demo.html">[ CREM DEMO ]</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-sub">► ROBCO TERMLINK PROTOCOL ◄</div>
+  <div class="hero-title pb-glow">TABLETOP EXERCISE TERMINAL</div>
+  <div class="hero-sub">VAULT-TEC INDUSTRIES &middot; CYBERSEC DIVISION</div>
+  <p class="hero-tagline">
+    A self-contained web app for facilitating, tracking, and analyzing cybersecurity tabletop exercises.
+    Run scenarios with your team, capture observations and risk assessments under pressure, and visualize
+    organizational exposure through the integrated CREM console.
+  </p>
+  <div class="pb-mt16">
+    <a href="tracker.html" class="pb-btn primary">[ START EXERCISE ]</a>
+    <a href="dashboard.html" class="pb-btn">[ VIEW DASHBOARD ]</a>
+  </div>
+</div>
+
+<!-- 3 module tiles -->
+<div class="tile-grid">
+  <a class="tile" href="dashboard.html">
+    <div class="tile-icon">▣</div>
+    <div class="tile-title">DASHBOARD</div>
+    <div class="tile-desc">
+      Command-and-control overview. Phase tracking, observation stats, risk register, and MITRE ATT&amp;CK coverage in one view.
+    </div>
+    <div class="tile-meta">▶ MODULE 01 · OVERVIEW</div>
+  </a>
+
+  <a class="tile" href="tracker.html">
+    <div class="tile-icon">▶</div>
+    <div class="tile-title">TTX TRACKER</div>
+    <div class="tile-desc">
+      Run a guided exercise. Two scenarios (data breach, ransomware) with phase-by-phase injects, facilitator notes, risk capture, and observation logging.
+    </div>
+    <div class="tile-meta">▶ MODULE 02 · EXERCISE</div>
+  </a>
+
+  <a class="tile" href="crem-demo.html">
+    <div class="tile-icon">◈</div>
+    <div class="tile-title">CREM DEMO</div>
+    <div class="tile-desc">
+      Interactive Cyber Risk Exposure Management console. CRI gauge, top exposures, attack-path analysis, and live filtering.
+    </div>
+    <div class="tile-meta">▶ MODULE 03 · INTERACTIVE</div>
+  </a>
+</div>
+
+<!-- About + features -->
+<div class="about-grid">
+  <div class="pb-panel">
+    <div class="pb-panel-title">► CAPABILITIES</div>
+    <ul class="feature-list pb-mt8">
+      <li>Two pre-built scenarios (breach, ransomware) with 6–7 phases each</li>
+      <li>Participant and facilitator modes with hidden tips</li>
+      <li>MITRE ATT&amp;CK technique mapping per inject</li>
+      <li>Live risk assessment capture (impact, likelihood, data, regulatory)</li>
+      <li>Observation logging — gaps, actions, strengths, notes</li>
+      <li>Plain-text exercise report export</li>
+      <li>Mock CREM console with attack-path visualization</li>
+      <li>100% client-side · no server · works offline</li>
+    </ul>
+  </div>
+
+  <div class="pb-panel">
+    <div class="pb-panel-title">► TECH STACK</div>
+    <ul class="feature-list pb-mt8">
+      <li>Vanilla HTML / CSS / JavaScript — no frameworks</li>
+      <li>Inline SVG charts (no external chart libs)</li>
+      <li>Hosted on GitHub Pages</li>
+      <li>Pip-Boy + Vault-Tec aesthetic (Share Tech Mono / VT323)</li>
+      <li>Self-contained — drop into any static host</li>
+      <li>Repo: <span style="color:var(--pb-green)">jd3vi1div6/ttx-app</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Vault-Tec poster -->
+<div class="poster pb-mt16">
+  <div class="poster-title">★ PREPAREDNESS IS PATRIOTISM ★</div>
+  <div class="poster-sub">
+    EXERCISE TODAY · RECOVER TOMORROW<br>
+    REPORT SUSPICIOUS NETWORK ACTIVITY TO YOUR LOCAL OVERSEER
+  </div>
+</div>
+
+<footer class="pb-mt16 pb-center pb-small pb-dim">
+  <div class="pb-divider">───────────────────────────────────────────────</div>
+  VAULT-TEC INDUSTRIES &middot; A BRIGHTER FUTURE, UNDERGROUND<br>
+  <span class="pb-mt8" style="display:inline-block">Source: <a style="color:var(--pb-green)" href="https://github.com/jd3vi1div6/ttx-app">github.com/jd3vi1div6/ttx-app</a></span>
+</footer>
+
+</div>
+
+<script>
+function tick() {
+  const d = new Date();
+  document.getElementById('clockBox').textContent =
+    d.toISOString().slice(0,10) + ' ' + d.toTimeString().slice(0,8);
+}
+tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>
