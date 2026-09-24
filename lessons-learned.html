@@ -153,8 +153,6 @@
             display: inline-block;
         }
         .pb-badge.green { color: var(--pb-green); border-color: var(--pb-green-dim); }
-        .pb-badge.amber { color: var(--pb-amber); border-color: var(--pb-amber); background: rgba(255,180,55,0.1); }
-        .pb-badge.red { color: var(--pb-red); border-color: var(--pb-red); background: rgba(255,77,77,0.15); }
 
         /* KPI Grid */
         .kpi-grid {
@@ -329,159 +327,183 @@
 </div>
 
 <script>
-    let activeTypeFilter = 'all';
+/* Centralny magazyn danych localStorage dla aplikacji TTX */
+const TTXStore = {
+    KEY: 'VAULT_TEC_TTX_STATE_V1',
 
-    function getStoredState() {
-        const data = localStorage.getItem('VAULT_TEC_TTX_STATE_V1');
-        if (!data) return null;
+    /* Odczyt stanu z pamięci przeglądarki */
+    get() {
+        const raw = localStorage.getItem(this.KEY);
+        if (!raw) return this.init();
         try {
-            return JSON.parse(data);
+            return JSON.parse(raw);
         } catch (e) {
-            return null;
+            console.error('Błąd odczytu localStorage:', e);
+            return this.init();
         }
-    }
+    },
 
-    function saveStoredState(state) {
-        localStorage.setItem('VAULT_TEC_TTX_STATE_V1', JSON.stringify(state));
-    }
+    /* Inicjalizacja domyślnego stanu sesji */
+    init() {
+        const defaultState = {
+            participantId: 'CISO-NL-LOGISTICS-01',
+            activeScenario: 'dutch_logistics_nis2',
+            currentPhase: 0,
+            forms: {},
+            observations: []
+        };
+        this.save(defaultState);
+        return defaultState;
+    },
 
-    function populateOwnerFilter(obs) {
-        const select = document.getElementById('ownerFilterSelect');
-        const currentVal = select.value;
-        select.innerHTML = '<option value="all">-- ALL OWNERS --</option>';
+    /* Zapis całego obiektu stanu */
+    save(state) {
+        localStorage.setItem(this.KEY, JSON.stringify(state));
+    },
 
-        const owners = new Set();
-        obs.forEach(o => {
-            if (o.owner && o.owner !== 'UNASSIGNED') owners.add(o.owner);
-        });
-
-        owners.forEach(owner => {
-            const opt = document.createElement('option');
-            opt.value = owner;
-            opt.innerText = owner;
-            if (owner === currentVal) opt.selected = true;
-            select.appendChild(opt);
-        });
-    }
-
-    function setFilterType(type, btn) {
-        activeTypeFilter = type;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderTable();
-    }
-
-    function renderTable() {
-        const state = getStoredState();
-        const tbody = document.getElementById('observationsTableBody');
-        tbody.innerHTML = '';
-
-        if (!state || !state.observations || state.observations.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--pb-text-dim); padding: 20px;">No observations logged in session yet. Use the Exercise Tracker to record findings during the simulation.</td></tr>';
-            
-            document.getElementById('kpiTotal').innerText = '0';
-            document.getElementById('kpiGaps').innerText = '0';
-            document.getElementById('kpiActions').innerText = '0';
-            document.getElementById('kpiStrengths').innerText = '0';
-            return;
-        }
-
-        const obs = state.observations;
-
-        // KPI Counts
-        document.getElementById('kpiTotal').innerText = obs.length;
-        document.getElementById('kpiGaps').innerText = obs.filter(o => o.type === 'gap').length;
-        document.getElementById('kpiActions').innerText = obs.filter(o => o.type === 'action').length;
-        document.getElementById('kpiStrengths').innerText = obs.filter(o => o.type === 'strength').length;
-
-        populateOwnerFilter(obs);
-        const selectedOwner = document.getElementById('ownerFilterSelect').value;
-
-        // Filtering
-        const filtered = obs.filter(o => {
-            const matchesType = (activeTypeFilter === 'all' || o.type === activeTypeFilter);
-            const matchesOwner = (selectedOwner === 'all' || o.owner === selectedOwner);
-            return matchesType && matchesOwner;
-        });
-
-        if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--pb-text-dim); padding: 20px;">No matching observations found for current filter criteria.</td></tr>';
-            return;
-        }
-
-        filtered.forEach(o => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="color: var(--pb-amber); font-weight: bold;">PHASE ${o.phaseIdx}</td>
-                <td><span class="type-tag type-${o.type}">${o.type}</span></td>
-                <td style="color: var(--pb-text);">${o.text}</td>
-                <td style="color: var(--pb-cyan);">${o.owner || 'UNASSIGNED'}</td>
-                <td style="color: var(--pb-text-dim); font-size: 11px;">${o.timestamp || 'N/A'}</td>
-                <td><span class="btn-del" onclick="deleteObservation(${o.id})">[X]</span></td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function deleteObservation(id) {
-        const state = getStoredState();
-        if (!state) return;
-
+    /* Usuwanie wpisu z rejestru */
+    removeObservation(id) {
+        const state = this.get();
         state.observations = state.observations.filter(o => o.id !== id);
-        saveStoredState(state);
-        renderTable();
+        this.save(state);
     }
+};
 
-    function exportReport() {
-        const state = getStoredState();
-        if (!state) {
-            alert('No TTX session data found to export.');
-            return;
-        }
+let activeTypeFilter = 'all';
 
-        const lines = [];
-        lines.push('================================================================');
-        lines.push(`  TABLETOP EXERCISE REPORT — LESSONS LEARNED & ACTION ITEMS`);
-        lines.push(`  VAULT-TEC TTX TERMINAL · PARTICIPANT: ${state.participantId || 'CISO-NL-LOGISTICS-01'}`);
-        lines.push(`  TIMESTAMP: ${new Date().toLocaleString()}`);
-        lines.push('================================================================\n');
+function populateOwnerFilter(obs) {
+    const select = document.getElementById('ownerFilterSelect');
+    const currentVal = select.value;
+    select.innerHTML = '<option value="all">-- ALL OWNERS --</option>';
 
-        lines.push('--- SUMMARY STATISTICS ---');
-        lines.push(`TOTAL OBSERVATIONS: ${state.observations ? state.observations.length : 0}`);
-        lines.push(`GAPS IDENTIFIED: ${state.observations ? state.observations.filter(o=>o.type==='gap').length : 0}`);
-        lines.push(`REMEDIATION ACTIONS: ${state.observations ? state.observations.filter(o=>o.type==='action').length : 0}`);
-        lines.push(`STRENGTHS VERIFIED: ${state.observations ? state.observations.filter(o=>o.type==='strength').length : 0}`);
-        lines.push('\n================================================================');
-        lines.push('  DETAILED OBSERVATIONS & REMEDIATION ROADMAP');
-        lines.push('================================================================');
-
-        if (!state.observations || state.observations.length === 0) {
-            lines.push('No observations logged.');
-        } else {
-            state.observations.forEach(o => {
-                lines.push(`[${o.type.toUpperCase()}] (Phase ${o.phaseIdx}) ${o.text} — Owner: ${o.owner} (${o.timestamp || ''})`);
-            });
-        }
-
-        const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `ttx-lessons-learned-${Date.now()}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-
-    function tickClock() {
-        const d = new Date();
-        document.getElementById('clockBox').innerText = d.toISOString().replace('T', ' ').slice(0, 19);
-    }
-
-    window.addEventListener('load', () => {
-        tickClock();
-        setInterval(tickClock, 1000);
-        renderTable();
+    const owners = new Set();
+    obs.forEach(o => {
+        if (o.owner && o.owner !== 'UNASSIGNED') owners.add(o.owner);
     });
+
+    owners.forEach(owner => {
+        const opt = document.createElement('option');
+        opt.value = owner;
+        opt.innerText = owner;
+        if (owner === currentVal) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
+
+function setFilterType(type, btn) {
+    activeTypeFilter = type;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTable();
+}
+
+function renderTable() {
+    const state = TTXStore.get();
+    const tbody = document.getElementById('observationsTableBody');
+    tbody.innerHTML = '';
+
+    if (!state || !state.observations || state.observations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--pb-text-dim); padding: 20px;">No observations logged in session yet. Use the Exercise Tracker to record findings during the simulation.</td></tr>';
+        
+        document.getElementById('kpiTotal').innerText = '0';
+        document.getElementById('kpiGaps').innerText = '0';
+        document.getElementById('kpiActions').innerText = '0';
+        document.getElementById('kpiStrengths').innerText = '0';
+        return;
+    }
+
+    const obs = state.observations;
+
+    /* KPI Counts */
+    document.getElementById('kpiTotal').innerText = obs.length;
+    document.getElementById('kpiGaps').innerText = obs.filter(o => o.type === 'gap').length;
+    document.getElementById('kpiActions').innerText = obs.filter(o => o.type === 'action').length;
+    document.getElementById('kpiStrengths').innerText = obs.filter(o => o.type === 'strength').length;
+
+    populateOwnerFilter(obs);
+    const selectedOwner = document.getElementById('ownerFilterSelect').value;
+
+    /* Filtering */
+    const filtered = obs.filter(o => {
+        const matchesType = (activeTypeFilter === 'all' || o.type === activeTypeFilter);
+        const matchesOwner = (selectedOwner === 'all' || o.owner === selectedOwner);
+        return matchesType && matchesOwner;
+    });
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--pb-text-dim); padding: 20px;">No matching observations found for current filter criteria.</td></tr>';
+        return;
+    }
+
+    filtered.forEach(o => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td style="color: var(--pb-amber); font-weight: bold;">PHASE ${o.phaseIdx}</td>
+            <td><span class="type-tag type-${o.type}">${o.type}</span></td>
+            <td style="color: var(--pb-text);">${o.text}</td>
+            <td style="color: var(--pb-cyan);">${o.owner || 'UNASSIGNED'}</td>
+            <td style="color: var(--pb-text-dim); font-size: 11px;">${o.timestamp || 'N/A'}</td>
+            <td><span class="btn-del" onclick="deleteObservation(${o.id})">[X]</span></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function deleteObservation(id) {
+    TTXStore.removeObservation(id);
+    renderTable();
+}
+
+function exportReport() {
+    const state = TTXStore.get();
+    if (!state) {
+        alert('No TTX session data found to export.');
+        return;
+    }
+
+    const lines = [];
+    lines.push('================================================================');
+    lines.push(`  TABLETOP EXERCISE REPORT — LESSONS LEARNED & ACTION ITEMS`);
+    lines.push(`  VAULT-TEC TTX TERMINAL · PARTICIPANT: ${state.participantId || 'CISO-NL-LOGISTICS-01'}`);
+    lines.push(`  TIMESTAMP: ${new Date().toLocaleString()}`);
+    lines.push('================================================================\n');
+
+    lines.push('--- SUMMARY STATISTICS ---');
+    lines.push(`TOTAL OBSERVATIONS: ${state.observations ? state.observations.length : 0}`);
+    lines.push(`GAPS IDENTIFIED: ${state.observations ? state.observations.filter(o=>o.type==='gap').length : 0}`);
+    lines.push(`REMEDIATION ACTIONS: ${state.observations ? state.observations.filter(o=>o.type==='action').length : 0}`);
+    lines.push(`STRENGTHS VERIFIED: ${state.observations ? state.observations.filter(o=>o.type==='strength').length : 0}`);
+    lines.push('\n================================================================');
+    lines.push('  DETAILED OBSERVATIONS & REMEDIATION ROADMAP');
+    lines.push('================================================================');
+
+    if (!state.observations || state.observations.length === 0) {
+        lines.push('No observations logged.');
+    } else {
+        state.observations.forEach(o => {
+            lines.push(`[${o.type.toUpperCase()}] (Phase ${o.phaseIdx}) ${o.text} — Owner: ${o.owner} (${o.timestamp || ''})`);
+        });
+    }
+
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ttx-lessons-learned-${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function tickClock() {
+    const d = new Date();
+    document.getElementById('clockBox').innerText = d.toISOString().replace('T', ' ').slice(0, 19);
+}
+
+window.addEventListener('load', () => {
+    tickClock();
+    setInterval(tickClock, 1000);
+    renderTable();
+});
 </script>
 </body>
 </html>
