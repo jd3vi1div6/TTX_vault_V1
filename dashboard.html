@@ -155,6 +155,7 @@
         .pb-badge.green { color: var(--pb-green); border-color: var(--pb-green-dim); }
         .pb-badge.amber { color: var(--pb-amber); border-color: var(--pb-amber); background: rgba(255,180,55,0.1); }
         .pb-badge.red { color: var(--pb-red); border-color: var(--pb-red); background: rgba(255,77,77,0.15); }
+        .pb-badge.cyan { color: var(--pb-cyan); border-color: var(--pb-cyan); background: rgba(0,229,255,0.1); }
 
         /* KPI Grid */
         .kpi-grid {
@@ -247,10 +248,10 @@
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
-        .tag-gap { color: var(--pb-red); }
-        .tag-action { color: var(--pb-amber); }
-        .tag-strength { color: var(--pb-green); }
-        .tag-note { color: var(--pb-text-dim); }
+        .tag-gap { color: var(--pb-red); border-color: var(--pb-red); }
+        .tag-action { color: var(--pb-amber); border-color: var(--pb-amber); }
+        .tag-strength { color: var(--pb-green); border-color: var(--pb-green); }
+        .tag-note { color: var(--pb-text-dim); border-color: var(--pb-green-dim); }
     </style>
 </head>
 <body>
@@ -426,62 +427,121 @@
 </div>
 
 <script>
-    // Centralny magazyn danych localStorage dla aplikacji TTX const 
-    TTXStore = { KEY: 'VAULT\_TEC\_TTX\_STATE\_V1', 
-                // Odczyt stanu z pamięci przeglądarki 
-                get() { const raw = localStorage.getItem(this.KEY); if (!raw) return this.init(); try { return JSON.parse(raw); } catch (e) { console.error('localStorage read error, reset:', e); return this.init(); } }, 
-                // Inicjalizacja domyślnego stanu sesji 
-                init() { const defaultState = { participantId: 'CISO-NL-LOGISTICS-01', activeScenario: 'dutch\_logistics\_nis2', currentPhase: 0, forms: {}, 
-                                               // Słownik ocen i notatek: 
-                                               { 'scenariusz\_faza': { impact, likelihood, data, reg, rationale, notes } } observations: [] 
-                        // Lista wniosków: 
-                        [ { id, scenarioKey, phaseIdx, text, type, owner, timestamp } ] }; this.save(defaultState); return defaultState; }, 
-    // Zapis całego obiektu stanu save(state) 
-    { localStorage.setItem(this.KEY, JSON.stringify(state)); }, 
-    // Zapis pojedynczego pola z formularza oceny ryzyka / notatek 
-    saveField(scenarioKey, phaseIdx, field, value) { const state = this.get(); const formKey = \`${scenarioKey}\_${phaseIdx}\`; if (!state.forms[formKey]) { state.forms[formKey] = { impact: '', likelihood: '', data: '', reg: '', rationale: '', notes: '' }; } state.forms[formKey][field] = value; this.save(state); }, 
-    // Dodanie nowej obserwacj / akcji (Lessons Learned) 
-    addObservation(scenarioKey, phaseIdx, text, type, owner) { const state = this.get(); const newObs = { id: Date.now(), scenarioKey, phaseIdx, text, type, // 'gap' | 'action' | 'strength' | 'note' owner: owner || 'UNASSIGNED', timestamp: new Date().toLocaleTimeString().slice(0, 5) }; state.observations.push(newObs); this.save(state); return newObs; }, 
-    // Usuwanie wpisu z rejestru removeObservation(id) { const state = this.get(); state.observations = state.observations.filter(o =&gt; o.id !== id); this.save(state); }, 
-    // Czyszczenie stanu (rozpoczęcie nowego ćwiczenia) reset() { localStorage.removeItem(this.KEY); return this.init(); } };
-    // READ STATE FROM LOCALSTORAGE
-    function getStoredState() {
-        const data = localStorage.getItem('VAULT_TEC_TTX_STATE_V1');
-        if (!data) return null;
+/* Centralny magazyn danych localStorage dla aplikacji TTX */
+const TTXStore = {
+    KEY: 'VAULT_TEC_TTX_STATE_V1',
+
+    /* Odczyt stanu z pamięci przeglądarki */
+    get() {
+        const raw = localStorage.getItem(this.KEY);
+        if (!raw) return this.init();
         try {
-            return JSON.parse(data);
+            return JSON.parse(raw);
         } catch (e) {
-            return null;
+            console.error('Błąd odczytu localStorage:', e);
+            return this.init();
+        }
+    },
+
+    /* Inicjalizacja domyślnego stanu sesji */
+    init() {
+        const defaultState = {
+            participantId: 'CISO-NL-LOGISTICS-01',
+            activeScenario: 'dutch_logistics_nis2',
+            currentPhase: 0,
+            forms: {},
+            observations: []
+        };
+        this.save(defaultState);
+        return defaultState;
+    },
+
+    /* Zapis całego obiektu stanu */
+    save(state) {
+        localStorage.setItem(this.KEY, JSON.stringify(state));
+    },
+
+    /* Zapis pojedynczego pola z formularza oceny ryzyka / notatek */
+    saveField(scenarioKey, phaseIdx, field, value) {
+        const state = this.get();
+        const formKey = `${scenarioKey}_${phaseIdx}`;
+        if (!state.forms[formKey]) {
+            state.forms[formKey] = { impact: '', likelihood: '', data: '', reg: '', rationale: '', notes: '' };
+        }
+        state.forms[formKey][field] = value;
+        this.save(state);
+    },
+
+    /* Dodanie nowej obserwacji / akcji (Lessons Learned) */
+    addObservation(scenarioKey, phaseIdx, text, type, owner) {
+        const state = this.get();
+        const newObs = {
+            id: Date.now(),
+            scenarioKey,
+            phaseIdx,
+            text,
+            type, /* 'gap' | 'action' | 'strength' | 'note' */
+            owner: owner || 'UNASSIGNED',
+            timestamp: new Date().toLocaleTimeString().slice(0, 5)
+        };
+        state.observations.push(newObs);
+        this.save(state);
+        return newObs;
+    },
+
+    /* Usuwanie wpisu z rejestru */
+    removeObservation(id) {
+        const state = this.get();
+        state.observations = state.observations.filter(o => o.id !== id);
+        this.save(state);
+    },
+
+    /* Czyszczenie stanu (rozpoczęcie nowego ćwiczenia) */
+    reset() {
+        localStorage.removeItem(this.KEY);
+        return this.init();
+    }
+};
+
+/* Logika aktualizacji interfejsu Dashboardu */
+function updateDashboard() {
+    const state = TTXStore.get();
+    if (!state) return;
+
+    /* Aktualizacja KPI Scenariusza */
+    const scElem = document.getElementById('kpiScenario');
+    if (scElem) {
+        if (state.activeScenario === 'dutch_logistics_nis2') {
+            scElem.innerText = 'Dutch Logistics NIS2';
+        } else if (state.activeScenario === 'specter_ransomware') {
+            scElem.innerText = 'Specter Ransomware';
+        } else {
+            scElem.innerText = 'Data Breach API';
         }
     }
 
-    function updateDashboard() {
-        const state = getStoredState();
-        if (!state) return;
+    /* Aktualizacja KPI Postępu */
+    const currentPhase = state.currentPhase || 0;
+    const progElem = document.getElementById('kpiProgress');
+    if (progElem) progElem.innerText = `${currentPhase} / 6`;
+    
+    const pct = Math.round((currentPhase / 6) * 100);
+    const subElem = document.getElementById('kpiProgressSub');
+    if (subElem) subElem.innerText = `${pct}% Completed`;
 
-        // KPI Updates
-        if (state.activeScenario === 'dutch_logistics_nis2') {
-            document.getElementById('kpiScenario').innerText = 'Dutch Logistics NIS2';
-        } else if (state.activeScenario === 'specter_ransomware') {
-            document.getElementById('kpiScenario').innerText = 'Specter Ransomware';
-        } else {
-            document.getElementById('kpiScenario').innerText = 'Data Breach API';
-        }
+    /* Aktualizacja KPI Obserwacji */
+    const obs = state.observations || [];
+    const obsTotal = document.getElementById('kpiObsTotal');
+    if (obsTotal) obsTotal.innerText = obs.length;
 
-        const currentPhase = state.currentPhase || 0;
-        document.getElementById('kpiProgress').innerText = `${currentPhase} / 6`;
-        const pct = Math.round((currentPhase / 6) * 100);
-        document.getElementById('kpiProgressSub').innerText = `${pct}% Completed`;
+    const gaps = obs.filter(o => o.type === 'gap').length;
+    const actions = obs.filter(o => o.type === 'action').length;
+    const obsSub = document.getElementById('kpiObsBreakdown');
+    if (obsSub) obsSub.innerText = `${gaps} Gaps · ${actions} Actions`;
 
-        const obs = state.observations || [];
-        document.getElementById('kpiObsTotal').innerText = obs.length;
-
-        const gaps = obs.filter(o => o.type === 'gap').length;
-        const actions = obs.filter(o => o.type === 'action').length;
-        document.getElementById('kpiObsBreakdown').innerText = `${gaps} Gaps · ${actions} Actions`;
-
-        // Render Observations Feed
-        const feedContainer = document.getElementById('obsFeedContainer');
+    /* Renderowanie Feedu Obserwacji */
+    const feedContainer = document.getElementById('obsFeedContainer');
+    if (feedContainer) {
         if (obs.length > 0) {
             feedContainer.innerHTML = '';
             obs.slice().reverse().forEach(o => {
@@ -496,42 +556,49 @@
                 `;
                 feedContainer.appendChild(row);
             });
-        }
-
-        // Render Risk Heatmap counts from saved forms
-        let highCount = 0;
-        let medCount = 0;
-        let lowCount = 0;
-
-        Object.keys(state.forms || {}).forEach(k => {
-            const form = state.forms[k];
-            if (form.impact === 'CRITICAL' || form.impact === 'HIGH') highCount++;
-            else if (form.impact === 'MEDIUM') medCount++;
-            else if (form.impact === 'LOW') lowCount++;
-        });
-
-        document.getElementById('hm-c1').innerText = highCount;
-        document.getElementById('hm-m2').innerText = medCount;
-        document.getElementById('hm-l3').innerText = lowCount;
-    }
-
-    function clearData() {
-        if (confirm('Are you sure you want to reset all TTX session data?')) {
-            localStorage.removeItem('VAULT_TEC_TTX_STATE_V1');
-            window.location.reload();
+        } else {
+            feedContainer.innerHTML = '<div style="font-size: 12px; color: var(--pb-text-dim); text-align: center; padding: 20px;">No observations logged yet in active session.</div>';
         }
     }
 
-    function tickClock() {
-        const d = new Date();
-        document.getElementById('clockBox').innerText = d.toISOString().replace('T', ' ').slice(0, 19);
-    }
+    /* Obliczanie wartości dla Macierzy Ryzyka z zapisanych formularzy */
+    let highCount = 0;
+    let medCount = 0;
+    let lowCount = 0;
 
-    window.addEventListener('load', () => {
-        tickClock();
-        setInterval(tickClock, 1000);
-        updateDashboard();
+    Object.keys(state.forms || {}).forEach(k => {
+        const form = state.forms[k];
+        if (form.impact === 'CRITICAL' || form.impact === 'HIGH') highCount++;
+        else if (form.impact === 'MEDIUM') medCount++;
+        else if (form.impact === 'LOW') lowCount++;
     });
+
+    const c1 = document.getElementById('hm-c1');
+    if (c1) c1.innerText = highCount;
+    const m2 = document.getElementById('hm-m2');
+    if (m2) m2.innerText = medCount;
+    const l3 = document.getElementById('hm-l3');
+    if (l3) l3.innerText = lowCount;
+}
+
+function clearData() {
+    if (confirm('Are you sure you want to reset all TTX session data?')) {
+        TTXStore.reset();
+        window.location.reload();
+    }
+}
+
+function tickClock() {
+    const d = new Date();
+    const clock = document.getElementById('clockBox');
+    if (clock) clock.innerText = d.toISOString().replace('T', ' ').slice(0, 19);
+}
+
+window.addEventListener('load', () => {
+    tickClock();
+    setInterval(tickClock, 1000);
+    updateDashboard();
+});
 </script>
 </body>
 </html>
