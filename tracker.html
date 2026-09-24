@@ -88,6 +88,7 @@
             font-size: 18px;
             padding: 4px 14px;
             cursor: pointer;
+            text-decoration: none;
             transition: all 0.15s;
         }
 
@@ -99,7 +100,6 @@
             box-shadow: 0 0 8px var(--pb-green-glow);
         }
 
-        /* Mode Switcher & Buttons */
         .mode-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--pb-text-dim); }
 
         .pb-btn {
@@ -275,19 +275,15 @@
         .obs-item { display: flex; gap: 10px; padding: 8px 10px; border: 1px solid var(--pb-green-dark); background: var(--pb-bg); align-items: center; }
         .obs-item-text { flex: 1; color: var(--pb-text); font-size: 13px; }
         .obs-type-badge { font-size: 10px; padding: 1px 8px; border: 1px solid currentColor; text-transform: uppercase; letter-spacing: 0.15em; }
-        .obs-gap { color: var(--pb-red); }
-        .obs-action { color: var(--pb-amber); }
-        .obs-strength { color: var(--pb-green); }
-        .obs-note { color: var(--pb-text-dim); }
+        .obs-gap { color: var(--pb-red); border-color: var(--pb-red); }
+        .obs-action { color: var(--pb-amber); border-color: var(--pb-amber); }
+        .obs-strength { color: var(--pb-green); border-color: var(--pb-green); }
+        .obs-note { color: var(--pb-text-dim); border-color: var(--pb-green-dim); }
         .obs-del { color: var(--pb-red); cursor: pointer; padding: 0 6px; font-weight: bold; }
         .obs-del:hover { background: var(--pb-red); color: var(--pb-bg); }
 
         .obs-add-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
         .obs-add-row input { flex: 1; min-width: 180px; }
-
-        .pb-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
-        .pb-table th, .pb-table td { border: 1px solid var(--pb-green-dark); padding: 8px 12px; text-align: left; }
-        .pb-table th { background: var(--pb-green-dark); color: var(--pb-green); font-family: var(--font-term); font-size: 16px; }
 
         .footer { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border: 1px solid var(--pb-green-dim); background: var(--pb-bg-2); margin-top: 15px; flex-wrap: wrap; gap: 10px; }
     </style>
@@ -303,8 +299,9 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="nav-btn active" id="btn-tab-exercise" onclick="showTab('exercise')">[ 1. EXERCISE TRACKER ]</button>
-            <button class="nav-btn" id="btn-tab-nist" onclick="showTab('nist')">[ 2. NIST 800-53 & LOSS SIMULATOR ]</button>
+            <a href="tracker.html" class="nav-btn active">[ 1. EXERCISE TRACKER ]</a>
+            <a href="dashboard.html" class="nav-btn">[ 2. DASHBOARD ]</a>
+            <a href="lessons-learned.html" class="nav-btn">[ 3. LESSONS LEARNED ]</a>
         </div>
 
         <div class="mode-toggle">
@@ -483,555 +480,452 @@
             </div>
         </div>
     </div>
-
-    <!-- TAB 2: NIST 800-53 & LOSS SIMULATOR VIEW -->
-    <div id="view-nist" style="display: none;">
-        <div class="pb-panel">
-            <div class="pb-panel-title">
-                <span>NIST SP 800-53 & DUTCH NIS2 CONTROL MAPPING</span>
-                <span class="pb-badge green">FRAMEWORK V2</span>
-            </div>
-
-            <table class="pb-table">
-                <thead>
-                    <tr>
-                        <th>NIST SP 800-53</th>
-                        <th>Control Family</th>
-                        <th>NIS2 Requirement (NL)</th>
-                        <th>Manual Audit vs Trend Vision One CREM</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>RA — Risk Assessment</strong></td>
-                        <td>RA-3 / RA-5 Vulnerability Scanning</td>
-                        <td>Zorgplicht (Duty of Care & Asset Inventory)</td>
-                        <td><span style="color:var(--pb-red)">MANUAL:</span> Blind spot on OT workstation secondary NIC.<br><span style="color:var(--pb-cyan)">CREM:</span> Continuous Risk Index (CRI) & Asset Discovery.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>SC — Boundary Protection</strong></td>
-                        <td>SC-7 Boundary Protection</td>
-                        <td>IT/OT Network Segmentation</td>
-                        <td><span style="color:var(--pb-red)">MANUAL:</span> Unmapped dual-homed bridge.<br><span style="color:var(--pb-cyan)">CREM:</span> Attack Path Visualization & Topology Mapping.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>SI — System Integrity</strong></td>
-                        <td>SI-4 System Monitoring</td>
-                        <td>Meldplicht 24h (Incident Notification)</td>
-                        <td><span style="color:var(--pb-red)">MANUAL:</span> Delayed detection of lateral movement.<br><span style="color:var(--pb-cyan)">CREM:</span> XDR Correlation & Exposure Telemetry.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>SA — System Supply Chain</strong></td>
-                        <td>SA-9 Supply Chain Risk Management</td>
-                        <td>Supply Chain Security Assessment</td>
-                        <td><span style="color:var(--pb-red)">MANUAL:</span> Annual static vendor questionnaires.<br><span style="color:var(--pb-cyan)">CREM:</span> Dynamic Third-Party Exposure Scoring.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="pb-panel" style="border-color: var(--pb-red);">
-            <div class="pb-panel-title" style="color: var(--pb-red);">
-                <span>LATERAL MOVEMENT & CUMULATIVE LOSS SIMULATOR</span>
-                <span class="pb-badge red">ATTACK PATH ACTIVE</span>
-            </div>
-
-            <div style="margin-top: 10px;">
-                <div style="font-family: var(--font-term); font-size: 18px; color: var(--pb-amber);">ADVERSARY LATERAL MOVEMENT PATH:</div>
-                <div class="facilitator-box" style="border-color: var(--pb-red); color: var(--pb-text); background: rgba(255,77,77,0.08);">
-                    1. Blind spot in manual asset register &rarr; 2. OT Workstation (OS-04) compromised & Domain Controller encrypted (.lockedbyspecter) &rarr; 3. Lateral Movement across secondary NIC into IT domain &rarr; 4. Active Directory Domain Admin compromise &rarr; 5. Ransomware deployment & Port of Rotterdam operations paralysis.
-                </div>
-            </div>
-
-            <div style="margin-top: 15px;">
-                <div style="font-family: var(--font-term); font-size: 18px; color: var(--pb-red);">ESTIMATED FINANCIAL & REGULATORY LOSSES:</div>
-                <ul style="margin-left: 20px; line-height: 1.7; font-size: 13px; color: var(--pb-text);">
-                    <li><strong>NIS2 Regulatory Fines:</strong> Up to <strong style="color: var(--pb-red);">&euro;10,000,000</strong> (2% of global annual turnover for Zorgplicht breach).</li>
-                    <li><strong>Operational Downtime Costs:</strong> Approx. <strong style="color: var(--pb-red);">&euro;15,000,000 / day</strong> in multimodal port paralysis.</li>
-                    <li><strong>Incident Response & Forensics:</strong> Approx. <strong style="color: var(--pb-amber);">&euro;3,500,000</strong>.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="pb-panel">
-            <div class="pb-panel-title">LOGGED OBSERVATIONS & ACTION ITEMS SUMMARY</div>
-            <div id="summaryObsContainer"></div>
-        </div>
-    </div>
 </div>
 
 <script>
-    // Centralny magazyn danych localStorage dla aplikacji TTX const TTXStore = { KEY: 'VAULT\_TEC\_TTX\_STATE\_V1', // Odczyt stanu z pamięci przeglądarki get() { const raw = localStorage.getItem(this.KEY); if (!raw) return this.init(); try { return JSON.parse(raw); } catch (e) { console.error('Błąd odczytu localStorage, resetowanie stanu:', e); return this.init(); } }, // Inicjalizacja domyślnego stanu sesji init() { const defaultState = { participantId: 'CISO-NL-LOGISTICS-01', activeScenario: 'dutch\_logistics\_nis2', currentPhase: 0, forms: {}, // Słownik ocen i notatek: { 'scenariusz\_faza': { impact, likelihood, data, reg, rationale, notes } } observations: [] // Lista wniosków: [ { id, scenarioKey, phaseIdx, text, type, owner, timestamp } ] }; this.save(defaultState); return defaultState; }, // Zapis całego obiektu stanu save(state) { localStorage.setItem(this.KEY, JSON.stringify(state)); }, // Zapis pojedynczego pola z formularza oceny ryzyka / notatek saveField(scenarioKey, phaseIdx, field, value) { const state = this.get(); const formKey = \`${scenarioKey}\_${phaseIdx}\`; if (!state.forms[formKey]) { state.forms[formKey] = { impact: '', likelihood: '', data: '', reg: '', rationale: '', notes: '' }; } state.forms[formKey][field] = value; this.save(state); }, // Dodanie nowej obserwacji / akcji (Lessons Learned) addObservation(scenarioKey, phaseIdx, text, type, owner) { const state = this.get(); const newObs = { id: Date.now(), scenarioKey, phaseIdx, text, type, // 'gap' | 'action' | 'strength' | 'note' owner: owner || 'UNASSIGNED', timestamp: new Date().toLocaleTimeString().slice(0, 5) }; state.observations.push(newObs); this.save(state); return newObs; }, // Usuwanie wpisu z rejestru removeObservation(id) { const state = this.get(); state.observations = state.observations.filter(o =&gt; o.id !== id); this.save(state); }, // Czyszczenie stanu (rozpoczęcie nowego ćwiczenia) reset() { localStorage.removeItem(this.KEY); return this.init(); } };
-    // GLOBAL APP STATE
-    let isFacilitatorMode = false;
-    let selectedScenarioKey = 'dutch_logistics_nis2';
-    let currentPhaseIdx = 0;
-    
-    const appState = {
-        participantId: 'CISO-NL-LOGISTICS-01',
-        forms: {},
-        observations: []
-    };
+/* Centralny magazyn danych localStorage dla aplikacji TTX */
+const TTXStore = {
+    KEY: 'VAULT_TEC_TTX_STATE_V1',
 
-    // SCENARIO DATABASE
-    const SCENARIOS = {
-        dutch_logistics_nis2: {
-            title: 'Dutch Supply Chain & Logistics — NIS2 Risk Exposure & CREM Challenge',
-            targetAudience: 'CISO / Risk Board / VP Infrastructure',
-            description: 'Full 7-phase strategic exercise simulating manual risk exposure pitfalls on a dual-homed OT operator workstation, lateral movement, ransomware infection (.lockedbyspecter), and Port of Rotterdam paralysis under Dutch NIS2 (Cyberbeveiligingswet).',
-            phases: [
-                {
-                    title: 'Phase 0 — Preliminary Event',
-                    severity: 'amber',
-                    sevLabel: 'ALERT: ELEVATED',
-                    mitre: 'T1190 · Vulnerability Disclosure & NIS2 Audit',
-                    inject: 'Your team is notified of CVE-2025-55182 (CVSS 10.0), associated with the Specter ransomware family. Last vulnerability scan ran one week ago. Next scheduled scan is in 3 weeks. The vulnerable server was not covered by the critical-asset weekly scan.',
-                    tip: 'Prompt participants to consider how static annual spreadsheet scans create blind spots on OT/IT boundaries.',
-                    questions: [
-                        'Are current scan frequencies and scope sufficient?',
-                        'How do you assess likelihood of exploitation given the disclosure timeline?',
-                        'What is your immediate response — emergency patch, compensating controls, or wait for scheduled scan?',
-                        'Which assets and business processes are at highest risk from this CVE?'
-                    ]
-                },
-                {
-                    title: 'Phase 1 — Main Event',
-                    severity: 'red',
-                    sevLabel: 'CRITICAL: RED',
-                    mitre: 'T1486 / T1078 · Domain Controller Compromise & Encryption',
-                    inject: 'Helpdesk is flooded with calls — users cannot log in. An administrator checks the Domain Controller and finds all files have been modified with the extension ".lockedbyspecter".',
-                    tip: 'Focus discussion on first 30 minutes: triage protocols, domain controller isolation, and C-level notification escalation.',
-                    questions: [
-                        'What is your first action — who do you call and what do you do immediately?',
-                        'How do you prioritise and triage across affected systems?',
-                        'How would you assess initial business process impact?',
-                        'Who do you engage and notify in the first 30 minutes?',
-                        'What data and from which systems do you need to qualify and communicate the event?'
-                    ]
-                },
-                {
-                    title: 'Phase 2 — Lateral Movement & OT/IT Pivot',
-                    severity: 'red',
-                    sevLabel: 'CRITICAL: RED',
-                    mitre: 'T1210 / T1021 · Remote Service Exploitation & OT Pivot',
-                    inject: 'Threat actors leverage unmapped secondary NIC on operator console OS-04, pivoting from IT domain controllers into OT crane control systems in Rotterdam Port terminal.',
-                    tip: 'Evaluate physical safety vs cyber isolation trade-offs when OT crane control systems are affected.',
-                    questions: [
-                        'How do you verify whether OT network segment isolation is truly holding?',
-                        'What emergency compensating controls can be engaged to disconnect IT/OT bridges without physical safety risk?',
-                        'Who leads decisions when IT security policies collide with physical port safety protocols?'
-                    ]
-                },
-                {
-                    title: 'Phase 3 — Regulatory Clock & 24h NIS2 Notification',
-                    severity: 'red',
-                    sevLabel: 'ALERT: SEVERE CRITICAL',
-                    mitre: 'T1490 · Inhibit System Recovery & Regulatory Compliance',
-                    inject: 'Ticking clock on 24-hour Meldplicht notification to NCSC-NL. Backup catalogs on cloud storage accounts locked. Logistics hub queues backed up 15 km onto highways.',
-                    tip: 'Remind team of legal penalties (€10M or 2% global turnover) under Dutch NIS2 Zorgplicht breach.',
-                    questions: [
-                        'What specific evidence is required to submit the initial 24h NIS2 notification?',
-                        'How do you handle public communication while forensics are still underway?'
-                    ]
-                },
-                {
-                    title: 'Phase 4 — Business Impact & Ransom Strategy',
-                    severity: 'red',
-                    sevLabel: 'ALERT: CRITICAL',
-                    mitre: 'T1486 · Impact & Financial Extortion',
-                    inject: 'Specter ransomware operators demand 100 BTC. Estimated operational outage losses hit €15,000,000 per day. Executive board convenes emergency session.',
-                    tip: 'Discuss legal ramifications of paying extortion fees vs prolonged supply chain shutdown.',
-                    questions: [
-                        'What is the company policy and legal standing regarding ransom payments under Dutch law?',
-                        'How do you calculate total cost of downtime vs recovery time from offline tape backups?'
-                    ]
-                },
-                {
-                    title: 'Phase 5 — Board & Regulatory Defense',
-                    severity: 'amber',
-                    sevLabel: 'ALERT: ELEVATED',
-                    mitre: 'Zorgplicht Audit & Due Diligence Review',
-                    inject: 'Dutch Gaming and Transport Authority (NCSC-NL) initiates formal investigation into whether CISO fulfilled Zorgplicht (Due Care) asset management requirements.',
-                    tip: 'Highlight how automated CREM logs provide verifiable audit trails that spreadsheets lack.',
-                    questions: [
-                        'How do you defend historical risk acceptance decisions made in annual spreadsheets?',
-                        'What evidence demonstrates due diligence in managing supply chain vendor risks?'
-                    ]
-                },
-                {
-                    title: 'Phase 6 — Post-Incident & CREM Strategic Roadmap',
-                    severity: 'green',
-                    sevLabel: 'STATUS: COMPLETE',
-                    mitre: 'Post-Mortem & Security Architecture Transformation',
-                    inject: 'Incident contained. Organization transitions from manual spreadsheet-based risk management to automated Cyber Risk Exposure Management (CREM).',
-                    tip: 'Summarize key action items logged during exercise for executive presentation.',
-                    questions: [
-                        'What key gaps in asset discovery and vulnerability prioritization were exposed during this exercise?',
-                        'How will CREM automation change daily CISO decision-making and Board reporting?'
-                    ]
-                }
-            ]
-        },
-
-        specter_ransomware: {
-            title: 'Specter Ransomware & Critical Infrastructure Outage',
-            targetAudience: 'SOC Analysts / Incident Responders / Threat Hunters',
-            description: 'Technical 7-phase tabletop exercise focusing on rapid ransomware outbreak, CVE-2025-55182 exploitation, EDR evasion, and emergency incident containment.',
-            phases: [
-                {
-                    title: 'Phase 0 — Preliminary Event',
-                    severity: 'amber',
-                    sevLabel: 'ALERT: ELEVATED',
-                    mitre: 'T1190 · CVE Disclosure',
-                    inject: 'Your team is notified of CVE-2025-55182 (CVSS 10.0), associated with the Specter ransomware family. Last vulnerability scan ran one week ago.',
-                    tip: 'Review scanning scope and critical asset lists.',
-                    questions: [
-                        'Are current scan frequencies and scope sufficient?',
-                        'How do you assess likelihood of exploitation given the disclosure timeline?'
-                    ]
-                },
-                {
-                    title: 'Phase 1 — Main Event',
-                    severity: 'red',
-                    sevLabel: 'CRITICAL: RED',
-                    mitre: 'T1486 · Domain Controller Infection',
-                    inject: 'Helpdesk is flooded with calls — users cannot log in. Domain Controller files modified with ".lockedbyspecter".',
-                    tip: 'Execute initial domain containment procedures.',
-                    questions: [
-                        'What is your first action — who do you call and what do you do immediately?',
-                        'How do you prioritise and triage across affected systems?'
-                    ]
-                },
-                { title: 'Phase 2 — Escalation', severity: 'red', sevLabel: 'CRITICAL: RED', mitre: 'T1021 · Lateral Movement', inject: 'Ransomware spreads to secondary subnets.', tip: 'Isolate affected VLANs.', questions: ['How do you isolate infected VLANs?'] },
-                { title: 'Phase 3 — Backup Destruction', severity: 'red', sevLabel: 'ALERT: SEVERE CRITICAL', mitre: 'T1490 · Recovery Inhibition', inject: 'Online backups wiped by attackers.', tip: 'Evaluate offline tape recovery options.', questions: ['What offline recovery mechanisms exist?'] },
-                { title: 'Phase 4 — Extortion', severity: 'red', sevLabel: 'ALERT: CRITICAL', mitre: 'T1486 · Ransom Demand', inject: 'Attackers demand 50 BTC ransom.', tip: 'Review corporate stance on ransom payments.', questions: ['What is the policy regarding payment?'] },
-                { title: 'Phase 5 — Remediation', severity: 'amber', sevLabel: 'ALERT: ELEVATED', mitre: 'System Rebuild', inject: 'Rebuilding environment from clean gold images.', tip: 'Verify AD domain trust integrity.', questions: ['How do you verify domain trust integrity?'] },
-                { title: 'Phase 6 — Post-Mortem', severity: 'green', sevLabel: 'STATUS: COMPLETE', mitre: 'Lessons Learned', inject: 'Final incident report and security control upgrades.', tip: 'Document lessons learned and action logs.', questions: ['What permanent architecture changes are required?'] }
-            ]
-        },
-
-        data_breach: {
-            title: 'Data Breach & Exfiltration via Compromised API',
-            targetAudience: 'Data Protection Officers / Cloud Engineers / Security Architects',
-            description: 'Focuses on API token theft, customer PII data exfiltration, regulatory disclosure deadlines (GDPR), and brand damage mitigation.',
-            phases: [
-                {
-                    title: 'Phase 0 — Preliminary Event',
-                    severity: 'amber',
-                    sevLabel: 'ALERT: ELEVATED',
-                    mitre: 'T1041 · Exfiltration Over C2 Channel',
-                    inject: 'SOC detects 500GB of outbound data transferred to an unknown external IP address originating from a customer database API service account.',
-                    tip: 'Check API token rotation policies.',
-                    questions: [
-                        'Who is authorized to revoke compromised service account API tokens?',
-                        'How quickly can data classification be determined for exfiltrated tables?'
-                    ]
-                },
-                {
-                    title: 'Phase 1 — Main Event',
-                    severity: 'red',
-                    sevLabel: 'CRITICAL: RED',
-                    mitre: 'T1567 · Exfiltration to Cloud Storage',
-                    inject: 'Exfiltrated dataset includes hashed passwords, passport scans, and payment tokens for 450,000 European transport users. The 72-hour GDPR notification clock is ticking.',
-                    tip: 'DPO must initiate regulatory reporting protocol.',
-                    questions: [
-                        'What is the legal threshold for notifying affected data subjects?',
-                        'How do you coordinate public relations with regulatory filings?'
-                    ]
-                },
-                { title: 'Phase 2 — Containment', severity: 'red', sevLabel: 'CRITICAL: RED', mitre: 'Token Revocation', inject: 'Revoking compromised API keys.', tip: 'Isolate cloud service accounts.', questions: ['How do you verify no secondary backdoor exists?'] },
-                { title: 'Phase 3 — Notification', severity: 'amber', sevLabel: 'ALERT: ELEVATED', mitre: 'GDPR Filing', inject: 'Submitting 72h report to Data Protection Authority.', tip: 'Coordinate Legal and PR.', questions: ['What details must be included in the initial report?'] },
-                { title: 'Phase 4 — Remediation', severity: 'amber', sevLabel: 'ALERT: ELEVATED', mitre: 'API Hardening', inject: 'Implementing mTLS and OAuth token expiration.', tip: 'Review cloud IAM roles.', questions: ['How do you enforce least privilege access?'] },
-                { title: 'Phase 5 — Post-Mortem', severity: 'green', sevLabel: 'STATUS: COMPLETE', mitre: 'Audit Review', inject: 'Final report to Executive Board.', tip: 'Log all long-term action items.', questions: ['What architecture changes will prevent future API exfiltration?'] }
-            ]
+    /* Odczyt stanu z pamięci przeglądarki */
+    get() {
+        const raw = localStorage.getItem(this.KEY);
+        if (!raw) return this.init();
+        try {
+            return JSON.parse(raw);
+        } catch (e) {
+            console.error('Błąd odczytu localStorage:', e);
+            return this.init();
         }
-    };
+    },
 
-    function switchScenarioFromSelector(key) {
-        saveCurrentPhaseForm();
-        selectedScenarioKey = key;
-        currentPhaseIdx = 0;
-        document.getElementById('metaScenarioKey').innerText = key;
-        document.getElementById('metaPhaseCount').innerText = SCENARIOS[key].phases.length;
-        renderPhasePips();
-        loadCurrentPhaseData();
-    }
-
-    function renderPhasePips() {
-        const sc = SCENARIOS[selectedScenarioKey];
-        const container = document.getElementById('phaseProgressPips');
-        container.innerHTML = '';
-
-        sc.phases.forEach((p, idx) => {
-            const pip = document.createElement('div');
-            pip.className = `phase-pip ${idx === currentPhaseIdx ? 'current' : (idx < currentPhaseIdx ? 'done' : '')}`;
-            pip.innerText = idx;
-            pip.title = p.title;
-            pip.onclick = () => jumpToPhase(idx);
-            container.appendChild(pip);
-        });
-
-        const counter = document.createElement('span');
-        counter.className = 'phase-step-counter';
-        counter.innerText = `${currentPhaseIdx} / ${sc.phases.length - 1}`;
-        container.appendChild(counter);
-    }
-
-    function jumpToPhase(idx) {
-        saveCurrentPhaseForm();
-        currentPhaseIdx = idx;
-        renderPhasePips();
-        loadCurrentPhaseData();
-    }
-
-    function changePhase(delta) {
-        saveCurrentPhaseForm();
-        const sc = SCENARIOS[selectedScenarioKey];
-        const newIdx = currentPhaseIdx + delta;
-        if (newIdx >= 0 && newIdx < sc.phases.length) {
-            currentPhaseIdx = newIdx;
-            renderPhasePips();
-            loadCurrentPhaseData();
-        }
-    }
-
-    function loadCurrentPhaseData() {
-        const sc = SCENARIOS[selectedScenarioKey];
-        const p = sc.phases[currentPhaseIdx];
-
-        document.getElementById('activePhaseTitle').innerText = p.title;
-        
-        const badgeEl = document.getElementById('activePhaseBadge');
-        badgeEl.innerText = p.sevLabel;
-        badgeEl.className = `pb-badge ${p.severity}`;
-
-        document.getElementById('injectBodyText').innerText = p.inject;
-        document.getElementById('facilitatorTipText').innerText = p.tip;
-        document.getElementById('facilitatorBox').style.display = isFacilitatorMode ? 'block' : 'none';
-
-        // Questions
-        const qContainer = document.getElementById('questionsListContainer');
-        qContainer.innerHTML = '';
-        p.questions.forEach((q, i) => {
-            const item = document.createElement('div');
-            item.className = 'q-item';
-            item.innerHTML = `<span class="q-num">${i + 1}.</span><span class="q-text">${q}</span>`;
-            qContainer.appendChild(item);
-        });
-
-        // Load saved form values
-        const formKey = `${selectedScenarioKey}_${currentPhaseIdx}`;
-        const saved = appState.forms[formKey] || {};
-
-        document.getElementById('riskImpact').value = saved.impact || '';
-        document.getElementById('riskLikelihood').value = saved.likelihood || '';
-        document.getElementById('riskData').value = saved.data || '';
-        document.getElementById('riskRegulatory').value = saved.reg || '';
-        document.getElementById('riskRationale').value = saved.rationale || '';
-        document.getElementById('phaseNotes').value = saved.notes || '';
-
-        renderObservations();
-
-        document.getElementById('btnPrevPhase').disabled = (currentPhaseIdx === 0);
-        document.getElementById('btnNextPhase').innerText = (currentPhaseIdx === sc.phases.length - 1) ? 'FINISH EXERCISE ▶' : 'NEXT INJECT ▶';
-        document.getElementById('footerPhaseStatus').innerText = `PHASE ${currentPhaseIdx} OF ${sc.phases.length - 1}`;
-    }
-
-    function saveCurrentPhaseForm() {
-        const formKey = `${selectedScenarioKey}_${currentPhaseIdx}`;
-        appState.forms[formKey] = {
-            impact: document.getElementById('riskImpact').value,
-            likelihood: document.getElementById('riskLikelihood').value,
-            data: document.getElementById('riskData').value,
-            reg: document.getElementById('riskRegulatory').value,
-            rationale: document.getElementById('riskRationale').value,
-            notes: document.getElementById('phaseNotes').value
+    /* Inicjalizacja domyślnego stanu sesji */
+    init() {
+        const defaultState = {
+            participantId: 'CISO-NL-LOGISTICS-01',
+            activeScenario: 'dutch_logistics_nis2',
+            currentPhase: 0,
+            forms: {},
+            observations: []
         };
-    }
+        this.save(defaultState);
+        return defaultState;
+    },
 
-    function addObservation() {
-        const textInp = document.getElementById('obsInputText');
-        const typeSel = document.getElementById('obsTypeSelect');
-        const ownerInp = document.getElementById('obsOwnerInput');
+    /* Zapis całego obiektu stanu */
+    save(state) {
+        localStorage.setItem(this.KEY, JSON.stringify(state));
+    },
 
-        const text = textInp.value.trim();
-        if (!text) return;
+    /* Zapis pojedynczego pola z formularza oceny ryzyka / notatek */
+    saveField(scenarioKey, phaseIdx, field, value) {
+        const state = this.get();
+        const formKey = `${scenarioKey}_${phaseIdx}`;
+        if (!state.forms[formKey]) {
+            state.forms[formKey] = { impact: '', likelihood: '', data: '', reg: '', rationale: '', notes: '' };
+        }
+        state.forms[formKey][field] = value;
+        this.save(state);
+    },
 
-        appState.observations.push({
+    /* Dodanie nowej obserwacji / akcji (Lessons Learned) */
+    addObservation(scenarioKey, phaseIdx, text, type, owner) {
+        const state = this.get();
+        const newObs = {
             id: Date.now(),
-            scenarioKey: selectedScenarioKey,
-            phaseIdx: currentPhaseIdx,
+            scenarioKey,
+            phaseIdx,
             text,
-            type: typeSel.value,
-            owner: ownerInp.value.trim() || 'UNASSIGNED'
-        });
+            type, /* 'gap' | 'action' | 'strength' | 'note' */
+            owner: owner || 'UNASSIGNED',
+            timestamp: new Date().toLocaleTimeString().slice(0, 5)
+        };
+        state.observations.push(newObs);
+        this.save(state);
+        return newObs;
+    },
 
-        textInp.value = '';
-        ownerInp.value = '';
+    /* Usuwanie wpisu z rejestru */
+    removeObservation(id) {
+        const state = this.get();
+        state.observations = state.observations.filter(o => o.id !== id);
+        this.save(state);
+    },
 
-        renderObservations();
+    /* Czyszczenie stanu (rozpoczęcie nowego ćwiczenia) */
+    reset() {
+        localStorage.removeItem(this.KEY);
+        return this.init();
     }
+};
 
-    function deleteObservation(id) {
-        appState.observations = appState.observations.filter(o => o.id !== id);
-        renderObservations();
+/* GLOBAL APP STATE & SCENARIOS */
+let isFacilitatorMode = false;
+let selectedScenarioKey = 'dutch_logistics_nis2';
+let currentPhaseIdx = 0;
+
+const SCENARIOS = {
+    dutch_logistics_nis2: {
+        title: 'Dutch Supply Chain & Logistics — NIS2 Risk Exposure & CREM Challenge',
+        targetAudience: 'CISO / Risk Board / VP Infrastructure',
+        description: 'Full 7-phase strategic exercise simulating manual risk exposure pitfalls on a dual-homed OT operator workstation, lateral movement, ransomware infection (.lockedbyspecter), and Port of Rotterdam paralysis under Dutch NIS2.',
+        phases: [
+            {
+                title: 'Phase 0 — Preliminary Event',
+                severity: 'amber',
+                sevLabel: 'ALERT: ELEVATED',
+                inject: 'Your team is notified of CVE-2025-55182 (CVSS 10.0), associated with the Specter ransomware family. Last vulnerability scan ran one week ago. Next scheduled scan is in 3 weeks.',
+                tip: 'Prompt participants to consider how static annual spreadsheet scans create blind spots on OT/IT boundaries.',
+                questions: [
+                    'Are current scan frequencies and scope sufficient?',
+                    'How do you assess likelihood of exploitation given the disclosure timeline?',
+                    'What is your immediate response — emergency patch or wait for scheduled scan?'
+                ]
+            },
+            {
+                title: 'Phase 1 — Main Event',
+                severity: 'red',
+                sevLabel: 'CRITICAL: RED',
+                inject: 'Helpdesk is flooded with calls — users cannot log in. An administrator checks the Domain Controller and finds all files have been modified with the extension ".lockedbyspecter".',
+                tip: 'Focus discussion on first 30 minutes: triage protocols, domain controller isolation, and C-level notification escalation.',
+                questions: [
+                    'What is your first action — who do you call and what do you do immediately?',
+                    'How do you prioritise and triage across affected systems?',
+                    'Who do you engage and notify in the first 30 minutes?'
+                ]
+            },
+            {
+                title: 'Phase 2 — Lateral Movement & OT/IT Pivot',
+                severity: 'red',
+                sevLabel: 'CRITICAL: RED',
+                inject: 'Threat actors leverage unmapped secondary NIC on operator console OS-04, pivoting from IT domain controllers into OT crane control systems in Rotterdam Port terminal.',
+                tip: 'Evaluate physical safety vs cyber isolation trade-offs when OT crane control systems are affected.',
+                questions: [
+                    'How do you verify whether OT network segment isolation is truly holding?',
+                    'What emergency compensating controls can be engaged without physical safety risk?'
+                ]
+            },
+            {
+                title: 'Phase 3 — Regulatory Clock & 24h NIS2 Notification',
+                severity: 'red',
+                sevLabel: 'ALERT: SEVERE CRITICAL',
+                inject: 'Ticking clock on 24-hour Meldplicht notification to NCSC-NL. Backup catalogs on cloud storage accounts locked. Logistics hub queues backed up 15 km onto highways.',
+                tip: 'Remind team of legal penalties (€10M or 2% global turnover) under Dutch NIS2 Zorgplicht breach.',
+                questions: [
+                    'What specific evidence is required to submit the initial 24h NIS2 notification?',
+                    'How do you handle public communication while forensics are still underway?'
+                ]
+            },
+            {
+                title: 'Phase 4 — Business Impact & Ransom Strategy',
+                severity: 'red',
+                sevLabel: 'ALERT: CRITICAL',
+                inject: 'Specter ransomware operators demand 100 BTC. Estimated operational outage losses hit €15,000,000 per day. Executive board convenes emergency session.',
+                tip: 'Discuss legal ramifications of paying extortion fees vs prolonged supply chain shutdown.',
+                questions: [
+                    'What is the company policy regarding ransom payments under Dutch law?',
+                    'How do you calculate total cost of downtime vs recovery time from offline tape backups?'
+                ]
+            },
+            {
+                title: 'Phase 5 — Board & Regulatory Defense',
+                severity: 'amber',
+                sevLabel: 'ALERT: ELEVATED',
+                inject: 'Dutch Gaming and Transport Authority (NCSC-NL) initiates formal investigation into whether CISO fulfilled Zorgplicht (Due Care) asset management requirements.',
+                tip: 'Highlight how automated CREM logs provide verifiable audit trails that spreadsheets lack.',
+                questions: [
+                    'How do you defend historical risk acceptance decisions made in annual spreadsheets?',
+                    'What evidence demonstrates due diligence in managing supply chain vendor risks?'
+                ]
+            },
+            {
+                title: 'Phase 6 — Post-Incident & Strategic Roadmap',
+                severity: 'green',
+                sevLabel: 'STATUS: COMPLETE',
+                inject: 'Incident contained. Organization transitions from manual spreadsheet-based risk management to automated Cyber Risk Exposure Management (CREM).',
+                tip: 'Summarize key action items logged during exercise for executive presentation.',
+                questions: [
+                    'What key gaps in asset discovery and vulnerability prioritization were exposed?',
+                    'How will automation change daily CISO decision-making and Board reporting?'
+                ]
+            }
+        ]
+    },
+    specter_ransomware: {
+        title: 'Specter Ransomware Outage',
+        targetAudience: 'SOC / Incident Responders',
+        description: 'Technical 7-phase tabletop exercise focusing on rapid ransomware outbreak and domain controller recovery.',
+        phases: [
+            { title: 'Phase 0 — Preliminary Event', severity: 'amber', sevLabel: 'ALERT: ELEVATED', inject: 'CVE-2025-55182 vulnerability disclosed.', tip: 'Check scan scope.', questions: ['Are scans up to date?'] },
+            { title: 'Phase 1 — Main Event', severity: 'red', sevLabel: 'CRITICAL: RED', inject: 'Domain Controllers encrypted with .lockedbyspecter.', tip: 'Execute DC isolation.', questions: ['Who is notified first?'] },
+            { title: 'Phase 2 — Escalation', severity: 'red', sevLabel: 'CRITICAL: RED', inject: 'Lateral movement detected on secondary VLANs.', tip: 'Isolate subnets.', questions: ['How do you cut VLAN bridges?'] },
+            { title: 'Phase 3 — Backup Destruction', severity: 'red', sevLabel: 'ALERT: SEVERE CRITICAL', inject: 'Online backup catalogs erased.', tip: 'Locate tape backups.', questions: ['Where are offline tapes stored?'] },
+            { title: 'Phase 4 — Extortion', severity: 'red', sevLabel: 'ALERT: CRITICAL', inject: 'Ransom note demands 50 BTC.', tip: 'Consult Legal.', questions: ['What is executive stance on ransom?'] },
+            { title: 'Phase 5 — Remediation', severity: 'amber', sevLabel: 'ALERT: ELEVATED', inject: 'Rebuilding core AD forest from gold images.', tip: 'Verify trust relationships.', questions: ['How do you verify domain trust?'] },
+            { title: 'Phase 6 — Post-Mortem', severity: 'green', sevLabel: 'STATUS: COMPLETE', inject: 'Lessons learned and security upgrades.', tip: 'Finalize report.', questions: ['What permanent architecture changes are needed?'] }
+        ]
+    },
+    data_breach: {
+        title: 'Data Breach & Exfiltration via API',
+        targetAudience: 'DPO / Cloud Engineers',
+        description: 'Focuses on API token theft, customer PII data exfiltration, and 72h GDPR reporting.',
+        phases: [
+            { title: 'Phase 0 — Preliminary Event', severity: 'amber', sevLabel: 'ALERT: ELEVATED', inject: 'SOC detects 500GB outbound data transfer from API service account.', tip: 'Check API tokens.', questions: ['Who revokes cloud tokens?'] },
+            { title: 'Phase 1 — Main Event', severity: 'red', sevLabel: 'CRITICAL: RED', inject: 'Exfiltrated data includes 450k customer passport scans. GDPR clock active.', tip: 'Notify DPA.', questions: ['What is the threshold for DPA reporting?'] },
+            { title: 'Phase 2 — Containment', severity: 'red', sevLabel: 'CRITICAL: RED', inject: 'API tokens rotated. Verifying C2 backdoors.', tip: 'Revoke IAM roles.', questions: ['How do you verify no secondary token exists?'] },
+            { title: 'Phase 3 — Notification', severity: 'amber', sevLabel: 'ALERT: ELEVATED', inject: 'Submitting 72h report to Data Protection Authority.', tip: 'Coordinate PR & Legal.', questions: ['What details are included in the 72h filing?'] },
+            { title: 'Phase 4 — Remediation', severity: 'amber', sevLabel: 'ALERT: ELEVATED', inject: 'Hardening API gateways with mTLS.', tip: 'Audit IAM policies.', questions: ['How do you enforce least privilege access?'] },
+            { title: 'Phase 5 — Post-Mortem', severity: 'green', sevLabel: 'STATUS: COMPLETE', inject: 'Final report submitted to Board.', tip: 'Review lessons learned.', questions: ['What permanent changes will prevent API exfiltration?'] }
+        ]
     }
+};
 
-    function renderObservations() {
-        const container = document.getElementById('obsListContainer');
-        container.innerHTML = '';
+function switchScenarioFromSelector(key) {
+    saveCurrentPhaseForm();
+    selectedScenarioKey = key;
+    currentPhaseIdx = 0;
+    
+    const state = TTXStore.get();
+    state.activeScenario = key;
+    state.currentPhase = 0;
+    TTXStore.save(state);
 
-        const currentObs = appState.observations.filter(o => o.scenarioKey === selectedScenarioKey && o.phaseIdx === currentPhaseIdx);
+    document.getElementById('metaScenarioKey').innerText = key;
+    document.getElementById('metaPhaseCount').innerText = SCENARIOS[key].phases.length;
+    renderPhasePips();
+    loadCurrentPhaseData();
+}
 
-        if (currentObs.length === 0) {
-            container.innerHTML = '<div style="font-size: 12px; color: var(--pb-text-dim); padding: 4px 0;">> NO OBSERVATIONS RECORDED FOR THIS PHASE</div>';
-            return;
-        }
+function renderPhasePips() {
+    const sc = SCENARIOS[selectedScenarioKey];
+    const container = document.getElementById('phaseProgressPips');
+    container.innerHTML = '';
 
-        currentObs.forEach(o => {
-            const item = document.createElement('div');
-            item.className = 'obs-item';
-            
-            const badgeClass = `obs-${o.type}`;
-            item.innerHTML = `
-                <span class="obs-type-badge ${badgeClass}">${o.type}</span>
-                <span class="obs-item-text">${o.text} <span style="color: var(--pb-text-dim); font-size: 11px;">— ${o.owner}</span></span>
-                <span class="obs-del" onclick="deleteObservation(${o.id})">[X]</span>
-            `;
-            container.appendChild(item);
-        });
-    }
+    sc.phases.forEach((p, idx) => {
+        const pip = document.createElement('div');
+        pip.className = `phase-pip ${idx === currentPhaseIdx ? 'current' : (idx < currentPhaseIdx ? 'done' : '')}`;
+        pip.innerText = idx;
+        pip.title = p.title;
+        pip.onclick = () => jumpToPhase(idx);
+        container.appendChild(pip);
+    });
 
-    function renderSummaryObservations() {
-        const container = document.getElementById('summaryObsContainer');
-        const obs = appState.observations.filter(o => o.scenarioKey === selectedScenarioKey);
+    const counter = document.createElement('span');
+    counter.className = 'phase-step-counter';
+    counter.innerText = `${currentPhaseIdx} / ${sc.phases.length - 1}`;
+    container.appendChild(counter);
+}
 
-        if (obs.length === 0) {
-            container.innerHTML = '<p style="color: var(--pb-text-dim); font-size: 13px;">No action items logged across phases yet.</p>';
-            return;
-        }
+function jumpToPhase(idx) {
+    saveCurrentPhaseForm();
+    currentPhaseIdx = idx;
+    
+    const state = TTXStore.get();
+    state.currentPhase = idx;
+    TTXStore.save(state);
 
-        let html = '<table class="pb-table"><thead><tr><th>PHASE</th><th>TYPE</th><th>OBSERVATION / ACTION ITEM</th><th>OWNER</th></tr></thead><tbody>';
-        obs.forEach(o => {
-            html += `
-                <tr>
-                    <td style="color: var(--pb-amber);">PHASE ${o.phaseIdx}</td>
-                    <td><span class="obs-type-badge obs-${o.type}">${o.type}</span></td>
-                    <td>${o.text}</td>
-                    <td style="color: var(--pb-cyan);">${o.owner}</td>
-                </tr>
-            `;
-        });
-        html += '</tbody></table>';
-        container.innerHTML = html;
-    }
+    renderPhasePips();
+    loadCurrentPhaseData();
+}
 
-    function toggleRole(chip) { chip.classList.toggle('selected'); }
-
-    function toggleMode() {
-        isFacilitatorMode = !isFacilitatorMode;
-        const btn = document.getElementById('btn-mode');
-        btn.innerText = isFacilitatorMode ? '[ FACILITATOR ]' : '[ PARTICIPANT ]';
-        btn.className = isFacilitatorMode ? 'pb-btn amber' : 'pb-btn';
+function changePhase(delta) {
+    saveCurrentPhaseForm();
+    const sc = SCENARIOS[selectedScenarioKey];
+    const newIdx = currentPhaseIdx + delta;
+    if (newIdx >= 0 && newIdx < sc.phases.length) {
+        currentPhaseIdx = newIdx;
         
-        document.getElementById('metaFacilitatorStatus').innerText = isFacilitatorMode ? 'ENABLED' : 'DISABLED';
-        document.getElementById('metaFacilitatorStatus').style.color = isFacilitatorMode ? 'var(--pb-amber)' : 'var(--pb-text-dim)';
-        document.getElementById('facilitatorBox').style.display = isFacilitatorMode ? 'block' : 'none';
-    }
-
-    function showTab(tabName) {
-        saveCurrentPhaseForm();
-        document.getElementById('btn-tab-exercise').classList.toggle('active', tabName === 'exercise');
-        document.getElementById('btn-tab-nist').classList.toggle('active', tabName === 'nist');
-
-        if (tabName === 'exercise') {
-            document.getElementById('view-nist').style.display = 'none';
-            document.getElementById('view-tracker').style.display = 'block';
-        } else {
-            document.getElementById('view-tracker').style.display = 'none';
-            document.getElementById('view-nist').style.display = 'block';
-            renderSummaryObservations();
-        }
-    }
-
-    function exportReport() {
-        saveCurrentPhaseForm();
-        const sc = SCENARIOS[selectedScenarioKey];
-        const lines = [];
-
-        lines.push('================================================================');
-        lines.push(`  TABLETOP EXERCISE REPORT — ${sc.title.toUpperCase()}`);
-        lines.push(`  VAULT-TEC TTX TERMINAL · PARTICIPANT: ${appState.participantId}`);
-        lines.push(`  TIMESTAMP: ${new Date().toLocaleString()}`);
-        lines.push('================================================================\n');
-
-        sc.phases.forEach((p, idx) => {
-            const formKey = `${selectedScenarioKey}_${idx}`;
-            const f = appState.forms[formKey] || {};
-
-            lines.push(`--- ${p.title.toUpperCase()} ---`);
-            lines.push(`SEVERITY: ${p.sevLabel}`);
-            if (p.mitre) lines.push(`MITRE TAG: ${p.mitre}`);
-            if (f.impact) lines.push(`BUSINESS IMPACT: ${f.impact}`);
-            if (f.likelihood) lines.push(`LIKELIHOOD: ${f.likelihood}`);
-            if (f.data) lines.push(`DATA SENSITIVITY: ${f.data}`);
-            if (f.reg) lines.push(`REGULATORY EXPOSURE: ${f.reg}`);
-            if (f.rationale) lines.push(`RATIONALE: ${f.rationale}`);
-            if (f.notes) lines.push(`DISCUSSION NOTES: ${f.notes}`);
-            lines.push('');
-        });
-
-        lines.push('\n================================================================');
-        lines.push('  LOGGED OBSERVATIONS & ACTION ITEMS');
-        lines.push('================================================================');
-        
-        const obs = appState.observations.filter(o => o.scenarioKey === selectedScenarioKey);
-        if (obs.length === 0) {
-            lines.push('No observations recorded.');
-        } else {
-            obs.forEach(o => {
-                lines.push(`[${o.type.toUpperCase()}] (Phase ${o.phaseIdx}) ${o.text} — Owner: ${o.owner}`);
-            });
-        }
-
-        const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `ttx-report-${selectedScenarioKey}-${Date.now()}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-
-    function tickClock() {
-        const d = new Date();
-        document.getElementById('clockBox').innerText = d.toISOString().replace('T', ' ').slice(0, 19);
-    }
-
-    // INIT FROM URL PARAMS OR DEFAULTS
-    window.addEventListener('load', () => {
-        tickClock();
-        setInterval(tickClock, 1000);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const scParam = urlParams.get('scenario') || urlParams.get('sc');
-        const idParam = urlParams.get('id') || urlParams.get('callsign');
-
-        if (scParam && SCENARIOS[scParam]) {
-            selectedScenarioKey = scParam;
-        }
-        if (idParam) {
-            appState.participantId = idParam;
-        }
-
-        document.getElementById('scenarioSelector').value = selectedScenarioKey;
-        document.getElementById('metaCallsign').innerText = appState.participantId;
-        document.getElementById('metaScenarioKey').innerText = selectedScenarioKey;
-        document.getElementById('metaPhaseCount').innerText = SCENARIOS[selectedScenarioKey].phases.length;
+        const state = TTXStore.get();
+        state.currentPhase = newIdx;
+        TTXStore.save(state);
 
         renderPhasePips();
         loadCurrentPhaseData();
+    }
+}
+
+function loadCurrentPhaseData() {
+    const sc = SCENARIOS[selectedScenarioKey];
+    const p = sc.phases[currentPhaseIdx];
+
+    document.getElementById('activePhaseTitle').innerText = p.title;
+    
+    const badgeEl = document.getElementById('activePhaseBadge');
+    badgeEl.innerText = p.sevLabel;
+    badgeEl.className = `pb-badge ${p.severity}`;
+
+    document.getElementById('injectBodyText').innerText = p.inject;
+    document.getElementById('facilitatorTipText').innerText = p.tip;
+    document.getElementById('facilitatorBox').style.display = isFacilitatorMode ? 'block' : 'none';
+
+    /* Render Questions */
+    const qContainer = document.getElementById('questionsListContainer');
+    qContainer.innerHTML = '';
+    p.questions.forEach((q, i) => {
+        const item = document.createElement('div');
+        item.className = 'q-item';
+        item.innerHTML = `<span class="q-num">${i + 1}.</span><span class="q-text">${q}</span>`;
+        qContainer.appendChild(item);
     });
+
+    /* Load saved form values from TTXStore */
+    const state = TTXStore.get();
+    const formKey = `${selectedScenarioKey}_${currentPhaseIdx}`;
+    const saved = (state.forms && state.forms[formKey]) ? state.forms[formKey] : {};
+
+    document.getElementById('riskImpact').value = saved.impact || '';
+    document.getElementById('riskLikelihood').value = saved.likelihood || '';
+    document.getElementById('riskData').value = saved.data || '';
+    document.getElementById('riskRegulatory').value = saved.reg || '';
+    document.getElementById('riskRationale').value = saved.rationale || '';
+    document.getElementById('phaseNotes').value = saved.notes || '';
+
+    renderObservations();
+
+    document.getElementById('btnPrevPhase').disabled = (currentPhaseIdx === 0);
+    document.getElementById('btnNextPhase').innerText = (currentPhaseIdx === sc.phases.length - 1) ? 'FINISH EXERCISE ▶' : 'NEXT INJECT ▶';
+    document.getElementById('footerPhaseStatus').innerText = `PHASE ${currentPhaseIdx} OF ${sc.phases.length - 1}`;
+}
+
+function saveCurrentPhaseForm() {
+    TTXStore.saveField(selectedScenarioKey, currentPhaseIdx, 'impact', document.getElementById('riskImpact').value);
+    TTXStore.saveField(selectedScenarioKey, currentPhaseIdx, 'likelihood', document.getElementById('riskLikelihood').value);
+    TTXStore.saveField(selectedScenarioKey, currentPhaseIdx, 'data', document.getElementById('riskData').value);
+    TTXStore.saveField(selectedScenarioKey, currentPhaseIdx, 'reg', document.getElementById('riskRegulatory').value);
+    TTXStore.saveField(selectedScenarioKey, currentPhaseIdx, 'rationale', document.getElementById('riskRationale').value);
+    TTXStore.saveField(selectedScenarioKey, currentPhaseIdx, 'notes', document.getElementById('phaseNotes').value);
+}
+
+function addObservation() {
+    const textInp = document.getElementById('obsInputText');
+    const typeSel = document.getElementById('obsTypeSelect');
+    const ownerInp = document.getElementById('obsOwnerInput');
+
+    const text = textInp.value.trim();
+    if (!text) return;
+
+    TTXStore.addObservation(selectedScenarioKey, currentPhaseIdx, text, typeSel.value, ownerInp.value.trim());
+
+    textInp.value = '';
+    ownerInp.value = '';
+
+    renderObservations();
+}
+
+function deleteObservation(id) {
+    TTXStore.removeObservation(id);
+    renderObservations();
+}
+
+function renderObservations() {
+    const container = document.getElementById('obsListContainer');
+    container.innerHTML = '';
+
+    const state = TTXStore.get();
+    const currentObs = (state.observations || []).filter(o => o.scenarioKey === selectedScenarioKey && o.phaseIdx === currentPhaseIdx);
+
+    if (currentObs.length === 0) {
+        container.innerHTML = '<div style="font-size: 12px; color: var(--pb-text-dim); padding: 4px 0;">> NO OBSERVATIONS RECORDED FOR THIS PHASE</div>';
+        return;
+    }
+
+    currentObs.forEach(o => {
+        const item = document.createElement('div');
+        item.className = 'obs-item';
+        
+        const badgeClass = `obs-${o.type}`;
+        item.innerHTML = `
+            <span class="obs-type-badge ${badgeClass}">${o.type}</span>
+            <span class="obs-item-text">${o.text} <span style="color: var(--pb-text-dim); font-size: 11px;">— ${o.owner}</span></span>
+            <span class="obs-del" onclick="deleteObservation(${o.id})">[X]</span>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function toggleRole(chip) { chip.classList.toggle('selected'); }
+
+function toggleMode() {
+    isFacilitatorMode = !isFacilitatorMode;
+    const btn = document.getElementById('btn-mode');
+    btn.innerText = isFacilitatorMode ? '[ FACILITATOR ]' : '[ PARTICIPANT ]';
+    btn.className = isFacilitatorMode ? 'pb-btn amber' : 'pb-btn';
+    
+    document.getElementById('metaFacilitatorStatus').innerText = isFacilitatorMode ? 'ENABLED' : 'DISABLED';
+    document.getElementById('metaFacilitatorStatus').style.color = isFacilitatorMode ? 'var(--pb-amber)' : 'var(--pb-text-dim)';
+    document.getElementById('facilitatorBox').style.display = isFacilitatorMode ? 'block' : 'none';
+}
+
+function exportReport() {
+    saveCurrentPhaseForm();
+    const sc = SCENARIOS[selectedScenarioKey];
+    const state = TTXStore.get();
+    const lines = [];
+
+    lines.push('================================================================');
+    lines.push(`  TABLETOP EXERCISE REPORT — ${sc.title.toUpperCase()}`);
+    lines.push(`  VAULT-TEC TTX TERMINAL · PARTICIPANT: ${state.participantId || 'CISO-NL-LOGISTICS-01'}`);
+    lines.push(`  TIMESTAMP: ${new Date().toLocaleString()}`);
+    lines.push('================================================================\n');
+
+    sc.phases.forEach((p, idx) => {
+        const formKey = `${selectedScenarioKey}_${idx}`;
+        const f = (state.forms && state.forms[formKey]) ? state.forms[formKey] : {};
+
+        lines.push(`--- ${p.title.toUpperCase()} ---`);
+        lines.push(`SEVERITY: ${p.sevLabel}`);
+        if (f.impact) lines.push(`BUSINESS IMPACT: ${f.impact}`);
+        if (f.likelihood) lines.push(`LIKELIHOOD: ${f.likelihood}`);
+        if (f.data) lines.push(`DATA SENSITIVITY: ${f.data}`);
+        if (f.reg) lines.push(`REGULATORY EXPOSURE: ${f.reg}`);
+        if (f.rationale) lines.push(`RATIONALE: ${f.rationale}`);
+        if (f.notes) lines.push(`DISCUSSION NOTES: ${f.notes}`);
+        lines.push('');
+    });
+
+    lines.push('\n================================================================');
+    lines.push('  LOGGED OBSERVATIONS & ACTION ITEMS');
+    lines.push('================================================================');
+    
+    const obs = (state.observations || []).filter(o => o.scenarioKey === selectedScenarioKey);
+    if (obs.length === 0) {
+        lines.push('No observations recorded.');
+    } else {
+        obs.forEach(o => {
+            lines.push(`[${o.type.toUpperCase()}] (Phase ${o.phaseIdx}) ${o.text} — Owner: ${o.owner}`);
+        });
+    }
+
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ttx-report-${selectedScenarioKey}-${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function tickClock() {
+    const d = new Date();
+    document.getElementById('clockBox').innerText = d.toISOString().replace('T', ' ').slice(0, 19);
+}
+
+window.addEventListener('load', () => {
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    const state = TTXStore.get();
+    selectedScenarioKey = state.activeScenario || 'dutch_logistics_nis2';
+    currentPhaseIdx = state.currentPhase || 0;
+
+    document.getElementById('scenarioSelector').value = selectedScenarioKey;
+    document.getElementById('metaCallsign').innerText = state.participantId || 'CISO-NL-LOGISTICS-01';
+    document.getElementById('metaScenarioKey').innerText = selectedScenarioKey;
+    document.getElementById('metaPhaseCount').innerText = SCENARIOS[selectedScenarioKey].phases.length;
+
+    renderPhasePips();
+    loadCurrentPhaseData();
+});
 </script>
 </body>
 </html>
