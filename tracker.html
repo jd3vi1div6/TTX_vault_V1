@@ -25,7 +25,11 @@
             --font-term: 'VT323', monospace;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             background-color: var(--pb-bg);
@@ -39,21 +43,26 @@
             background-size: 100% 100%, 100% 4px;
         }
 
-        /* CRT Scanline Overlay */
         body::before {
             content: " ";
             display: block;
             position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
             z-index: 9999;
             background-size: 100% 3px, 6px 100%;
             pointer-events: none;
         }
 
-        .container { max-width: 1350px; margin: 0 auto; padding: 15px; }
+        .container {
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 15px;
+        }
 
-        /* Top Bar */
         .topbar {
             display: flex;
             align-items: center;
@@ -67,18 +76,31 @@
             gap: 10px;
         }
 
-        .topbar-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
         .topbar-title {
             font-family: var(--font-term);
             font-size: 26px;
             color: var(--pb-green);
             letter-spacing: 2px;
             text-shadow: 0 0 8px var(--pb-green-glow);
+            text-decoration: none;
         }
 
-        .clock-box { font-size: 13px; color: var(--pb-text-dim); }
+        .clock-box {
+            font-size: 13px;
+            color: var(--pb-text-dim);
+        }
 
-        .nav-tabs { display: flex; gap: 6px; }
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+        }
 
         .nav-btn {
             background: var(--pb-bg);
@@ -92,7 +114,11 @@
             transition: all 0.15s;
         }
 
-        .nav-btn:hover { border-color: var(--pb-green); color: var(--pb-green); }
+        .nav-btn:hover {
+            border-color: var(--pb-green);
+            color: var(--pb-green);
+        }
+
         .nav-btn.active {
             background: var(--pb-green-dark);
             border-color: var(--pb-green);
@@ -100,7 +126,13 @@
             box-shadow: 0 0 8px var(--pb-green-glow);
         }
 
-        .mode-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--pb-text-dim); }
+        .mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--pb-text-dim);
+        }
 
         .pb-btn {
             background: var(--pb-bg-2);
@@ -121,10 +153,16 @@
             color: #fff;
         }
 
-        .pb-btn.amber { border-color: var(--pb-amber); color: var(--pb-amber); }
-        .pb-btn.amber:hover { background: rgba(255,180,55,0.2); box-shadow: 0 0 12px rgba(255,180,55,0.4); }
+        .pb-btn.amber {
+            border-color: var(--pb-amber);
+            color: var(--pb-amber);
+        }
 
-        /* Panels */
+        .pb-btn.amber:hover {
+            background: rgba(255,180,55,0.2);
+            box-shadow: 0 0 12px rgba(255,180,55,0.4);
+        }
+
         .pb-panel {
             border: 1px solid var(--pb-green-dim);
             background: var(--pb-bg-2);
@@ -154,21 +192,43 @@
             letter-spacing: 0.1em;
             display: inline-block;
         }
-        .pb-badge.green { color: var(--pb-green); border-color: var(--pb-green-dim); }
-        .pb-badge.amber { color: var(--pb-amber); border-color: var(--pb-amber); background: rgba(255,180,55,0.1); }
-        .pb-badge.red { color: var(--pb-red); border-color: var(--pb-red); background: rgba(255,77,77,0.15); }
 
-        /* Layout Grid */
+        .pb-badge.green {
+            color: var(--pb-green);
+            border-color: var(--pb-green-dim);
+        }
+
+        .pb-badge.amber {
+            color: var(--pb-amber);
+            border-color: var(--pb-amber);
+            background: rgba(255,180,55,0.1);
+        }
+
+        .pb-badge.red {
+            color: var(--pb-red);
+            border-color: var(--pb-red);
+            background: rgba(255,77,77,0.15);
+        }
+
         .tracker-layout {
             display: grid;
             grid-template-columns: 280px 1fr;
             gap: 15px;
         }
 
-        @media (max-width: 850px) { .tracker-layout { grid-template-columns: 1fr; } }
+        @media (max-width: 850px) {
+            .tracker-layout {
+                grid-template-columns: 1fr;
+            }
+        }
 
-        /* Sidebar Elements */
-        .role-list { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; }
+        .role-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
 
         .role-chip {
             font-size: 11px;
@@ -200,8 +260,13 @@
             display: block;
         }
 
-        /* Phase Pips */
-        .phase-progress { display: flex; gap: 5px; align-items: center; margin: 12px 0 18px 0; flex-wrap: wrap; }
+        .phase-progress {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            margin: 12px 0 18px 0;
+            flex-wrap: wrap;
+        }
 
         .phase-pip {
             flex: 1;
@@ -219,8 +284,17 @@
             justify-content: center;
         }
 
-        .phase-pip:hover { border-color: var(--pb-green); color: var(--pb-green); }
-        .phase-pip.done { background: var(--pb-green-dark); color: var(--pb-green); border-color: var(--pb-green-dim); }
+        .phase-pip:hover {
+            border-color: var(--pb-green);
+            color: var(--pb-green);
+        }
+
+        .phase-pip.done {
+            background: var(--pb-green-dark);
+            color: var(--pb-green);
+            border-color: var(--pb-green-dim);
+        }
+
         .phase-pip.current {
             background: var(--pb-green-dim);
             color: var(--pb-bg);
@@ -229,10 +303,20 @@
             font-weight: bold;
         }
 
-        .phase-step-counter { font-family: var(--font-term); font-size: 20px; color: var(--pb-amber); margin-left: auto; }
+        .phase-step-counter {
+            font-family: var(--font-term);
+            font-size: 20px;
+            color: var(--pb-amber);
+            margin-left: auto;
+        }
 
-        /* Inject & Facilitator Box */
-        .inject-body { font-family: var(--font-mono); font-size: 14px; line-height: 1.7; color: var(--pb-text); white-space: pre-wrap; }
+        .inject-body {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--pb-text);
+            white-space: pre-wrap;
+        }
 
         .facilitator-box {
             border: 1px dashed var(--pb-amber);
@@ -243,18 +327,64 @@
             line-height: 1.5;
             background: rgba(255,180,55,0.06);
         }
-        .facilitator-box::before { content: '>> FACILITATOR EYES ONLY <<'; display: block; font-size: 11px; letter-spacing: 0.2em; margin-bottom: 6px; font-weight: bold; }
 
-        .q-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-        .q-item { display: flex; gap: 10px; padding: 8px 10px; border-left: 2px solid var(--pb-green-dim); background: rgba(78,255,145,0.03); }
-        .q-num { color: var(--pb-green); min-width: 24px; font-weight: bold; }
-        .q-text { color: var(--pb-text); line-height: 1.5; font-size: 13px; }
+        .facilitator-box::before {
+            content: '>> FACILITATOR EYES ONLY <<';
+            display: block;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
 
-        /* Forms */
-        .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        @media (max-width: 600px) { .risk-grid { grid-template-columns: 1fr; } }
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
 
-        .risk-field label { display: block; font-size: 11px; color: var(--pb-green-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+        .q-item {
+            display: flex;
+            gap: 10px;
+            padding: 8px 10px;
+            border-left: 2px solid var(--pb-green-dim);
+            background: rgba(78,255,145,0.03);
+        }
+
+        .q-num {
+            color: var(--pb-green);
+            min-width: 24px;
+            font-weight: bold;
+        }
+
+        .q-text {
+            color: var(--pb-text);
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .risk-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .risk-field label {
+            display: block;
+            font-size: 11px;
+            color: var(--pb-green-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
 
         .pb-select, .pb-input, .pb-textarea {
             width: 100%;
@@ -267,38 +397,115 @@
             outline: none;
         }
 
-        .pb-select:focus, .pb-input:focus, .pb-textarea:focus { border-color: var(--pb-green); box-shadow: 0 0 8px var(--pb-green-glow); }
-        .pb-textarea { min-height: 80px; resize: vertical; }
+        .pb-select:focus, .pb-input:focus, .pb-textarea:focus {
+            border-color: var(--pb-green);
+            box-shadow: 0 0 8px var(--pb-green-glow);
+        }
 
-        /* Observations Table */
-        .obs-list { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
-        .obs-item { display: flex; gap: 10px; padding: 8px 10px; border: 1px solid var(--pb-green-dark); background: var(--pb-bg); align-items: center; }
-        .obs-item-text { flex: 1; color: var(--pb-text); font-size: 13px; }
-        .obs-type-badge { font-size: 10px; padding: 1px 8px; border: 1px solid currentColor; text-transform: uppercase; letter-spacing: 0.15em; }
-        .obs-gap { color: var(--pb-red); border-color: var(--pb-red); }
-        .obs-action { color: var(--pb-amber); border-color: var(--pb-amber); }
-        .obs-strength { color: var(--pb-green); border-color: var(--pb-green); }
-        .obs-note { color: var(--pb-text-dim); border-color: var(--pb-green-dim); }
-        .obs-del { color: var(--pb-red); cursor: pointer; padding: 0 6px; font-weight: bold; }
-        .obs-del:hover { background: var(--pb-red); color: var(--pb-bg); }
+        .pb-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
 
-        .obs-add-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
-        .obs-add-row input { flex: 1; min-width: 180px; }
+        .obs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 12px 0;
+        }
 
-        .footer { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border: 1px solid var(--pb-green-dim); background: var(--pb-bg-2); margin-top: 15px; flex-wrap: wrap; gap: 10px; }
+        .obs-item {
+            display: flex;
+            gap: 10px;
+            padding: 8px 10px;
+            border: 1px solid var(--pb-green-dark);
+            background: var(--pb-bg);
+            align-items: center;
+        }
+
+        .obs-item-text {
+            flex: 1;
+            color: var(--pb-text);
+            font-size: 13px;
+        }
+
+        .obs-type-badge {
+            font-size: 10px;
+            padding: 1px 8px;
+            border: 1px solid currentColor;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .obs-gap {
+            color: var(--pb-red);
+            border-color: var(--pb-red);
+        }
+
+        .obs-action {
+            color: var(--pb-amber);
+            border-color: var(--pb-amber);
+        }
+
+        .obs-strength {
+            color: var(--pb-green);
+            border-color: var(--pb-green);
+        }
+
+        .obs-note {
+            color: var(--pb-text-dim);
+            border-color: var(--pb-green-dim);
+        }
+
+        .obs-del {
+            color: var(--pb-red);
+            cursor: pointer;
+            padding: 0 6px;
+            font-weight: bold;
+        }
+
+        .obs-del:hover {
+            background: var(--pb-red);
+            color: var(--pb-bg);
+        }
+
+        .obs-add-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .obs-add-row input {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border: 1px solid var(--pb-green-dim);
+            background: var(--pb-bg-2);
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- TOP BAR -->
     <header class="topbar">
         <div class="topbar-left">
-            <span class="topbar-title">VAULT-TEC TTX TERMINAL ENGINE</span>
+            <a href="index.html" class="topbar-title">VAULT-TEC TTX TERMINAL ENGINE</a>
             <span class="clock-box" id="clockBox">2026-09-24 00:00:00</span>
         </div>
 
         <div class="nav-tabs">
+            <a href="index.html" class="nav-btn">[ START / SCENARIOS ]</a>
             <a href="tracker.html" class="nav-btn active">[ 1. EXERCISE TRACKER ]</a>
             <a href="dashboard.html" class="nav-btn">[ 2. DASHBOARD ]</a>
             <a href="lessons-learned.html" class="nav-btn">[ 3. LESSONS LEARNED ]</a>
@@ -311,10 +518,8 @@
         </div>
     </header>
 
-    <!-- MAIN TRACKER WORKSPACE -->
     <div id="view-tracker">
         <div class="tracker-layout">
-            <!-- SIDEBAR -->
             <div>
                 <div class="pb-panel">
                     <div class="pb-panel-title">DWELLERS PRESENT</div>
@@ -367,7 +572,6 @@
                 </div>
             </div>
 
-            <!-- MAIN PHASES AREA -->
             <div>
                 <div class="pb-panel">
                     <div class="pb-panel-title">
@@ -375,10 +579,8 @@
                         <span id="activePhaseBadge" class="pb-badge amber">ALERT: ELEVATED</span>
                     </div>
 
-                    <!-- PHASE PIPS -->
                     <div class="phase-progress" id="phaseProgressPips"></div>
 
-                    <!-- INJECT & DISCUSSION -->
                     <div class="inject-card">
                         <div class="inject-body" id="injectBodyText">Loading scenario inject...</div>
                         
@@ -387,13 +589,11 @@
                         </div>
                     </div>
 
-                    <!-- QUESTIONS -->
                     <div style="margin-top: 15px;">
                         <div style="font-family: var(--font-term); font-size: 18px; color: var(--pb-amber);">// DISCUSSION QUESTIONS</div>
                         <div class="q-list" id="questionsListContainer"></div>
                     </div>
 
-                    <!-- RISK ASSESSMENT FORM -->
                     <div style="margin-top: 20px; border-top: 1px dashed var(--pb-green-dark); padding-top: 15px;">
                         <div style="font-family: var(--font-term); font-size: 18px; color: var(--pb-amber); margin-bottom: 10px;">// RISK ASSESSMENT</div>
                         <div class="risk-grid">
@@ -445,13 +645,11 @@
                         </div>
                     </div>
 
-                    <!-- DISCUSSION NOTES -->
                     <div style="margin-top: 15px;">
                         <div style="font-family: var(--font-term); font-size: 18px; color: var(--pb-amber); margin-bottom: 6px;">// DISCUSSION NOTES</div>
                         <textarea id="phaseNotes" class="pb-textarea" placeholder="Capture key points, decisions, and outcomes for this phase..." onchange="saveCurrentPhaseForm()"></textarea>
                     </div>
 
-                    <!-- OBSERVATIONS & ACTION ITEMS -->
                     <div style="margin-top: 15px;">
                         <div style="font-family: var(--font-term); font-size: 18px; color: var(--pb-amber); margin-bottom: 6px;">// OBSERVATIONS & ACTION ITEMS</div>
                         
@@ -470,7 +668,6 @@
                         </div>
                     </div>
 
-                    <!-- FOOTER CONTROLS -->
                     <div class="footer">
                         <button class="pb-btn" id="btnPrevPhase" onclick="changePhase(-1)">&larr; PREVIOUS PHASE</button>
                         <span id="footerPhaseStatus" style="font-size: 13px; color: var(--pb-text-dim);">PHASE 0 OF 6</span>
@@ -487,9 +684,8 @@
 const TTXStore = {
     KEY: 'VAULT_TEC_TTX_STATE_V1',
 
-    /* Odczyt stanu z pamięci przeglądarki */
-    get() {
-        const raw = localStorage.getItem(this.KEY);
+    get: function() {
+        var raw = localStorage.getItem(this.KEY);
         if (!raw) return this.init();
         try {
             return JSON.parse(raw);
@@ -499,9 +695,8 @@ const TTXStore = {
         }
     },
 
-    /* Inicjalizacja domyślnego stanu sesji */
-    init() {
-        const defaultState = {
+    init: function() {
+        var defaultState = {
             participantId: 'CISO-NL-LOGISTICS-01',
             activeScenario: 'dutch_logistics_nis2',
             currentPhase: 0,
@@ -512,15 +707,13 @@ const TTXStore = {
         return defaultState;
     },
 
-    /* Zapis całego obiektu stanu */
-    save(state) {
+    save: function(state) {
         localStorage.setItem(this.KEY, JSON.stringify(state));
     },
 
-    /* Zapis pojedynczego pola z formularza oceny ryzyka / notatek */
-    saveField(scenarioKey, phaseIdx, field, value) {
-        const state = this.get();
-        const formKey = `${scenarioKey}_${phaseIdx}`;
+    saveField: function(scenarioKey, phaseIdx, field, value) {
+        var state = this.get();
+        var formKey = scenarioKey + '_' + phaseIdx;
         if (!state.forms[formKey]) {
             state.forms[formKey] = { impact: '', likelihood: '', data: '', reg: '', rationale: '', notes: '' };
         }
@@ -528,15 +721,14 @@ const TTXStore = {
         this.save(state);
     },
 
-    /* Dodanie nowej obserwacji / akcji (Lessons Learned) */
-    addObservation(scenarioKey, phaseIdx, text, type, owner) {
-        const state = this.get();
-        const newObs = {
+    addObservation: function(scenarioKey, phaseIdx, text, type, owner) {
+        var state = this.get();
+        var newObs = {
             id: Date.now(),
-            scenarioKey,
-            phaseIdx,
-            text,
-            type, /* 'gap' | 'action' | 'strength' | 'note' */
+            scenarioKey: scenarioKey,
+            phaseIdx: phaseIdx,
+            text: text,
+            type: type,
             owner: owner || 'UNASSIGNED',
             timestamp: new Date().toLocaleTimeString().slice(0, 5)
         };
@@ -545,26 +737,25 @@ const TTXStore = {
         return newObs;
     },
 
-    /* Usuwanie wpisu z rejestru */
-    removeObservation(id) {
-        const state = this.get();
-        state.observations = state.observations.filter(o => o.id !== id);
+    removeObservation: function(id) {
+        var state = this.get();
+        state.observations = state.observations.filter(function(o) {
+            return o.id !== id;
+        });
         this.save(state);
     },
 
-    /* Czyszczenie stanu (rozpoczęcie nowego ćwiczenia) */
-    reset() {
+    reset: function() {
         localStorage.removeItem(this.KEY);
         return this.init();
     }
 };
 
-/* GLOBAL APP STATE & SCENARIOS */
-let isFacilitatorMode = false;
-let selectedScenarioKey = 'dutch_logistics_nis2';
-let currentPhaseIdx = 0;
+var isFacilitatorMode = false;
+var selectedScenarioKey = 'dutch_logistics_nis2';
+var currentPhaseIdx = 0;
 
-const SCENARIOS = {
+var SCENARIOS = {
     dutch_logistics_nis2: {
         title: 'Dutch Supply Chain & Logistics — NIS2 Risk Exposure & CREM Challenge',
         targetAudience: 'CISO / Risk Board / VP Infrastructure',
@@ -685,7 +876,7 @@ function switchScenarioFromSelector(key) {
     selectedScenarioKey = key;
     currentPhaseIdx = 0;
     
-    const state = TTXStore.get();
+    var state = TTXStore.get();
     state.activeScenario = key;
     state.currentPhase = 0;
     TTXStore.save(state);
@@ -697,22 +888,22 @@ function switchScenarioFromSelector(key) {
 }
 
 function renderPhasePips() {
-    const sc = SCENARIOS[selectedScenarioKey];
-    const container = document.getElementById('phaseProgressPips');
+    var sc = SCENARIOS[selectedScenarioKey];
+    var container = document.getElementById('phaseProgressPips');
     container.innerHTML = '';
 
-    sc.phases.forEach((p, idx) => {
-        const pip = document.createElement('div');
-        pip.className = `phase-pip ${idx === currentPhaseIdx ? 'current' : (idx < currentPhaseIdx ? 'done' : '')}`;
+    sc.phases.forEach(function(p, idx) {
+        var pip = document.createElement('div');
+        pip.className = 'phase-pip ' + (idx === currentPhaseIdx ? 'current' : (idx < currentPhaseIdx ? 'done' : ''));
         pip.innerText = idx;
         pip.title = p.title;
-        pip.onclick = () => jumpToPhase(idx);
+        pip.onclick = function() { jumpToPhase(idx); };
         container.appendChild(pip);
     });
 
-    const counter = document.createElement('span');
+    var counter = document.createElement('span');
     counter.className = 'phase-step-counter';
-    counter.innerText = `${currentPhaseIdx} / ${sc.phases.length - 1}`;
+    counter.innerText = currentPhaseIdx + ' / ' + (sc.phases.length - 1);
     container.appendChild(counter);
 }
 
@@ -720,7 +911,7 @@ function jumpToPhase(idx) {
     saveCurrentPhaseForm();
     currentPhaseIdx = idx;
     
-    const state = TTXStore.get();
+    var state = TTXStore.get();
     state.currentPhase = idx;
     TTXStore.save(state);
 
@@ -730,12 +921,12 @@ function jumpToPhase(idx) {
 
 function changePhase(delta) {
     saveCurrentPhaseForm();
-    const sc = SCENARIOS[selectedScenarioKey];
-    const newIdx = currentPhaseIdx + delta;
+    var sc = SCENARIOS[selectedScenarioKey];
+    var newIdx = currentPhaseIdx + delta;
     if (newIdx >= 0 && newIdx < sc.phases.length) {
         currentPhaseIdx = newIdx;
         
-        const state = TTXStore.get();
+        var state = TTXStore.get();
         state.currentPhase = newIdx;
         TTXStore.save(state);
 
@@ -745,33 +936,31 @@ function changePhase(delta) {
 }
 
 function loadCurrentPhaseData() {
-    const sc = SCENARIOS[selectedScenarioKey];
-    const p = sc.phases[currentPhaseIdx];
+    var sc = SCENARIOS[selectedScenarioKey];
+    var p = sc.phases[currentPhaseIdx];
 
     document.getElementById('activePhaseTitle').innerText = p.title;
     
-    const badgeEl = document.getElementById('activePhaseBadge');
+    var badgeEl = document.getElementById('activePhaseBadge');
     badgeEl.innerText = p.sevLabel;
-    badgeEl.className = `pb-badge ${p.severity}`;
+    badgeEl.className = 'pb-badge ' + p.severity;
 
     document.getElementById('injectBodyText').innerText = p.inject;
     document.getElementById('facilitatorTipText').innerText = p.tip;
     document.getElementById('facilitatorBox').style.display = isFacilitatorMode ? 'block' : 'none';
 
-    /* Render Questions */
-    const qContainer = document.getElementById('questionsListContainer');
+    var qContainer = document.getElementById('questionsListContainer');
     qContainer.innerHTML = '';
-    p.questions.forEach((q, i) => {
-        const item = document.createElement('div');
+    p.questions.forEach(function(q, i) {
+        var item = document.createElement('div');
         item.className = 'q-item';
-        item.innerHTML = `<span class="q-num">${i + 1}.</span><span class="q-text">${q}</span>`;
+        item.innerHTML = '<span class="q-num">' + (i + 1) + '.</span><span class="q-text">' + q + '</span>';
         qContainer.appendChild(item);
     });
 
-    /* Load saved form values from TTXStore */
-    const state = TTXStore.get();
-    const formKey = `${selectedScenarioKey}_${currentPhaseIdx}`;
-    const saved = (state.forms && state.forms[formKey]) ? state.forms[formKey] : {};
+    var state = TTXStore.get();
+    var formKey = selectedScenarioKey + '_' + currentPhaseIdx;
+    var saved = (state.forms && state.forms[formKey]) ? state.forms[formKey] : {};
 
     document.getElementById('riskImpact').value = saved.impact || '';
     document.getElementById('riskLikelihood').value = saved.likelihood || '';
@@ -784,7 +973,7 @@ function loadCurrentPhaseData() {
 
     document.getElementById('btnPrevPhase').disabled = (currentPhaseIdx === 0);
     document.getElementById('btnNextPhase').innerText = (currentPhaseIdx === sc.phases.length - 1) ? 'FINISH EXERCISE ▶' : 'NEXT INJECT ▶';
-    document.getElementById('footerPhaseStatus').innerText = `PHASE ${currentPhaseIdx} OF ${sc.phases.length - 1}`;
+    document.getElementById('footerPhaseStatus').innerText = 'PHASE ' + currentPhaseIdx + ' OF ' + (sc.phases.length - 1);
 }
 
 function saveCurrentPhaseForm() {
@@ -797,11 +986,11 @@ function saveCurrentPhaseForm() {
 }
 
 function addObservation() {
-    const textInp = document.getElementById('obsInputText');
-    const typeSel = document.getElementById('obsTypeSelect');
-    const ownerInp = document.getElementById('obsOwnerInput');
+    var textInp = document.getElementById('obsInputText');
+    var typeSel = document.getElementById('obsTypeSelect');
+    var ownerInp = document.getElementById('obsOwnerInput');
 
-    const text = textInp.value.trim();
+    var text = textInp.value.trim();
     if (!text) return;
 
     TTXStore.addObservation(selectedScenarioKey, currentPhaseIdx, text, typeSel.value, ownerInp.value.trim());
@@ -818,27 +1007,27 @@ function deleteObservation(id) {
 }
 
 function renderObservations() {
-    const container = document.getElementById('obsListContainer');
+    var container = document.getElementById('obsListContainer');
     container.innerHTML = '';
 
-    const state = TTXStore.get();
-    const currentObs = (state.observations || []).filter(o => o.scenarioKey === selectedScenarioKey && o.phaseIdx === currentPhaseIdx);
+    var state = TTXStore.get();
+    var currentObs = (state.observations || []).filter(function(o) {
+        return o.scenarioKey === selectedScenarioKey && o.phaseIdx === currentPhaseIdx;
+    });
 
     if (currentObs.length === 0) {
         container.innerHTML = '<div style="font-size: 12px; color: var(--pb-text-dim); padding: 4px 0;">> NO OBSERVATIONS RECORDED FOR THIS PHASE</div>';
         return;
     }
 
-    currentObs.forEach(o => {
-        const item = document.createElement('div');
+    currentObs.forEach(function(o) {
+        var item = document.createElement('div');
         item.className = 'obs-item';
         
-        const badgeClass = `obs-${o.type}`;
-        item.innerHTML = `
-            <span class="obs-type-badge ${badgeClass}">${o.type}</span>
-            <span class="obs-item-text">${o.text} <span style="color: var(--pb-text-dim); font-size: 11px;">— ${o.owner}</span></span>
-            <span class="obs-del" onclick="deleteObservation(${o.id})">[X]</span>
-        `;
+        var badgeClass = 'obs-' + o.type;
+        item.innerHTML = '<span class="obs-type-badge ' + badgeClass + '">' + o.type + '</span>' +
+            '<span class="obs-item-text">' + o.text + ' <span style="color: var(--pb-text-dim); font-size: 11px;">— ' + o.owner + '</span></span>' +
+            '<span class="obs-del" onclick="deleteObservation(' + o.id + ')">[X]</span>';
         container.appendChild(item);
     });
 }
@@ -847,7 +1036,7 @@ function toggleRole(chip) { chip.classList.toggle('selected'); }
 
 function toggleMode() {
     isFacilitatorMode = !isFacilitatorMode;
-    const btn = document.getElementById('btn-mode');
+    var btn = document.getElementById('btn-mode');
     btn.innerText = isFacilitatorMode ? '[ FACILITATOR ]' : '[ PARTICIPANT ]';
     btn.className = isFacilitatorMode ? 'pb-btn amber' : 'pb-btn';
     
@@ -858,28 +1047,28 @@ function toggleMode() {
 
 function exportReport() {
     saveCurrentPhaseForm();
-    const sc = SCENARIOS[selectedScenarioKey];
-    const state = TTXStore.get();
-    const lines = [];
+    var sc = SCENARIOS[selectedScenarioKey];
+    var state = TTXStore.get();
+    var lines = [];
 
     lines.push('================================================================');
-    lines.push(`  TABLETOP EXERCISE REPORT — ${sc.title.toUpperCase()}`);
-    lines.push(`  VAULT-TEC TTX TERMINAL · PARTICIPANT: ${state.participantId || 'CISO-NL-LOGISTICS-01'}`);
-    lines.push(`  TIMESTAMP: ${new Date().toLocaleString()}`);
+    lines.push('  TABLETOP EXERCISE REPORT — ' + sc.title.toUpperCase());
+    lines.push('  VAULT-TEC TTX TERMINAL · PARTICIPANT: ' + (state.participantId || 'CISO-NL-LOGISTICS-01'));
+    lines.push('  TIMESTAMP: ' + (new Date().toLocaleString()));
     lines.push('================================================================\n');
 
-    sc.phases.forEach((p, idx) => {
-        const formKey = `${selectedScenarioKey}_${idx}`;
-        const f = (state.forms && state.forms[formKey]) ? state.forms[formKey] : {};
+    sc.phases.forEach(function(p, idx) {
+        var formKey = selectedScenarioKey + '_' + idx;
+        var f = (state.forms && state.forms[formKey]) ? state.forms[formKey] : {};
 
-        lines.push(`--- ${p.title.toUpperCase()} ---`);
-        lines.push(`SEVERITY: ${p.sevLabel}`);
-        if (f.impact) lines.push(`BUSINESS IMPACT: ${f.impact}`);
-        if (f.likelihood) lines.push(`LIKELIHOOD: ${f.likelihood}`);
-        if (f.data) lines.push(`DATA SENSITIVITY: ${f.data}`);
-        if (f.reg) lines.push(`REGULATORY EXPOSURE: ${f.reg}`);
-        if (f.rationale) lines.push(`RATIONALE: ${f.rationale}`);
-        if (f.notes) lines.push(`DISCUSSION NOTES: ${f.notes}`);
+        lines.push('--- ' + p.title.toUpperCase() + ' ---');
+        lines.push('SEVERITY: ' + p.sevLabel);
+        if (f.impact) lines.push('BUSINESS IMPACT: ' + f.impact);
+        if (f.likelihood) lines.push('LIKELIHOOD: ' + f.likelihood);
+        if (f.data) lines.push('DATA SENSITIVITY: ' + f.data);
+        if (f.reg) lines.push('REGULATORY EXPOSURE: ' + f.reg);
+        if (f.rationale) lines.push('RATIONALE: ' + f.rationale);
+        if (f.notes) lines.push('DISCUSSION NOTES: ' + f.notes);
         lines.push('');
     });
 
@@ -887,35 +1076,52 @@ function exportReport() {
     lines.push('  LOGGED OBSERVATIONS & ACTION ITEMS');
     lines.push('================================================================');
     
-    const obs = (state.observations || []).filter(o => o.scenarioKey === selectedScenarioKey);
+    var obs = (state.observations || []).filter(function(o) {
+        return o.scenarioKey === selectedScenarioKey;
+    });
     if (obs.length === 0) {
         lines.push('No observations recorded.');
     } else {
-        obs.forEach(o => {
-            lines.push(`[${o.type.toUpperCase()}] (Phase ${o.phaseIdx}) ${o.text} — Owner: ${o.owner}`);
+        obs.forEach(function(o) {
+            lines.push('[' + o.type.toUpperCase() + '] (Phase ' + o.phaseIdx + ') ' + o.text + ' — Owner: ' + o.owner);
         });
     }
 
-    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
     a.href = url;
-    a.download = `ttx-report-${selectedScenarioKey}-${Date.now()}.txt`;
+    a.download = 'ttx-report-' + selectedScenarioKey + '-' + Date.now() + '.txt';
     a.click();
     URL.revokeObjectURL(url);
 }
 
 function tickClock() {
-    const d = new Date();
-    document.getElementById('clockBox').innerText = d.toISOString().replace('T', ' ').slice(0, 19);
+    var d = new Date();
+    var clock = document.getElementById('clockBox');
+    if (clock) {
+        clock.innerText = d.toISOString().replace('T', ' ').slice(0, 19);
+    }
 }
 
-window.addEventListener('load', () => {
+window.addEventListener('load', function() {
     tickClock();
     setInterval(tickClock, 1000);
 
-    const state = TTXStore.get();
-    selectedScenarioKey = state.activeScenario || 'dutch_logistics_nis2';
+    var urlParams = new URLSearchParams(window.location.search);
+    var scenarioParam = urlParams.get('scenario');
+
+    var state = TTXStore.get();
+
+    if (scenarioParam && SCENARIOS[scenarioParam]) {
+        selectedScenarioKey = scenarioParam;
+        state.activeScenario = scenarioParam;
+        state.currentPhase = 0;
+        TTXStore.save(state);
+    } else {
+        selectedScenarioKey = state.activeScenario || 'dutch_logistics_nis2';
+    }
+
     currentPhaseIdx = state.currentPhase || 0;
 
     document.getElementById('scenarioSelector').value = selectedScenarioKey;
