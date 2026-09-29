@@ -25,7 +25,11 @@
             --font-term: 'VT323', monospace;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             background-color: var(--pb-bg);
@@ -39,21 +43,26 @@
             background-size: 100% 100%, 100% 4px;
         }
 
-        /* CRT Scanline Overlay */
         body::before {
             content: " ";
             display: block;
             position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
             z-index: 9999;
             background-size: 100% 3px, 6px 100%;
             pointer-events: none;
         }
 
-        .container { max-width: 1350px; margin: 0 auto; padding: 15px; }
+        .container {
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 15px;
+        }
 
-        /* Top Bar */
         .topbar {
             display: flex;
             align-items: center;
@@ -67,18 +76,31 @@
             gap: 10px;
         }
 
-        .topbar-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
         .topbar-title {
             font-family: var(--font-term);
             font-size: 26px;
             color: var(--pb-green);
             letter-spacing: 2px;
             text-shadow: 0 0 8px var(--pb-green-glow);
+            text-decoration: none;
         }
 
-        .clock-box { font-size: 13px; color: var(--pb-text-dim); }
+        .clock-box {
+            font-size: 13px;
+            color: var(--pb-text-dim);
+        }
 
-        .nav-tabs { display: flex; gap: 6px; }
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+        }
 
         .nav-btn {
             background: var(--pb-bg);
@@ -92,7 +114,11 @@
             transition: all 0.15s;
         }
 
-        .nav-btn:hover { border-color: var(--pb-green); color: var(--pb-green); }
+        .nav-btn:hover {
+            border-color: var(--pb-green);
+            color: var(--pb-green);
+        }
+
         .nav-btn.active {
             background: var(--pb-green-dark);
             border-color: var(--pb-green);
@@ -119,10 +145,16 @@
             color: #fff;
         }
 
-        .pb-btn.amber { border-color: var(--pb-amber); color: var(--pb-amber); }
-        .pb-btn.amber:hover { background: rgba(255,180,55,0.2); box-shadow: 0 0 12px rgba(255,180,55,0.4); }
+        .pb-btn.amber {
+            border-color: var(--pb-amber);
+            color: var(--pb-amber);
+        }
 
-        /* Panels & Cards */
+        .pb-btn.amber:hover {
+            background: rgba(255,180,55,0.2);
+            box-shadow: 0 0 12px rgba(255,180,55,0.4);
+        }
+
         .pb-panel {
             border: 1px solid var(--pb-green-dim);
             background: var(--pb-bg-2);
@@ -152,27 +184,50 @@
             letter-spacing: 0.1em;
             display: inline-block;
         }
-        .pb-badge.green { color: var(--pb-green); border-color: var(--pb-green-dim); }
 
-        /* KPI Grid */
+        .pb-badge.green {
+            color: var(--pb-green);
+            border-color: var(--pb-green-dim);
+        }
+
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 12px;
             margin-bottom: 15px;
         }
-        @media (max-width: 900px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        @media (max-width: 900px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
         .kpi-card {
             border: 1px solid var(--pb-green-dim);
             background: var(--pb-bg-2);
             padding: 14px;
         }
-        .kpi-label { font-size: 11px; color: var(--pb-green-dim); letter-spacing: 0.15em; text-transform: uppercase; }
-        .kpi-value { font-family: var(--font-term); font-size: 36px; color: var(--pb-green); margin: 4px 0; }
-        .kpi-sub { font-size: 11px; color: var(--pb-text-dim); }
 
-        /* Filter Controls */
+        .kpi-label {
+            font-size: 11px;
+            color: var(--pb-green-dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .kpi-value {
+            font-family: var(--font-term);
+            font-size: 36px;
+            color: var(--pb-green);
+            margin: 4px 0;
+        }
+
+        .kpi-sub {
+            font-size: 11px;
+            color: var(--pb-text-dim);
+        }
+
         .filter-bar {
             display: flex;
             gap: 10px;
@@ -195,7 +250,12 @@
             letter-spacing: 0.1em;
             transition: all 0.15s;
         }
-        .filter-btn:hover { border-color: var(--pb-green); color: var(--pb-green); }
+
+        .filter-btn:hover {
+            border-color: var(--pb-green);
+            color: var(--pb-green);
+        }
+
         .filter-btn.active {
             background: var(--pb-green-dark);
             border-color: var(--pb-green);
@@ -212,10 +272,25 @@
             outline: none;
         }
 
-        /* Table */
-        .pb-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
-        .pb-table th, .pb-table td { border: 1px solid var(--pb-green-dark); padding: 10px 12px; text-align: left; }
-        .pb-table th { background: var(--pb-green-dark); color: var(--pb-green); font-family: var(--font-term); font-size: 16px; }
+        .pb-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+
+        .pb-table th, .pb-table td {
+            border: 1px solid var(--pb-green-dark);
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .pb-table th {
+            background: var(--pb-green-dark);
+            color: var(--pb-green);
+            font-family: var(--font-term);
+            font-size: 16px;
+        }
 
         .type-tag {
             font-size: 10px;
@@ -226,10 +301,29 @@
             display: inline-block;
             white-space: nowrap;
         }
-        .type-gap { color: var(--pb-red); border-color: var(--pb-red); background: rgba(255,77,77,0.1); }
-        .type-action { color: var(--pb-amber); border-color: var(--pb-amber); background: rgba(255,180,55,0.1); }
-        .type-strength { color: var(--pb-green); border-color: var(--pb-green); background: rgba(78,255,145,0.1); }
-        .type-note { color: var(--pb-text-dim); border-color: var(--pb-green-dim); }
+
+        .type-gap {
+            color: var(--pb-red);
+            border-color: var(--pb-red);
+            background: rgba(255,77,77,0.1);
+        }
+
+        .type-action {
+            color: var(--pb-amber);
+            border-color: var(--pb-amber);
+            background: rgba(255,180,55,0.1);
+        }
+
+        .type-strength {
+            color: var(--pb-green);
+            border-color: var(--pb-green);
+            background: rgba(78,255,145,0.1);
+        }
+
+        .type-note {
+            color: var(--pb-text-dim);
+            border-color: var(--pb-green-dim);
+        }
 
         .btn-del {
             color: var(--pb-red);
@@ -237,20 +331,24 @@
             font-weight: bold;
             padding: 2px 6px;
         }
-        .btn-del:hover { background: var(--pb-red); color: var(--pb-bg); }
+
+        .btn-del:hover {
+            background: var(--pb-red);
+            color: var(--pb-bg);
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- TOP BAR -->
     <header class="topbar">
         <div class="topbar-left">
-            <span class="topbar-title">VAULT-TEC TTX LESSONS LEARNED</span>
+            <a href="index.html" class="topbar-title">VAULT-TEC TTX LESSONS LEARNED</a>
             <span class="clock-box" id="clockBox">2026-09-24 00:00:00</span>
         </div>
 
         <div class="nav-tabs">
+            <a href="index.html" class="nav-btn">[ START / SCENARIOS ]</a>
             <a href="tracker.html" class="nav-btn">[ 1. EXERCISE TRACKER ]</a>
             <a href="dashboard.html" class="nav-btn">[ 2. DASHBOARD ]</a>
             <a href="lessons-learned.html" class="nav-btn active">[ 3. LESSONS LEARNED ]</a>
@@ -261,7 +359,6 @@
         </div>
     </header>
 
-    <!-- KPI GRID -->
     <div class="kpi-grid">
         <div class="kpi-card">
             <div class="kpi-label">TOTAL OBSERVATIONS</div>
@@ -285,29 +382,34 @@
         </div>
     </div>
 
-    <!-- MAIN LESSONS LEARNED PANEL -->
     <div class="pb-panel">
         <div class="pb-panel-title">
             <span>LESSONS LEARNED & REMEDIATION ROADMAP</span>
             <span class="pb-badge green">EXECUTIVE REPORT REPOSITORY</span>
         </div>
 
-        <!-- FILTER CONTROLS -->
         <div class="filter-bar">
-            <span style="font-size: 11px; color: var(--pb-green-dim); text-transform: uppercase;">FILTER BY TYPE:</span>
+            <span style="font-size: 11px; color: var(--pb-green-dim); text-transform: uppercase;">FILTER BY SCENARIO:</span>
+            <select id="scenarioFilterSelect" class="pb-select" onchange="renderTable()">
+                <option value="all">-- ALL SCENARIOS --</option>
+                <option value="dutch_logistics_nis2">Dutch Logistics NIS2</option>
+                <option value="specter_ransomware">Specter Ransomware</option>
+                <option value="data_breach">Data Breach API</option>
+            </select>
+
+            <span style="font-size: 11px; color: var(--pb-green-dim); text-transform: uppercase; margin-left: 10px;">FILTER BY TYPE:</span>
             <button class="filter-btn active" onclick="setFilterType('all', this)">ALL TYPES</button>
             <button class="filter-btn" onclick="setFilterType('gap', this)">GAPS ONLY</button>
             <button class="filter-btn" onclick="setFilterType('action', this)">ACTIONS ONLY</button>
             <button class="filter-btn" onclick="setFilterType('strength', this)">STRENGTHS ONLY</button>
             <button class="filter-btn" onclick="setFilterType('note', this)">NOTES ONLY</button>
 
-            <span style="font-size: 11px; color: var(--pb-green-dim); text-transform: uppercase; margin-left: 15px;">FILTER BY OWNER:</span>
+            <span style="font-size: 11px; color: var(--pb-green-dim); text-transform: uppercase; margin-left: 10px;">FILTER BY OWNER:</span>
             <select id="ownerFilterSelect" class="pb-select" onchange="renderTable()">
                 <option value="all">-- ALL OWNERS --</option>
             </select>
         </div>
 
-        <!-- TABLE OF OBSERVATIONS -->
         <table class="pb-table">
             <thead>
                 <tr>
@@ -320,7 +422,6 @@
                 </tr>
             </thead>
             <tbody id="observationsTableBody">
-                <!-- RENDERED BY JS -->
             </tbody>
         </table>
     </div>
@@ -331,9 +432,8 @@
 const TTXStore = {
     KEY: 'VAULT_TEC_TTX_STATE_V1',
 
-    /* Odczyt stanu z pamięci przeglądarki */
-    get() {
-        const raw = localStorage.getItem(this.KEY);
+    get: function() {
+        var raw = localStorage.getItem(this.KEY);
         if (!raw) return this.init();
         try {
             return JSON.parse(raw);
@@ -343,9 +443,8 @@ const TTXStore = {
         }
     },
 
-    /* Inicjalizacja domyślnego stanu sesji */
-    init() {
-        const defaultState = {
+    init: function() {
+        var defaultState = {
             participantId: 'CISO-NL-LOGISTICS-01',
             activeScenario: 'dutch_logistics_nis2',
             currentPhase: 0,
@@ -356,55 +455,91 @@ const TTXStore = {
         return defaultState;
     },
 
-    /* Zapis całego obiektu stanu */
-    save(state) {
+    save: function(state) {
         localStorage.setItem(this.KEY, JSON.stringify(state));
     },
 
-    /* Usuwanie wpisu z rejestru */
-    removeObservation(id) {
-        const state = this.get();
-        state.observations = state.observations.filter(o => o.id !== id);
+    saveField: function(scenarioKey, phaseIdx, field, value) {
+        var state = this.get();
+        var formKey = scenarioKey + '_' + phaseIdx;
+        if (!state.forms[formKey]) {
+            state.forms[formKey] = { impact: '', likelihood: '', data: '', reg: '', rationale: '', notes: '' };
+        }
+        state.forms[formKey][field] = value;
         this.save(state);
+    },
+
+    addObservation: function(scenarioKey, phaseIdx, text, type, owner) {
+        var state = this.get();
+        var newObs = {
+            id: Date.now(),
+            scenarioKey: scenarioKey,
+            phaseIdx: phaseIdx,
+            text: text,
+            type: type,
+            owner: owner || 'UNASSIGNED',
+            timestamp: new Date().toLocaleTimeString().slice(0, 5)
+        };
+        state.observations.push(newObs);
+        this.save(state);
+        return newObs;
+    },
+
+    removeObservation: function(id) {
+        var state = this.get();
+        state.observations = state.observations.filter(function(o) {
+            return o.id !== id;
+        });
+        this.save(state);
+    },
+
+    reset: function() {
+        localStorage.removeItem(this.KEY);
+        return this.init();
     }
 };
 
-let activeTypeFilter = 'all';
+var activeTypeFilter = 'all';
 
 function populateOwnerFilter(obs) {
-    const select = document.getElementById('ownerFilterSelect');
-    const currentVal = select.value;
+    var select = document.getElementById('ownerFilterSelect');
+    var currentVal = select.value;
     select.innerHTML = '<option value="all">-- ALL OWNERS --</option>';
 
-    const owners = new Set();
-    obs.forEach(o => {
-        if (o.owner && o.owner !== 'UNASSIGNED') owners.add(o.owner);
+    var owners = {};
+    obs.forEach(function(o) {
+        if (o.owner && o.owner !== 'UNASSIGNED') {
+            owners[o.owner] = true;
+        }
     });
 
-    owners.forEach(owner => {
-        const opt = document.createElement('option');
+    Object.keys(owners).forEach(function(owner) {
+        var opt = document.createElement('option');
         opt.value = owner;
         opt.innerText = owner;
-        if (owner === currentVal) opt.selected = true;
+        if (owner === currentVal) {
+            opt.selected = true;
+        }
         select.appendChild(opt);
     });
 }
 
 function setFilterType(type, btn) {
     activeTypeFilter = type;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.filter-btn').forEach(function(b) {
+        b.classList.remove('active');
+    });
     btn.classList.add('active');
     renderTable();
 }
 
 function renderTable() {
-    const state = TTXStore.get();
-    const tbody = document.getElementById('observationsTableBody');
+    var state = TTXStore.get();
+    var tbody = document.getElementById('observationsTableBody');
     tbody.innerHTML = '';
 
     if (!state || !state.observations || state.observations.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--pb-text-dim); padding: 20px;">No observations logged in session yet. Use the Exercise Tracker to record findings during the simulation.</td></tr>';
-        
         document.getElementById('kpiTotal').innerText = '0';
         document.getElementById('kpiGaps').innerText = '0';
         document.getElementById('kpiActions').innerText = '0';
@@ -412,22 +547,22 @@ function renderTable() {
         return;
     }
 
-    const obs = state.observations;
+    var obs = state.observations;
 
-    /* KPI Counts */
     document.getElementById('kpiTotal').innerText = obs.length;
-    document.getElementById('kpiGaps').innerText = obs.filter(o => o.type === 'gap').length;
-    document.getElementById('kpiActions').innerText = obs.filter(o => o.type === 'action').length;
-    document.getElementById('kpiStrengths').innerText = obs.filter(o => o.type === 'strength').length;
+    document.getElementById('kpiGaps').innerText = obs.filter(function(o) { return o.type === 'gap'; }).length;
+    document.getElementById('kpiActions').innerText = obs.filter(function(o) { return o.type === 'action'; }).length;
+    document.getElementById('kpiStrengths').innerText = obs.filter(function(o) { return o.type === 'strength'; }).length;
 
     populateOwnerFilter(obs);
-    const selectedOwner = document.getElementById('ownerFilterSelect').value;
+    var selectedOwner = document.getElementById('ownerFilterSelect').value;
+    var selectedScenario = document.getElementById('scenarioFilterSelect').value;
 
-    /* Filtering */
-    const filtered = obs.filter(o => {
-        const matchesType = (activeTypeFilter === 'all' || o.type === activeTypeFilter);
-        const matchesOwner = (selectedOwner === 'all' || o.owner === selectedOwner);
-        return matchesType && matchesOwner;
+    var filtered = obs.filter(function(o) {
+        var matchesScenario = (selectedScenario === 'all' || o.scenarioKey === selectedScenario);
+        var matchesType = (activeTypeFilter === 'all' || o.type === activeTypeFilter);
+        var matchesOwner = (selectedOwner === 'all' || o.owner === selectedOwner);
+        return matchesScenario && matchesType && matchesOwner;
     });
 
     if (filtered.length === 0) {
@@ -435,16 +570,16 @@ function renderTable() {
         return;
     }
 
-    filtered.forEach(o => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td style="color: var(--pb-amber); font-weight: bold;">PHASE ${o.phaseIdx}</td>
-            <td><span class="type-tag type-${o.type}">${o.type}</span></td>
-            <td style="color: var(--pb-text);">${o.text}</td>
-            <td style="color: var(--pb-cyan);">${o.owner || 'UNASSIGNED'}</td>
-            <td style="color: var(--pb-text-dim); font-size: 11px;">${o.timestamp || 'N/A'}</td>
-            <td><span class="btn-del" onclick="deleteObservation(${o.id})">[X]</span></td>
-        `;
+    filtered.forEach(function(o) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<tr>' +
+            '<td style="color: var(--pb-amber); font-weight: bold;">PHASE ' + o.phaseIdx + '</td>' +
+            '<td><span class="type-tag type-' + o.type + '">' + o.type + '</span></td>' +
+            '<td style="color: var(--pb-text);">' + o.text + '</td>' +
+            '<td style="color: var(--pb-cyan);">' + (o.owner || 'UNASSIGNED') + '</td>' +
+            '<td style="color: var(--pb-text-dim); font-size: 11px;">' + (o.timestamp || 'N/A') + '</td>' +
+            '<td><span class="btn-del" onclick="deleteObservation(' + o.id + ')">[X]</span></td>' +
+            '</tr>';
         tbody.appendChild(tr);
     });
 }
@@ -455,24 +590,24 @@ function deleteObservation(id) {
 }
 
 function exportReport() {
-    const state = TTXStore.get();
+    var state = TTXStore.get();
     if (!state) {
         alert('No TTX session data found to export.');
         return;
     }
 
-    const lines = [];
+    var lines = [];
     lines.push('================================================================');
-    lines.push(`  TABLETOP EXERCISE REPORT — LESSONS LEARNED & ACTION ITEMS`);
-    lines.push(`  VAULT-TEC TTX TERMINAL · PARTICIPANT: ${state.participantId || 'CISO-NL-LOGISTICS-01'}`);
-    lines.push(`  TIMESTAMP: ${new Date().toLocaleString()}`);
+    lines.push('  TABLETOP EXERCISE REPORT — LESSONS LEARNED & ACTION ITEMS');
+    lines.push('  VAULT-TEC TTX TERMINAL · PARTICIPANT: ' + (state.participantId || 'CISO-NL-LOGISTICS-01'));
+    lines.push('  TIMESTAMP: ' + (new Date().toLocaleString()));
     lines.push('================================================================\n');
 
     lines.push('--- SUMMARY STATISTICS ---');
-    lines.push(`TOTAL OBSERVATIONS: ${state.observations ? state.observations.length : 0}`);
-    lines.push(`GAPS IDENTIFIED: ${state.observations ? state.observations.filter(o=>o.type==='gap').length : 0}`);
-    lines.push(`REMEDIATION ACTIONS: ${state.observations ? state.observations.filter(o=>o.type==='action').length : 0}`);
-    lines.push(`STRENGTHS VERIFIED: ${state.observations ? state.observations.filter(o=>o.type==='strength').length : 0}`);
+    lines.push('TOTAL OBSERVATIONS: ' + (state.observations ? state.observations.length : 0));
+    lines.push('GAPS IDENTIFIED: ' + (state.observations ? state.observations.filter(function(o){ return o.type === 'gap'; }).length : 0));
+    lines.push('REMEDIATION ACTIONS: ' + (state.observations ? state.observations.filter(function(o){ return o.type === 'action'; }).length : 0));
+    lines.push('STRENGTHS VERIFIED: ' + (state.observations ? state.observations.filter(function(o){ return o.type === 'strength'; }).length : 0));
     lines.push('\n================================================================');
     lines.push('  DETAILED OBSERVATIONS & REMEDIATION ROADMAP');
     lines.push('================================================================');
@@ -480,28 +615,40 @@ function exportReport() {
     if (!state.observations || state.observations.length === 0) {
         lines.push('No observations logged.');
     } else {
-        state.observations.forEach(o => {
-            lines.push(`[${o.type.toUpperCase()}] (Phase ${o.phaseIdx}) ${o.text} — Owner: ${o.owner} (${o.timestamp || ''})`);
+        state.observations.forEach(function(o) {
+            lines.push('[' + o.type.toUpperCase() + '] (' + (o.scenarioKey || 'general') + ') (Phase ' + o.phaseIdx + ') ' + o.text + ' — Owner: ' + o.owner + ' (' + (o.timestamp || '') + ')');
         });
     }
 
-    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
     a.href = url;
-    a.download = `ttx-lessons-learned-${Date.now()}.txt`;
+    a.download = 'ttx-lessons-learned-' + Date.now() + '.txt';
     a.click();
     URL.revokeObjectURL(url);
 }
 
 function tickClock() {
-    const d = new Date();
-    document.getElementById('clockBox').innerText = d.toISOString().replace('T', ' ').slice(0, 19);
+    var d = new Date();
+    var clock = document.getElementById('clockBox');
+    if (clock) {
+        clock.innerText = d.toISOString().replace('T', ' ').slice(0, 19);
+    }
 }
 
-window.addEventListener('load', () => {
+window.addEventListener('load', function() {
     tickClock();
     setInterval(tickClock, 1000);
+
+    var state = TTXStore.get();
+    if (state && state.activeScenario) {
+        var scSel = document.getElementById('scenarioFilterSelect');
+        if (scSel) {
+            scSel.value = state.activeScenario;
+        }
+    }
+
     renderTable();
 });
 </script>
