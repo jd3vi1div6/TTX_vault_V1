@@ -25,7 +25,11 @@
             --font-term: 'VT323', monospace;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             background-color: var(--pb-bg);
@@ -44,14 +48,21 @@
             content: " ";
             display: block;
             position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
             z-index: 9999;
             background-size: 100% 3px, 6px 100%;
             pointer-events: none;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
         /* Top Bar */
         .topbar {
@@ -73,9 +84,13 @@
             color: var(--pb-green);
             letter-spacing: 2px;
             text-shadow: 0 0 8px var(--pb-green-glow);
+            text-decoration: none;
         }
 
-        .nav-tabs { display: flex; gap: 8px; }
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+        }
 
         .nav-btn {
             background: var(--pb-bg);
@@ -89,7 +104,11 @@
             transition: all 0.15s;
         }
 
-        .nav-btn:hover { border-color: var(--pb-green); color: var(--pb-green); }
+        .nav-btn:hover {
+            border-color: var(--pb-green);
+            color: var(--pb-green);
+        }
+
         .nav-btn.active {
             background: var(--pb-green-dark);
             border-color: var(--pb-green);
@@ -203,11 +222,12 @@
 
 <div class="container">
     <header class="topbar">
-        <span class="topbar-title">VAULT-TEC TTX TERMINAL</span>
+        <a href="index.html" class="topbar-title">VAULT-TEC TTX TERMINAL</a>
         <div class="nav-tabs">
+            <a href="index.html" class="nav-btn active">[ START / SCENARIOS ]</a>
             <a href="tracker.html" class="nav-btn">[ 1. TRACKER ]</a>
             <a href="dashboard.html" class="nav-btn">[ 2. DASHBOARD ]</a>
-            <a href="lessons-learned.html" class="nav-btn">[ 3. LESSONS LEARNED ]</a>
+            <a href="lessons-learned.html" class="nav-btn active">[ 3. LESSONS LEARNED ]</a>
         </div>
     </header>
 
@@ -242,7 +262,7 @@
         <!-- SCENARIO CHARLIE -->
         <div class="sc-card" style="border-color: var(--pb-cyan);">
             <div>
-                <div class="sc-badge" style="color: var(--pb-cyan);">SCENARIO CHARLIE — SEC-03 (NEW)</div>
+                <div class="sc-badge" style="color: var(--pb-cyan);">SCENARIO CHARLIE — SEC-03</div>
                 <div class="sc-title" style="color: var(--pb-cyan);">DUTCH LOGISTICS & NIS2</div>
                 <div class="sc-desc">Dual-homed OT console compromise → Rotterdam Port terminal paralysis → 24h NIS2 mandatory reporting & CISO Zorgplicht challenge.</div>
                 <div class="sc-meta">Target: CISO / Board / OT Lead · 7 Phases</div>
