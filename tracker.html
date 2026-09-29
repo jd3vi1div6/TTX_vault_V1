@@ -759,85 +759,90 @@ var SCENARIOS = {
     dutch_logistics_nis2: {
         title: 'Dutch Supply Chain & Logistics — NIS2 Risk Exposure & CREM Challenge',
         targetAudience: 'CISO / Risk Board / VP Infrastructure',
-        description: 'Full 7-phase strategic exercise simulating manual risk exposure pitfalls on a dual-homed OT operator workstation, lateral movement, ransomware infection (.lockedbyspecter), and Port of Rotterdam paralysis under Dutch NIS2.',
+        description: 'Full 7-phase strategic exercise simulating NIS2 asset scoping, vulnerability exposure, IT/OT lateral movement, ransomware encryption, regulatory reporting under Cyberbeveiligingswet (Cbw), and post-incident risk assessment.',
         phases: [
             {
-                title: 'Phase 0 — Preliminary Event',
+                title: 'Phase 0 — Asset Discovery & NIS2 Scoping',
                 severity: 'amber',
                 sevLabel: 'ALERT: ELEVATED',
-                inject: 'Your team is notified of CVE-2025-55182 (CVSS 10.0), associated with the Specter ransomware family. Last vulnerability scan ran one week ago. Next scheduled scan is in 3 weeks.',
-                tip: 'Prompt participants to consider how static annual spreadsheet scans create blind spots on OT/IT boundaries.',
+                inject: 'Asset discovery in accordance with the Dutch NIS2 implementation act — the Cyberbeveiligingswet (Cbw): IT has confirmed that 80% of assets are visible in the central inventory, while other assets are managed via separate systems. Business Impact Analysis (BIA) scenarios cover approximately 30% of assets, as focus is concentrated on critical systems and business owner declarations. How would you assess the risk related to this situation?',
+                tip: 'Encourage participants to evaluate hidden assets outside central IT inventories and the risks of partial BIA coverage under Cyberbeveiligingswet (Cbw) compliance requirements.',
                 questions: [
-                    'Are current scan frequencies and scope sufficient?',
-                    'How do you assess likelihood of exploitation given the disclosure timeline?',
-                    'What is your immediate response — emergency patch or wait for scheduled scan?'
+                    'How does the 20% unmapped asset gap impact your NIS2 (Cyberbeveiligingswet) compliance posture?',
+                    'Is a BIA covering only 30% of assets sufficient when critical supply chain dependencies exist?',
+                    'What immediate steps should be taken to consolidate IT and OT asset inventories?'
                 ]
             },
             {
-                title: 'Phase 1 — Main Event',
+                title: 'Phase 1 — Vulnerability Disclosure & Exposure',
+                severity: 'amber',
+                sevLabel: 'ALERT: ELEVATED',
+                inject: 'Your team is notified of CVE-2025-55182 (CVSS 10.0), associated with the Specter ransomware family. The last vulnerability scan for critical systems ran one week ago, and the next scheduled scan is in 3 weeks. The last scan showed no such vulnerabilities on assets in scope. How would you assess the risk related to this situation?',
+                tip: 'Discuss the illusion of security created by point-in-time scanning versus real-time, continuous threat exposure management.',
+                questions: [
+                    'Does a clean scan result from a week ago guarantee safety against zero-day or newly disclosed CVEs?',
+                    'Should you execute an emergency out-of-band vulnerability scan across all assets immediately?',
+                    'How do you handle assets not covered by the 30% BIA scope when a CVSS 10.0 vulnerability emerges?'
+                ]
+            },
+            {
+                title: 'Phase 2 — Active Outage & Domain Controller Compromise',
                 severity: 'red',
                 sevLabel: 'CRITICAL: RED',
-                inject: 'Helpdesk is flooded with calls — users cannot log in. An administrator checks the Domain Controller and finds all files have been modified with the extension ".lockedbyspecter".',
-                tip: 'Focus discussion on first 30 minutes: triage protocols, domain controller isolation, and C-level notification escalation.',
+                inject: 'Two weeks have passed since the CVE disclosure. The Helpdesk is flooded with calls — users cannot log in. An administrator checks the Domain Controller and finds that all files have been modified with the extension ".lockedbyspecter".',
+                tip: 'Focus on crisis communication, active incident response protocol activation, and Domain Controller containment.',
                 questions: [
-                    'What is your first action — who do you call and what do you do immediately?',
-                    'How do you prioritise and triage across affected systems?',
-                    'Who do you engage and notify in the first 30 minutes?'
+                    'What are the immediate containment actions upon discovering Domain Controller encryption?',
+                    'Who needs to be notified within the first 30 minutes (C-level, Incident Response Team, Legal)?',
+                    'How do you maintain operational communication if primary IT channels (Active Directory/Email) are compromised?'
                 ]
             },
             {
-                title: 'Phase 2 — Lateral Movement & OT/IT Pivot',
+                title: 'Phase 3 — Patient Zero & OT Crane Terminal Pivot',
                 severity: 'red',
                 sevLabel: 'CRITICAL: RED',
-                inject: 'Threat actors leverage unmapped secondary NIC on operator console OS-04, pivoting from IT domain controllers into OT crane control systems in Rotterdam Port terminal.',
-                tip: 'Evaluate physical safety vs cyber isolation trade-offs when OT crane control systems are affected.',
+                inject: 'After investigation, the SOC identified the likely Patient Zero: a Client Service Desk operator workstation with access to a minor server containing the order registry. Threat actors leveraged an unmapped secondary NIC on operator console OS-04, pivoting from IT domain controllers into OT crane control systems at the port terminal.',
+                tip: 'Highlight how unmapped secondary network cards (dual-homed consoles) bridge IT and OT segments, bypassing air-gaps.',
                 questions: [
-                    'How do you verify whether OT network segment isolation is truly holding?',
-                    'What emergency compensating controls can be engaged without physical safety risk?'
+                    'How do you verify whether OT network isolation is intact when dual-homed systems exist?',
+                    'What physical safety measures must be enacted before attempting to isolate OT crane control systems?',
+                    'Why was the secondary NIC missing from the central 80% asset inventory?'
                 ]
             },
             {
-                title: 'Phase 3 — Regulatory Clock & 24h NIS2 Notification',
+                title: 'Phase 4 — Regulatory Clock, Extortion & Supply Chain Paralysis',
                 severity: 'red',
                 sevLabel: 'ALERT: SEVERE CRITICAL',
-                inject: 'Ticking clock on 24-hour Meldplicht notification to NCSC-NL. Backup catalogs on cloud storage accounts locked. Logistics hub queues backed up 15 km onto highways.',
-                tip: 'Remind team of legal penalties (€10M or 2% global turnover) under Dutch NIS2 Zorgplicht breach.',
+                inject: 'The clock is ticking on the mandatory 24-hour Meldplicht notification to NCSC-NL under NIS2 (Cyberbeveiligingswet). Backup catalogs on cloud storage accounts are locked. Logistics hub queues are backed up 15 km onto highways. Specter ransomware operators demand 100 BTC. Estimated operational outage losses reach €15,000,000 per day. The Executive Board convenes an emergency session.',
+                tip: 'Deliberate on mandatory 24h regulatory reporting deadlines, ransom payment policy under Dutch law, and operational loss mitigation.',
                 questions: [
-                    'What specific evidence is required to submit the initial 24h NIS2 notification?',
-                    'How do you handle public communication while forensics are still underway?'
+                    'What minimum information must be included in the initial 24-hour Meldplicht submission to NCSC-NL?',
+                    'What is your organization\'s stance on paying a 100 BTC ransom versus prolonged port terminal paralysis?',
+                    'How do you manage emergency communications with logistics partners and transport authorities?'
                 ]
             },
             {
-                title: 'Phase 4 — Business Impact & Ransom Strategy',
-                severity: 'red',
-                sevLabel: 'ALERT: CRITICAL',
-                inject: 'Specter ransomware operators demand 100 BTC. Estimated operational outage losses hit €15,000,000 per day. Executive board convenes emergency session.',
-                tip: 'Discuss legal ramifications of paying extortion fees vs prolonged supply chain shutdown.',
-                questions: [
-                    'What is the company policy regarding ransom payments under Dutch law?',
-                    'How do you calculate total cost of downtime vs recovery time from offline tape backups?'
-                ]
-            },
-            {
-                title: 'Phase 5 — Board & Regulatory Defense',
+                title: 'Phase 5 — Regulatory Claims & Public Data Leakage',
                 severity: 'amber',
                 sevLabel: 'ALERT: ELEVATED',
-                inject: 'Dutch Gaming and Transport Authority (NCSC-NL) initiates formal investigation into whether CISO fulfilled Zorgplicht (Due Care) asset management requirements.',
-                tip: 'Highlight how automated CREM logs provide verifiable audit trails that spreadsheets lack.',
+                inject: 'Two weeks after the incident, your company is receiving legal claims regarding data processing in violation of binding laws (GDPR / Cyberbeveiligingswet). Media outlets publish news reports concerning a massive customer and partner data breach. How does this situation impact the company?',
+                tip: 'Discuss legal liability, regulatory fines (GDPR 4% / NIS2 €10M), reputational damage, and PR response strategy.',
                 questions: [
-                    'How do you defend historical risk acceptance decisions made in annual spreadsheets?',
-                    'What evidence demonstrates due diligence in managing supply chain vendor risks?'
+                    'How do you coordinate legal defense against data privacy claims following exfiltration?',
+                    'What public relations strategy should be deployed to address media reports of exfiltrated data?',
+                    'How does the CISO demonstrate "Zorgplicht" (Due Care) under Cyberbeveiligingswet during regulatory audit investigations?'
                 ]
             },
             {
-                title: 'Phase 6 — Post-Incident & Strategic Roadmap',
+                title: 'Phase 6 — Post-Incident & Final Risk Assessment',
                 severity: 'green',
                 sevLabel: 'STATUS: COMPLETE',
-                inject: 'Incident contained. Organization transitions from manual spreadsheet-based risk management to automated Cyber Risk Exposure Management (CREM).',
-                tip: 'Summarize key action items logged during exercise for executive presentation.',
+                inject: 'All incidents have been contained. IT confirms an updated asset inventory now covering 90% of assets; however, OT assets remain managed in a separate inventory. How would you assess the final residual risk?',
+                tip: 'Analyze remaining gaps: 10% unmapped IT assets and unintegrated OT inventory continue to pose systemic supply chain risks.',
                 questions: [
-                    'What key gaps in asset discovery and vulnerability prioritization were exposed?',
-                    'How will automation change daily CISO decision-making and Board reporting?'
+                    'Is a 90% IT asset coverage sufficient to prevent similar lateral movement attacks in the future?',
+                    'Why does maintaining a separate OT inventory perpetuate risk, and how can IT/OT visibility be unified?',
+                    'What strategic roadmap initiatives (e.g., continuous automated CREM) are necessary to satisfy NIS2 Zorgplicht?'
                 ]
             }
         ]
