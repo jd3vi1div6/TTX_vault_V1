@@ -25,7 +25,11 @@
             --font-term: 'VT323', monospace;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             background-color: var(--pb-bg);
@@ -39,21 +43,26 @@
             background-size: 100% 100%, 100% 4px;
         }
 
-        /* CRT Scanline Overlay */
         body::before {
             content: " ";
             display: block;
             position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
             z-index: 9999;
             background-size: 100% 3px, 6px 100%;
             pointer-events: none;
         }
 
-        .container { max-width: 1350px; margin: 0 auto; padding: 15px; }
+        .container {
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 15px;
+        }
 
-        /* Top Bar */
         .topbar {
             display: flex;
             align-items: center;
@@ -67,18 +76,31 @@
             gap: 10px;
         }
 
-        .topbar-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
         .topbar-title {
             font-family: var(--font-term);
             font-size: 26px;
             color: var(--pb-green);
             letter-spacing: 2px;
             text-shadow: 0 0 8px var(--pb-green-glow);
+            text-decoration: none;
         }
 
-        .clock-box { font-size: 13px; color: var(--pb-text-dim); }
+        .clock-box {
+            font-size: 13px;
+            color: var(--pb-text-dim);
+        }
 
-        .nav-tabs { display: flex; gap: 6px; }
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+        }
 
         .nav-btn {
             background: var(--pb-bg);
@@ -92,7 +114,11 @@
             transition: all 0.15s;
         }
 
-        .nav-btn:hover { border-color: var(--pb-green); color: var(--pb-green); }
+        .nav-btn:hover {
+            border-color: var(--pb-green);
+            color: var(--pb-green);
+        }
+
         .nav-btn.active {
             background: var(--pb-green-dark);
             border-color: var(--pb-green);
@@ -119,10 +145,16 @@
             color: #fff;
         }
 
-        .pb-btn.amber { border-color: var(--pb-amber); color: var(--pb-amber); }
-        .pb-btn.amber:hover { background: rgba(255,180,55,0.2); box-shadow: 0 0 12px rgba(255,180,55,0.4); }
+        .pb-btn.amber {
+            border-color: var(--pb-amber);
+            color: var(--pb-amber);
+        }
 
-        /* Panels & Cards */
+        .pb-btn.amber:hover {
+            background: rgba(255,180,55,0.2);
+            box-shadow: 0 0 12px rgba(255,180,55,0.4);
+        }
+
         .pb-panel {
             border: 1px solid var(--pb-green-dim);
             background: var(--pb-bg-2);
@@ -152,40 +184,69 @@
             letter-spacing: 0.1em;
             display: inline-block;
         }
+
         .pb-badge.green { color: var(--pb-green); border-color: var(--pb-green-dim); }
         .pb-badge.amber { color: var(--pb-amber); border-color: var(--pb-amber); background: rgba(255,180,55,0.1); }
         .pb-badge.red { color: var(--pb-red); border-color: var(--pb-red); background: rgba(255,77,77,0.15); }
         .pb-badge.cyan { color: var(--pb-cyan); border-color: var(--pb-cyan); background: rgba(0,229,255,0.1); }
 
-        /* KPI Grid */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 12px;
             margin-bottom: 15px;
         }
-        @media (max-width: 900px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        @media (max-width: 900px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
         .kpi-card {
             border: 1px solid var(--pb-green-dim);
             background: var(--pb-bg-2);
             padding: 14px;
         }
-        .kpi-label { font-size: 11px; color: var(--pb-green-dim); letter-spacing: 0.15em; text-transform: uppercase; }
-        .kpi-value { font-family: var(--font-term); font-size: 36px; color: var(--pb-green); margin: 4px 0; }
-        .kpi-sub { font-size: 11px; color: var(--pb-text-dim); }
 
-        /* Grid Layouts */
-        .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        @media (max-width: 850px) { .dash-grid { grid-template-columns: 1fr; } }
+        .kpi-label {
+            font-size: 11px;
+            color: var(--pb-green-dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
 
-        /* Risk Heatmap Grid */
+        .kpi-value {
+            font-family: var(--font-term);
+            font-size: 36px;
+            color: var(--pb-green);
+            margin: 4px 0;
+        }
+
+        .kpi-sub {
+            font-size: 11px;
+            color: var(--pb-text-dim);
+        }
+
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 850px) {
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .risk-heatmap {
             display: grid;
             grid-template-columns: 80px repeat(3, 1fr);
             gap: 4px;
             margin-top: 10px;
         }
+
         .hm-cell {
             padding: 10px;
             text-align: center;
@@ -194,6 +255,7 @@
             font-family: var(--font-mono);
             background: var(--pb-bg);
         }
+
         .hm-axis {
             color: var(--pb-green-dim);
             font-size: 10px;
@@ -203,21 +265,52 @@
             align-items: center;
             justify-content: center;
         }
-        .hm-cell .num { font-family: var(--font-term); font-size: 26px; display: block; line-height: 1; }
-        .hm-cell .lbl { font-size: 10px; opacity: 0.7; text-transform: uppercase; }
+
+        .hm-cell .num {
+            font-family: var(--font-term);
+            font-size: 26px;
+            display: block;
+            line-height: 1;
+        }
+
+        .hm-cell .lbl {
+            font-size: 10px;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
 
         .hm-low { background: rgba(78,255,145,0.10); color: var(--pb-green); }
         .hm-medium { background: rgba(255,180,55,0.15); color: var(--pb-amber); }
         .hm-high { background: rgba(255,77,77,0.20); color: var(--pb-red); }
         .hm-critical { background: rgba(255,77,77,0.45); color: var(--pb-red); font-weight: bold; }
 
-        /* Tables */
-        .pb-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
-        .pb-table th, .pb-table td { border: 1px solid var(--pb-green-dark); padding: 8px 12px; text-align: left; }
-        .pb-table th { background: var(--pb-green-dark); color: var(--pb-green); font-family: var(--font-term); font-size: 16px; }
+        .pb-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 13px;
+        }
 
-        /* MITRE Grid */
-        .mitre-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px; margin-top: 10px; }
+        .pb-table th, .pb-table td {
+            border: 1px solid var(--pb-green-dark);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .pb-table th {
+            background: var(--pb-green-dark);
+            color: var(--pb-green);
+            font-family: var(--font-term);
+            font-size: 16px;
+        }
+
+        .mitre-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 6px;
+            margin-top: 10px;
+        }
+
         .mitre-cell {
             border: 1px solid var(--pb-green-dark);
             padding: 8px;
@@ -225,12 +318,33 @@
             font-family: var(--font-mono);
             background: var(--pb-bg);
         }
-        .mitre-cell.covered { background: rgba(78,255,145,0.12); border-color: var(--pb-green-dim); color: var(--pb-green); }
-        .mitre-cell.gap { background: rgba(255,77,77,0.12); border-color: var(--pb-red); color: var(--pb-red); }
-        .mitre-cell .code { font-weight: bold; display: block; margin-bottom: 2px; }
 
-        /* Observations Feed */
-        .obs-feed { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; }
+        .mitre-cell.covered {
+            background: rgba(78,255,145,0.12);
+            border-color: var(--pb-green-dim);
+            color: var(--pb-green);
+        }
+
+        .mitre-cell.gap {
+            background: rgba(255,77,77,0.12);
+            border-color: var(--pb-red);
+            color: var(--pb-red);
+        }
+
+        .mitre-cell .code {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .obs-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
         .obs-row {
             display: flex;
             gap: 10px;
@@ -240,6 +354,7 @@
             font-size: 12px;
             align-items: flex-start;
         }
+
         .obs-row .tag {
             font-size: 10px;
             padding: 1px 6px;
@@ -248,6 +363,7 @@
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
+
         .tag-gap { color: var(--pb-red); border-color: var(--pb-red); }
         .tag-action { color: var(--pb-amber); border-color: var(--pb-amber); }
         .tag-strength { color: var(--pb-green); border-color: var(--pb-green); }
@@ -257,14 +373,14 @@
 <body>
 
 <div class="container">
-    <!-- TOP BAR -->
     <header class="topbar">
         <div class="topbar-left">
-            <span class="topbar-title">VAULT-TEC TTX DASHBOARD</span>
+            <a href="index.html" class="topbar-title">VAULT-TEC TTX DASHBOARD</a>
             <span class="clock-box" id="clockBox">2026-09-24 00:00:00</span>
         </div>
 
         <div class="nav-tabs">
+            <a href="index.html" class="nav-btn">[ START / SCENARIOS ]</a>
             <a href="tracker.html" class="nav-btn">[ 1. EXERCISE TRACKER ]</a>
             <a href="dashboard.html" class="nav-btn active">[ 2. DASHBOARD ]</a>
             <a href="lessons-learned.html" class="nav-btn">[ 3. LESSONS LEARNED ]</a>
@@ -275,7 +391,6 @@
         </div>
     </header>
 
-    <!-- KPI GRID -->
     <div class="kpi-grid">
         <div class="kpi-card">
             <div class="kpi-label">ACTIVE SCENARIO</div>
@@ -299,9 +414,7 @@
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD GRID -->
     <div class="dash-grid">
-        <!-- LEFT: RISK HEATMAP -->
         <div class="pb-panel">
             <div class="pb-panel-title">
                 <span>QUALITATIVE RISK MATRIX (3x3)</span>
@@ -333,7 +446,6 @@
             </div>
         </div>
 
-        <!-- RIGHT: KEY RISKS REGISTER -->
         <div class="pb-panel">
             <div class="pb-panel-title">
                 <span>KEY IDENTIFIED THREATS & GAPS</span>
@@ -350,38 +462,12 @@
                     </tr>
                 </thead>
                 <tbody id="riskRegisterTable">
-                    <tr>
-                        <td>R-01</td>
-                        <td>OT Workstation secondary NIC unmapped in asset inventory</td>
-                        <td style="color:var(--pb-red);">CRITICAL</td>
-                        <td>OT Lead</td>
-                    </tr>
-                    <tr>
-                        <td>R-02</td>
-                        <td>Active Directory Domain Controller lacking MFA on Admin logins</td>
-                        <td style="color:var(--pb-red);">HIGH</td>
-                        <td>IT Lead</td>
-                    </tr>
-                    <tr>
-                        <td>R-03</td>
-                        <td>24h NCSC-NL NIS2 Notification workflow delayed by manual triage</td>
-                        <td style="color:var(--pb-amber);">HIGH</td>
-                        <td>CISO / Legal</td>
-                    </tr>
-                    <tr>
-                        <td>R-04</td>
-                        <td>Offline tape backup recovery cadence unverified in 12 months</td>
-                        <td style="color:var(--pb-amber);">MEDIUM</td>
-                        <td>IT Ops</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- LOWER SECTION GRID -->
     <div class="dash-grid">
-        <!-- MITRE ATT&CK MATRIX -->
         <div class="pb-panel">
             <div class="pb-panel-title">
                 <span>MITRE ATT&CK TECHNIQUE COVERAGE</span>
@@ -410,7 +496,6 @@
             </div>
         </div>
 
-        <!-- OBSERVATIONS LIVE FEED -->
         <div class="pb-panel">
             <div class="pb-panel-title">
                 <span>OBSERVATIONS & ACTION ITEMS FEED</span>
@@ -431,9 +516,8 @@
 const TTXStore = {
     KEY: 'VAULT_TEC_TTX_STATE_V1',
 
-    /* Odczyt stanu z pamięci przeglądarki */
-    get() {
-        const raw = localStorage.getItem(this.KEY);
+    get: function() {
+        var raw = localStorage.getItem(this.KEY);
         if (!raw) return this.init();
         try {
             return JSON.parse(raw);
@@ -443,9 +527,8 @@ const TTXStore = {
         }
     },
 
-    /* Inicjalizacja domyślnego stanu sesji */
-    init() {
-        const defaultState = {
+    init: function() {
+        var defaultState = {
             participantId: 'CISO-NL-LOGISTICS-01',
             activeScenario: 'dutch_logistics_nis2',
             currentPhase: 0,
@@ -456,15 +539,13 @@ const TTXStore = {
         return defaultState;
     },
 
-    /* Zapis całego obiektu stanu */
-    save(state) {
+    save: function(state) {
         localStorage.setItem(this.KEY, JSON.stringify(state));
     },
 
-    /* Zapis pojedynczego pola z formularza oceny ryzyka / notatek */
-    saveField(scenarioKey, phaseIdx, field, value) {
-        const state = this.get();
-        const formKey = `${scenarioKey}_${phaseIdx}`;
+    saveField: function(scenarioKey, phaseIdx, field, value) {
+        var state = this.get();
+        var formKey = scenarioKey + '_' + phaseIdx;
         if (!state.forms[formKey]) {
             state.forms[formKey] = { impact: '', likelihood: '', data: '', reg: '', rationale: '', notes: '' };
         }
@@ -472,15 +553,14 @@ const TTXStore = {
         this.save(state);
     },
 
-    /* Dodanie nowej obserwacji / akcji (Lessons Learned) */
-    addObservation(scenarioKey, phaseIdx, text, type, owner) {
-        const state = this.get();
-        const newObs = {
+    addObservation: function(scenarioKey, phaseIdx, text, type, owner) {
+        var state = this.get();
+        var newObs = {
             id: Date.now(),
-            scenarioKey,
-            phaseIdx,
-            text,
-            type, /* 'gap' | 'action' | 'strength' | 'note' */
+            scenarioKey: scenarioKey,
+            phaseIdx: phaseIdx,
+            text: text,
+            type: type,
             owner: owner || 'UNASSIGNED',
             timestamp: new Date().toLocaleTimeString().slice(0, 5)
         };
@@ -489,71 +569,69 @@ const TTXStore = {
         return newObs;
     },
 
-    /* Usuwanie wpisu z rejestru */
-    removeObservation(id) {
-        const state = this.get();
-        state.observations = state.observations.filter(o => o.id !== id);
+    removeObservation: function(id) {
+        var state = this.get();
+        state.observations = state.observations.filter(function(o) {
+            return o.id !== id;
+        });
         this.save(state);
     },
 
-    /* Czyszczenie stanu (rozpoczęcie nowego ćwiczenia) */
-    reset() {
+    reset: function() {
         localStorage.removeItem(this.KEY);
         return this.init();
     }
 };
 
-/* Logika aktualizacji interfejsu Dashboardu */
 function updateDashboard() {
-    const state = TTXStore.get();
+    var state = TTXStore.get();
     if (!state) return;
 
-    /* Aktualizacja KPI Scenariusza */
-    const scElem = document.getElementById('kpiScenario');
+    var activeScenario = state.activeScenario || 'dutch_logistics_nis2';
+
+    var scElem = document.getElementById('kpiScenario');
     if (scElem) {
-        if (state.activeScenario === 'dutch_logistics_nis2') {
+        if (activeScenario === 'dutch_logistics_nis2') {
             scElem.innerText = 'Dutch Logistics NIS2';
-        } else if (state.activeScenario === 'specter_ransomware') {
+        } else if (activeScenario === 'specter_ransomware') {
             scElem.innerText = 'Specter Ransomware';
         } else {
             scElem.innerText = 'Data Breach API';
         }
     }
 
-    /* Aktualizacja KPI Postępu */
-    const currentPhase = state.currentPhase || 0;
-    const progElem = document.getElementById('kpiProgress');
-    if (progElem) progElem.innerText = `${currentPhase} / 6`;
+    var currentPhase = state.currentPhase || 0;
+    var progElem = document.getElementById('kpiProgress');
+    if (progElem) progElem.innerText = currentPhase + ' / 6';
     
-    const pct = Math.round((currentPhase / 6) * 100);
-    const subElem = document.getElementById('kpiProgressSub');
-    if (subElem) subElem.innerText = `${pct}% Completed`;
+    var pct = Math.round((currentPhase / 6) * 100);
+    var subElem = document.getElementById('kpiProgressSub');
+    if (subElem) subElem.innerText = pct + '% Completed';
 
-    /* Aktualizacja KPI Obserwacji */
-    const obs = state.observations || [];
-    const obsTotal = document.getElementById('kpiObsTotal');
+    var obs = (state.observations || []).filter(function(o) {
+        return o.scenarioKey === activeScenario;
+    });
+
+    var obsTotal = document.getElementById('kpiObsTotal');
     if (obsTotal) obsTotal.innerText = obs.length;
 
-    const gaps = obs.filter(o => o.type === 'gap').length;
-    const actions = obs.filter(o => o.type === 'action').length;
-    const obsSub = document.getElementById('kpiObsBreakdown');
-    if (obsSub) obsSub.innerText = `${gaps} Gaps · ${actions} Actions`;
+    var gaps = obs.filter(function(o) { return o.type === 'gap'; }).length;
+    var actions = obs.filter(function(o) { return o.type === 'action'; }).length;
+    var obsSub = document.getElementById('kpiObsBreakdown');
+    if (obsSub) obsSub.innerText = gaps + ' Gaps · ' + actions + ' Actions';
 
-    /* Renderowanie Feedu Obserwacji */
-    const feedContainer = document.getElementById('obsFeedContainer');
+    var feedContainer = document.getElementById('obsFeedContainer');
     if (feedContainer) {
         if (obs.length > 0) {
             feedContainer.innerHTML = '';
-            obs.slice().reverse().forEach(o => {
-                const row = document.createElement('div');
+            obs.slice().reverse().forEach(function(o) {
+                var row = document.createElement('div');
                 row.className = 'obs-row';
-                row.innerHTML = `
-                    <span class="tag tag-${o.type}">${o.type}</span>
-                    <div style="flex:1;">
-                        <div style="color:var(--pb-text);">${o.text}</div>
-                        <div style="font-size:10px; color:var(--pb-text-dim); margin-top:2px;">Phase ${o.phaseIdx} · Owner: ${o.owner}</div>
-                    </div>
-                `;
+                row.innerHTML = '<span class="tag tag-' + o.type + '">' + o.type + '</span>' +
+                    '<div style="flex:1;">' +
+                    '<div style="color:var(--pb-text);">' + o.text + '</div>' +
+                    '<div style="font-size:10px; color:var(--pb-text-dim); margin-top:2px;">Phase ' + o.phaseIdx + ' · Owner: ' + o.owner + '</div>' +
+                    '</div>';
                 feedContainer.appendChild(row);
             });
         } else {
@@ -561,24 +639,72 @@ function updateDashboard() {
         }
     }
 
-    /* Obliczanie wartości dla Macierzy Ryzyka z zapisanych formularzy */
-    let highCount = 0;
-    let medCount = 0;
-    let lowCount = 0;
+    var counts = {
+        hm_c1: 0, hm_h1: 0, hm_m1: 0,
+        hm_h2: 0, hm_m2: 0, hm_l1: 0,
+        hm_m3: 0, hm_l2: 0, hm_l3: 0
+    };
 
-    Object.keys(state.forms || {}).forEach(k => {
-        const form = state.forms[k];
-        if (form.impact === 'CRITICAL' || form.impact === 'HIGH') highCount++;
-        else if (form.impact === 'MEDIUM') medCount++;
-        else if (form.impact === 'LOW') lowCount++;
+    Object.keys(state.forms || {}).forEach(function(k) {
+        if (k.indexOf(activeScenario) !== 0) return;
+
+        var form = state.forms[k];
+        var impact = (form.impact || '').toUpperCase();
+        var likelihood = (form.likelihood || '').toUpperCase();
+
+        var isHighImp = (impact === 'CRITICAL' || impact === 'HIGH');
+        var isMedImp = (impact === 'MEDIUM');
+        var isLowImp = (impact === 'LOW');
+
+        var isLikely = (likelihood === 'LIKELY' || likelihood === 'CERTAIN');
+        var isPossible = (likelihood === 'POSSIBLE');
+        var isUnlikely = (likelihood === 'UNLIKELY');
+
+        if (isHighImp && isLikely) counts.hm_c1++;
+        else if (isHighImp && isPossible) counts.hm_h1++;
+        else if (isHighImp && isUnlikely) counts.hm_m1++;
+        else if (isMedImp && isLikely) counts.hm_h2++;
+        else if (isMedImp && isPossible) counts.hm_m2++;
+        else if (isMedImp && isUnlikely) counts.hm_l1++;
+        else if (isLowImp && isLikely) counts.hm_m3++;
+        else if (isLowImp && isPossible) counts.hm_l2++;
+        else if (isLowImp && isUnlikely) counts.hm_l3++;
     });
 
-    const c1 = document.getElementById('hm-c1');
-    if (c1) c1.innerText = highCount;
-    const m2 = document.getElementById('hm-m2');
-    if (m2) m2.innerText = medCount;
-    const l3 = document.getElementById('hm-l3');
-    if (l3) l3.innerText = lowCount;
+    var setVal = function(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.innerText = val;
+    };
+
+    setVal('hm-c1', counts.hm_c1);
+    setVal('hm-h1', counts.hm_h1);
+    setVal('hm-m1', counts.hm_m1);
+    setVal('hm-h2', counts.hm_h2);
+    setVal('hm-m2', counts.hm_m2);
+    setVal('hm-l1', counts.hm_l1);
+    setVal('hm-m3', counts.hm_m3);
+    setVal('hm-l2', counts.hm_l2);
+    setVal('hm-l3', counts.hm_l3);
+
+    var riskTable = document.getElementById('riskRegisterTable');
+    if (riskTable) {
+        var gapObs = obs.filter(function(o) { return o.type === 'gap'; });
+        if (gapObs.length > 0) {
+            riskTable.innerHTML = '';
+            gapObs.forEach(function(g, idx) {
+                var tr = document.createElement('tr');
+                tr.innerHTML = '<td>R-0' + (idx + 1) + '</td>' +
+                    '<td>' + g.text + '</td>' +
+                    '<td style="color:var(--pb-red);">HIGH</td>' +
+                    '<td>' + (g.owner || 'UNASSIGNED') + '</td>';
+                riskTable.appendChild(tr);
+            });
+        } else {
+            riskTable.innerHTML = '<tr><td>R-01</td><td>OT Workstation secondary NIC unmapped in asset inventory</td><td style="color:var(--pb-red);">CRITICAL</td><td>OT Lead</td></tr>' +
+                '<tr><td>R-02</td><td>Active Directory Domain Controller lacking MFA on Admin logins</td><td style="color:var(--pb-red);">HIGH</td><td>IT Lead</td></tr>' +
+                '<tr><td>R-03</td><td>24h NCSC-NL NIS2 Notification workflow delayed by manual triage</td><td style="color:var(--pb-amber);">HIGH</td><td>CISO / Legal</td></tr>';
+        }
+    }
 }
 
 function clearData() {
@@ -589,12 +715,14 @@ function clearData() {
 }
 
 function tickClock() {
-    const d = new Date();
-    const clock = document.getElementById('clockBox');
-    if (clock) clock.innerText = d.toISOString().replace('T', ' ').slice(0, 19);
+    var d = new Date();
+    var clock = document.getElementById('clockBox');
+    if (clock) {
+        clock.innerText = d.toISOString().replace('T', ' ').slice(0, 19);
+    }
 }
 
-window.addEventListener('load', () => {
+window.addEventListener('load', function() {
     tickClock();
     setInterval(tickClock, 1000);
     updateDashboard();
